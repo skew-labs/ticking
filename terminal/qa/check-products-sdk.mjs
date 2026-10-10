@@ -1,0 +1,15 @@
+import assert from 'node:assert/strict';
+import {applyTradeMessage,createTradeFeed} from '../sdk/trade-feed.js';
+const first={type:'snapshot',seq:1,data:{identity:{market:'fixture'},trades:[{identity:'one',price:1},{identity:'two',price:2}]},cursor:'fixture:1'};
+let base=applyTradeMessage(null,first);
+const next={type:'trade_delta',seq:2,base:1,ids:['two','three'],trades:[{identity:'two',price:3},{identity:'three',price:4}],meta:{identity:{market:'fixture'}},cursor:'fixture:2'};
+assert.deepEqual(applyTradeMessage(base,next).data.trades.map(r=>r.price),[3,4]);
+assert.throws(()=>applyTradeMessage(base,{...next,base:0}));
+assert.throws(()=>applyTradeMessage(null,{...first,data:{trades:[{identity:'one'},{identity:'one'}]}}));
+let calls=0,wire;const encoder=new TextEncoder();
+globalThis.fetch=async(url,options)=>{calls++;assert.ok(options.headers.Authorization.startsWith('Bearer td_'));return new Response(new ReadableStream({start(controller){wire=controller;controller.enqueue(encoder.encode('data: '+JSON.stringify(first)+'\n\n'));options.signal.addEventListener('abort',()=>{try{controller.close();}catch{}});}}),{headers:{'Content-Type':'text/event-stream'}});};
+const feed=createTradeFeed({tokenProvider:async()=>({token:'td_isolated_fixture',expires:Date.now()/1000+60})});
+let a=0,b=0;const offA=feed.subscribe(()=>a++),offB=feed.subscribe(()=>b++);
+const deadline=Date.now()+2000;while(!b&&Date.now()<deadline)await new Promise(r=>setTimeout(r,10));assert.equal(calls,1);assert.equal(a,1);assert.equal(b,1);
+offA();wire.enqueue(encoder.encode('data: '+JSON.stringify(next)+'\n\n'));while(b<2&&Date.now()<deadline)await new Promise(r=>setTimeout(r,10));assert.equal(a,1);assert.equal(b,2);offB();feed.destroy();assert.throws(()=>feed.subscribe(()=>{}));
+console.log(JSON.stringify({passed:true,checks:['Exact-base execution deltas and duplicate rejection','Multiple view subscribers share one SSE connection','Unsubscription retains other listeners; final disposal stops delivery'],financialActions:false}));

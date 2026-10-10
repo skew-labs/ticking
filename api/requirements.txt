@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+httpx
+solders
+base58
+Pillow>=11,<13
+PyJWT[crypto]>=2.9,<3

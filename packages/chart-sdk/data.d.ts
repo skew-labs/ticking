@@ -1,0 +1,4 @@
+import type {Candle} from './types.js';
+export interface NativeMarketMessage {candles?:Candle[];page?:Candle[];status?:{message?:string;[key:string]:unknown};quote?:string;sequence?:number;error?:string;history?:boolean;live?:boolean;statusOnly?:boolean;coverage?:string;source?:string;historyExtent?:{firstTime:number|null;lastTime:number|null;minuteCandles:number};receiptCounts?:{receipts:number;decoded:number;pending:number}}
+/** Mingle's same-origin native market adapter; external hosts use MarketAdapter. */
+export class MarketDataHub {constructor(mint:string);readonly source:'native'|'bitquery';setSource(source:'native'|'bitquery'):void;subscribe(interval:number,listener:(message:NativeMarketMessage)=>void,anchor?:number|null):()=>void;older(interval:number,before:number):Promise<void>;destroy():void}

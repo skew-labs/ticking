@@ -1,0 +1,4 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ticking · Pro source preview</title><link rel="stylesheet" href="/terminal/base.css"><link rel="stylesheet" href="/terminal/terminal.css"><link rel="stylesheet" href="/terminal/chart-tools.css"></head><body class="pro-active"><header class="demo-nav"><strong>ticking</strong><span>Pro terminal · source preview · read only</span></header><main id="app"></main><script type="module">
+import {terminalPage,mountTerminal} from '/terminal/src/pro-terminal.js';
+let dispose;function render(){dispose?.();const root=document.querySelector('#app');root.innerHTML=terminalPage();let id='SOL';try{id=decodeURIComponent(location.hash.split('/')[2]||'SOL')}catch{}dispose=mountTerminal(root,{ident:id})}window.addEventListener('hashchange',render);window.addEventListener('pagehide',()=>dispose?.(),{once:true});render();
+</script></body></html>

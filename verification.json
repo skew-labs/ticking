@@ -1,0 +1,87 @@
+{
+  "schema": 1,
+  "verifiedAtUTC": "2026-10-10T21:08:17.373913+00:00",
+  "scope": "Selected public source; isolated Linux tests and one read-only browser preview",
+  "commands": [
+    "PATH=\"$PWD/.venv/bin:$PATH\" ./scripts/build-native.sh",
+    "./scripts/check.sh"
+  ],
+  "tests": {
+    "engineAndBridge": 108,
+    "apiAndAccounting": 95,
+    "independentChartSDK": 47,
+    "failed": 0,
+    "native": {
+      "coreRetainedFixtureEvents": 80000,
+      "archiveAssertions": 2689,
+      "capsuleAssertions": 545,
+      "faultInjection": [
+        "write EIO",
+        "partial write then EIO",
+        "fdatasync EIO",
+        "tail marker rename EIO"
+      ],
+      "tlsTransport": {
+        "controlledLocalFeed": true,
+        "retainedWireFrames": 500,
+        "reconnectReplay": true,
+        "quotaCooldownSurvivesRestart": true,
+        "mainnetLatencyMeasurement": false
+      },
+      "venueFixtureAssertions": 10,
+      "venueInvalidFramesRejected": 8
+    },
+    "browserModules": [
+      "indicator math",
+      "intervals and weekly anchors",
+      "quote-identity rebasing",
+      "shared feed deltas and cleanup",
+      "quality correction redraw"
+    ]
+  },
+  "toolchain": {
+    "os": "Linux",
+    "python": "3.12.3",
+    "node": "22.22.1",
+    "g++": "15.2.0",
+    "protoc": "3.21.12",
+    "grpc++": "1.51.1",
+    "libcurl": "8.18.0",
+    "sqlite": "3.46.1"
+  },
+  "browser": {
+    "source": "terminal/index.html",
+    "apiOrigin": "https://api.ticking.dev",
+    "market": "SOL",
+    "chartRendered": true,
+    "executionTableRendered": true,
+    "marketListRendered": true,
+    "scope": "One read-only source preview; not an all-market coverage or FPS benchmark"
+  },
+  "publicationChecks": {
+    "boundaryScanPassed": true,
+    "exactRuntimeCredentialMatches": 0,
+    "productionConfigurationFilesScanned": 2,
+    "privateDatasetsIncluded": false,
+    "productionServicesChanged": false,
+    "financialActions": false
+  },
+  "warnings": [
+    "Test client dependency emits a deprecation warning; all assertions passed."
+  ],
+  "notEstablished": [
+    "whole-chain completeness",
+    "lifetime historical coverage",
+    "zero downtime",
+    "mainnet latency SLA",
+    "browser 60fps across devices",
+    "market-data redistribution rights"
+  ],
+  "evidenceDigests": {
+    "native-build.log": "b202cd5f91386e67902b23e3a29246ae72d754f26e496f583078e33d4d40a5cc",
+    "public-check-final.log": "be7244f71f8e444c20a2390895df24d408d56d782f792bf3e12f893a4928b9c7",
+    "secret-audit.json": "c144a0db6b8401e2d0d343a9d817b235aa6e34bbdf701aa1b14979832a970c71"
+  },
+  "sourceManifestSha256": "ab13a2c24e862d14617e45960993900aef3194659be525be92b348ce74395e53",
+  "sourceManifestFiles": 189
+}

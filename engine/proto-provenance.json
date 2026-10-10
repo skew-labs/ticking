@@ -1,0 +1,8 @@
+{
+  "repository": "https://github.com/rpcpool/yellowstone-grpc",
+  "commit": "f9ef83eb5a24824389478534652bbc00143b2b46",
+  "files": {
+    "geyser.proto": "80ee337f361198a0722cb5bdf244fe41838949ab7a3af6d1b182b7fdca9abf02",
+    "solana-storage.proto": "e5d16ba9a9e83f6ed8c92a96b6b75dfd64c43f897b976011eb3ec5abe2f3c818"
+  }
+}

@@ -1,0 +1,1955 @@
+{
+  "version": 1,
+  "assets": {
+    "BTC": {
+      "id": "BTC",
+      "name": "Bitcoin",
+      "coingecko": "bitcoin",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "BTC",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "BTC-USDT",
+          "identityReceipt": "6a16bb14b5dc829296a7f1b47b02f60ebc0914afdccd1a1e58fc884f551e9628"
+        },
+        {
+          "provider": "gate",
+          "market": "BTC_USDT",
+          "identityReceipt": "0dc57ef592580b9154ad734908cbc10005b6a314dad6f6fba180fcd043e3f731"
+        }
+      ],
+      "solanaMints": [
+        "cbbtcf3aa214zXHbiAZQwf4122FBYbraNdFqgw4iMij"
+      ]
+    },
+    "ETH": {
+      "id": "ETH",
+      "name": "Ethereum",
+      "coingecko": "ethereum",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "ETH",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "ETH-USDT",
+          "identityReceipt": "50b61ab6cf91a64630fee6a16d5f936aae3000b186ebe4e18e18c8b450ef91c3"
+        },
+        {
+          "provider": "gate",
+          "market": "ETH_USDT",
+          "identityReceipt": "c46f69b17d79401c4084b584dc567706caef27533cf45fa15977dfe972f65d21"
+        }
+      ],
+      "solanaMints": [
+        "7vfCXTUXx5WJV5JADk17DUJ4ksgau7utNKj4b963voxs"
+      ]
+    },
+    "XRP": {
+      "id": "XRP",
+      "name": "XRP",
+      "coingecko": "ripple",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "XRP",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "XRP-USDT",
+          "identityReceipt": "c1e57daf81a8ac415da977bc06bfe71a072518010f564259fa7abe7dd2c7f0b3"
+        },
+        {
+          "provider": "gate",
+          "market": "XRP_USDT",
+          "identityReceipt": "7db7478d269b413c949f67b5d666fdd9b00fd3f3a06122d39e963b04723153b7"
+        }
+      ]
+    },
+    "BNB": {
+      "id": "BNB",
+      "name": "BNB",
+      "coingecko": "binancecoin",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "BNB",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "BNB-USDT",
+          "identityReceipt": "325088f2050449b5c472bd48fe8c3dfe210a28514583b2743f8cda5a5eddb13b"
+        },
+        {
+          "provider": "gate",
+          "market": "BNB_USDT",
+          "identityReceipt": "8e9a52d32bd38a4110b7d1305b39852fa10dd358dba9f2064b829ac644e5f0c7"
+        }
+      ]
+    },
+    "DOGE": {
+      "id": "DOGE",
+      "name": "Dogecoin",
+      "coingecko": "dogecoin",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "DOGE",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "DOGE-USDT",
+          "identityReceipt": "ddd719dee935f606e2d23e302cdff58c120e01a3d378d711ee12c5e7fe5219ac"
+        },
+        {
+          "provider": "gate",
+          "market": "DOGE_USDT",
+          "identityReceipt": "d625e4ae7eec36e04628ec2f4e6182fc97bbe827f8c7f4510d476417c97183c9"
+        }
+      ]
+    },
+    "ADA": {
+      "id": "ADA",
+      "name": "Cardano",
+      "coingecko": "cardano",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "ADA",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "ADA-USDT",
+          "identityReceipt": "20cd8608e2ce1636f161c278fc49cdccd95817b9f96ef4d151ae4e154d52eb76"
+        },
+        {
+          "provider": "gate",
+          "market": "ADA_USDT",
+          "identityReceipt": "7ad73a69f3f3c423c41d05c4af195a09fd8393efae04ac33079a2f49d40a31dc"
+        }
+      ]
+    },
+    "TRX": {
+      "id": "TRX",
+      "name": "TRON",
+      "coingecko": "tron",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "TRX",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "TRX-USDT",
+          "identityReceipt": "fcee30b5734bdf65d195dfec0fe19148d427fdf85f708072310a7d14c1b6f739"
+        },
+        {
+          "provider": "gate",
+          "market": "TRX_USDT",
+          "identityReceipt": "c4112c4dfd5cbfa6929b9bf2da48df7db8970b0c655f3538bd2f9ab3f79d2d4d"
+        }
+      ]
+    },
+    "LINK": {
+      "id": "LINK",
+      "name": "Chainlink",
+      "coingecko": "chainlink",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "LINK",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "LINK-USDT",
+          "identityReceipt": "3460e8c5547bda1af77083178f259795bbff541f5bb02fa514e3007c478963d7"
+        },
+        {
+          "provider": "gate",
+          "market": "LINK_USDT",
+          "identityReceipt": "01d1841e004aa808cb45afaab8b528cc0aa578f81e62321908b6682f0c7e286a"
+        }
+      ]
+    },
+    "LTC": {
+      "id": "LTC",
+      "name": "Litecoin",
+      "coingecko": "litecoin",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "LTC",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "LTC-USDT",
+          "identityReceipt": "583b15f1ede473b3b5bdf1365652b7c9b13a673864a331ebdcaf52de9c611e15"
+        },
+        {
+          "provider": "gate",
+          "market": "LTC_USDT",
+          "identityReceipt": "7e1b73276627c3f5a95f363f3965c87464fc0fe3571ea000a809cf46a95efd21"
+        }
+      ]
+    },
+    "BCH": {
+      "id": "BCH",
+      "name": "Bitcoin Cash",
+      "coingecko": "bitcoin-cash",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "BCH",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "BCH-USDT",
+          "identityReceipt": "623ae08aa8e2290ab203e45de2012c1385f1e98034a4a93ca32be653a255f402"
+        },
+        {
+          "provider": "gate",
+          "market": "BCH_USDT",
+          "identityReceipt": "b3b3c7d0a75ddd92bb5f942f667ba93190a874790190a64ba3bd7fe192b54526"
+        }
+      ]
+    },
+    "XLM": {
+      "id": "XLM",
+      "name": "Stellar",
+      "coingecko": "stellar",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "XLM",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "XLM-USDT",
+          "identityReceipt": "5dd47dcaf7d4c81ade7b779c77f6c223c971bfa0286c0c2b7d37d219f3088956"
+        },
+        {
+          "provider": "gate",
+          "market": "XLM_USDT",
+          "identityReceipt": "60ec1eeaafc93688d864f892af16e1e84504c3c1f5d0c70872521e422f9a1318"
+        }
+      ]
+    },
+    "AVAX": {
+      "id": "AVAX",
+      "name": "Avalanche",
+      "coingecko": "avalanche-2",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "AVAX",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "AVAX-USDT",
+          "identityReceipt": "c356e8a9fc6986012dc4df23c5105adeb86d8f73d75927fc6ebe368735444993"
+        },
+        {
+          "provider": "gate",
+          "market": "AVAX_USDT",
+          "identityReceipt": "1c076e8835cf3c0e456ffce7a05422eeda83879c413a928cfaff3d7363e0381f"
+        }
+      ]
+    },
+    "SUI": {
+      "id": "SUI",
+      "name": "Sui",
+      "coingecko": "sui",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "SUI",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "SUI-USDT",
+          "identityReceipt": "7fcc064c6425ebf344a0182e2c9ddb32e87dff0c2cb6fe109b736822a5309c99"
+        },
+        {
+          "provider": "gate",
+          "market": "SUI_USDT",
+          "identityReceipt": "9090cb71ab995e51eee30a5db5a386f02c56b8f59ef680a25dccb99d939fc7d3"
+        }
+      ]
+    },
+    "DOT": {
+      "id": "DOT",
+      "name": "Polkadot",
+      "coingecko": "polkadot",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "DOT",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "DOT-USDT",
+          "identityReceipt": "5889047aac4996fc708223446e0fe3dd53c4ef620a9c31fd4ba43b3674b248bd"
+        },
+        {
+          "provider": "gate",
+          "market": "DOT_USDT",
+          "identityReceipt": "378d1ee0754e225d094284a3910654bb261fd825b2e365cbc38f19f59274a46e"
+        }
+      ]
+    },
+    "HYPE": {
+      "id": "HYPE",
+      "name": "Hyperliquid",
+      "coingecko": "hyperliquid",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "HYPE",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "HYPE-USDT",
+          "identityReceipt": "396344186f62795e15662d71beb96b75513321bf25d228b25dd5757c748429e8"
+        },
+        {
+          "provider": "gate",
+          "market": "HYPE_USDT",
+          "identityReceipt": "11189008ba9bd2516835ce651cf9b28a1477d47897be28ab53514946dc746076"
+        }
+      ]
+    },
+    "XMR": {
+      "id": "XMR",
+      "name": "Monero",
+      "coingecko": "monero",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "XMR",
+      "quote": "USDT",
+      "sources": []
+    },
+    "ZEC": {
+      "id": "ZEC",
+      "name": "Zcash",
+      "coingecko": "zcash",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "ZEC",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "ZEC-USDT",
+          "identityReceipt": "db536e11db0f52618d018e8f3fc958680df19a5740663ad902c518496ab9fda4"
+        },
+        {
+          "provider": "gate",
+          "market": "ZEC_USDT",
+          "identityReceipt": "aad1dd290ccc3d27c6a1bdc93a6c9dae245818b8be219a2b4979fb2e8ab42be5"
+        }
+      ]
+    },
+    "NEAR": {
+      "id": "NEAR",
+      "name": "NEAR Protocol",
+      "coingecko": "near",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "NEAR",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "NEAR-USDT",
+          "identityReceipt": "5d2d028e9b51a837105649ca5ad075775ff8b9e84839d416bbe26a221805b89e"
+        },
+        {
+          "provider": "gate",
+          "market": "NEAR_USDT",
+          "identityReceipt": "f3a4fe78affe391ba743a4938085b3498ad3eaef74a546d3a72b49ccba56ecde"
+        }
+      ]
+    },
+    "ICP": {
+      "id": "ICP",
+      "name": "Internet Computer",
+      "coingecko": "internet-computer",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "ICP",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "ICP-USDT",
+          "identityReceipt": "113ef2ba8acf5e5a77f2ef26d801ed584c443acc543d6ec7b988fa8b9e10440e"
+        },
+        {
+          "provider": "gate",
+          "market": "ICP_USDT",
+          "identityReceipt": "af7866ee4b72e28928f02113b0c9d9f76bc70a30bd4856988a24850fbb0a42eb"
+        }
+      ]
+    },
+    "APT": {
+      "id": "APT",
+      "name": "Aptos",
+      "coingecko": "aptos",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "APT",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "APT-USDT",
+          "identityReceipt": "0099dfbb2668f4549fc15b7aec9b6358046b34965abb467d3c24bde71332a060"
+        },
+        {
+          "provider": "gate",
+          "market": "APT_USDT",
+          "identityReceipt": "0e7f6fb3826fae02bde83993e1c348ca5a4aa9018d57d5837d415f4ea96f9df9"
+        }
+      ]
+    },
+    "ETC": {
+      "id": "ETC",
+      "name": "Ethereum Classic",
+      "coingecko": "ethereum-classic",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "ETC",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "ETC-USDT",
+          "identityReceipt": "70266a9dce8fe5a6b192ccbb3d012e8d57f00854ae0b31d6d30b02ad1a491d98"
+        },
+        {
+          "provider": "gate",
+          "market": "ETC_USDT",
+          "identityReceipt": "c07482dd2aadaab14e7e44e18ba52d34410f11847ddb63c7c13057c5ab6d6d2d"
+        }
+      ]
+    },
+    "UNI": {
+      "id": "UNI",
+      "name": "Uniswap",
+      "coingecko": "uniswap",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "UNI",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "UNI-USDT",
+          "identityReceipt": "445c0017721587227b12ef158110eb3da57ea3526c111fca1aa22d26bba34389"
+        },
+        {
+          "provider": "gate",
+          "market": "UNI_USDT",
+          "identityReceipt": "8f25811ed0faf2c065192f76b8955e64f50f3d8e1faaa4933feb71a4a0d2e9ff"
+        }
+      ]
+    },
+    "AAVE": {
+      "id": "AAVE",
+      "name": "Aave",
+      "coingecko": "aave",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "AAVE",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "AAVE-USDT",
+          "identityReceipt": "0388b29f6c929dbed34a90b2fc5f2413c780e7d82b6fb7cb8da75e8d6e2133af"
+        },
+        {
+          "provider": "gate",
+          "market": "AAVE_USDT",
+          "identityReceipt": "6bf366d05147bda93632e36afe28b7a23684903d91bed4224b22c71408475781"
+        }
+      ]
+    },
+    "TAO": {
+      "id": "TAO",
+      "name": "Bittensor",
+      "coingecko": "bittensor",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "TAO",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "TAO-USDT",
+          "identityReceipt": "741dd92f716d2c84b3084147b28010a90b9c2f223ce48a84d804eb27cdd5293e"
+        },
+        {
+          "provider": "gate",
+          "market": "TAO_USDT",
+          "identityReceipt": "b11c3ad861737f21a10dbbb39d4bdf080d9042a71f7111eb046aa3a232a7fdd5"
+        }
+      ]
+    },
+    "ONDO": {
+      "id": "ONDO",
+      "name": "Ondo",
+      "coingecko": "ondo-finance",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "ONDO",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "ONDO-USDT",
+          "identityReceipt": "dec70e4c1d24b62c76070b844d3522a6a15254b020d4f093c0f803f812b3c869"
+        },
+        {
+          "provider": "gate",
+          "market": "ONDO_USDT",
+          "identityReceipt": "49b2b47d83961c04c719ff4fdcf350cd8695765ff4592ac93b2f02050109e9fe"
+        }
+      ]
+    },
+    "FIL": {
+      "id": "FIL",
+      "name": "Filecoin",
+      "coingecko": "filecoin",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "FIL",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "FIL-USDT",
+          "identityReceipt": "ef53ec4cac8e147a9828588bdcd47dd52249c72166f3585c9e7d472c8eebf34e"
+        },
+        {
+          "provider": "gate",
+          "market": "FIL_USDT",
+          "identityReceipt": "e93c19539e00276275c87093777c7053e6d2e5709de9982b312290831c6250cf"
+        }
+      ]
+    },
+    "HBAR": {
+      "id": "HBAR",
+      "name": "Hedera",
+      "coingecko": "hedera-hashgraph",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "HBAR",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "HBAR-USDT",
+          "identityReceipt": "83f339b314eac3cb954b3f19746526ab280b8397569220353c81a1eb58eed0f9"
+        },
+        {
+          "provider": "gate",
+          "market": "HBAR_USDT",
+          "identityReceipt": "b2cdcd4646920445cfcfd5824940684781f0c40bad3355b628a2d49f6cdd0e16"
+        }
+      ]
+    },
+    "ARB": {
+      "id": "ARB",
+      "name": "Arbitrum",
+      "coingecko": "arbitrum",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "ARB",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "ARB-USDT",
+          "identityReceipt": "3013d98d918572e4a57143ab13d75d8f9209ef2054f131b91e3d7452ebc6b80a"
+        },
+        {
+          "provider": "gate",
+          "market": "ARB_USDT",
+          "identityReceipt": "d3c09ec524ef62ec96c2d9a584ef5b695fa6c5c121bf0f2a2d37da4be813b89c"
+        }
+      ]
+    },
+    "OP": {
+      "id": "OP",
+      "name": "Optimism",
+      "coingecko": "optimism",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "OP",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "OP-USDT",
+          "identityReceipt": "3ed359b1e4812ee5298aaead237a5c4590d6f67857fc7eb6faaf7ac034130654"
+        },
+        {
+          "provider": "gate",
+          "market": "OP_USDT",
+          "identityReceipt": "419aa1d4e934c01d2155a084ec128dab110ecbb6866ce581058d25dc4cfb9c99"
+        }
+      ]
+    },
+    "INJ": {
+      "id": "INJ",
+      "name": "Injective",
+      "coingecko": "injective-protocol",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "INJ",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "INJ-USDT",
+          "identityReceipt": "cab88aecef483acd04f625429c27bd239b00e5182e492fcfa6c839c91c309f14"
+        },
+        {
+          "provider": "gate",
+          "market": "INJ_USDT",
+          "identityReceipt": "f311e0d17204265e5cda76f5c56aa729befd1446845b2094697d332d5c714122"
+        }
+      ]
+    },
+    "ATOM": {
+      "id": "ATOM",
+      "name": "Cosmos Hub",
+      "coingecko": "cosmos",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "ATOM",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "ATOM-USDT",
+          "identityReceipt": "719e7a81151d7d6b3c3c686d366a65cc660261d3644836ab8ff4828f3b444cdf"
+        },
+        {
+          "provider": "gate",
+          "market": "ATOM_USDT",
+          "identityReceipt": "0e1b8d5b32c62418a22e40f882935e2c88ee1601e28f2821d4f22378bc85aec9"
+        }
+      ]
+    },
+    "SEI": {
+      "id": "SEI",
+      "name": "Sei",
+      "coingecko": "sei-network",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "SEI",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "SEI-USDT",
+          "identityReceipt": "ad675e9b69b2563761c58c2a0984bad3f782b302e0aa64aa083e7888e7b77be6"
+        },
+        {
+          "provider": "gate",
+          "market": "SEI_USDT",
+          "identityReceipt": "2751370cb9073f6d434204571be2c1671cc797bb111cac4d4cb51aa6a8cc5172"
+        }
+      ]
+    },
+    "ALGO": {
+      "id": "ALGO",
+      "name": "Algorand",
+      "coingecko": "algorand",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "ALGO",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "ALGO-USDT",
+          "identityReceipt": "de828d471bf426fe889a5355566e80c1f73f77012891e915f2b7abce4fb72d24"
+        },
+        {
+          "provider": "gate",
+          "market": "ALGO_USDT",
+          "identityReceipt": "c94feba976ef938337cd8149fc5c15b9248d6330634a1f7755b0e3f368718130"
+        }
+      ]
+    },
+    "VET": {
+      "id": "VET",
+      "name": "VeChain",
+      "coingecko": "vechain",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "VET",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "gate",
+          "market": "VET_USDT",
+          "identityReceipt": "bb775e1168d7594a97db4f18487296bb80b05787c7daf2037ce339207af44fec"
+        }
+      ]
+    },
+    "POL": {
+      "id": "POL",
+      "name": "POL (ex-MATIC)",
+      "coingecko": "polygon-ecosystem-token",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "POL",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "POL-USDT",
+          "identityReceipt": "2c301882cae7b4460f9d2cf485bb3f79cf7d330d275f4bed89e9dfb7bd983dc1"
+        },
+        {
+          "provider": "gate",
+          "market": "POL_USDT",
+          "identityReceipt": "380884544a619595330db6402e60a67498d565777de239095557fd804fdb4afc"
+        }
+      ]
+    },
+    "QNT": {
+      "id": "QNT",
+      "name": "Quant",
+      "coingecko": "quant-network",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "QNT",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "gate",
+          "market": "QNT_USDT",
+          "identityReceipt": "1623c8eecf2d8272a464a9a577c13cf0e270862c7e99edc610eef2046d6584f0"
+        }
+      ]
+    },
+    "ENA": {
+      "id": "ENA",
+      "name": "Ethena",
+      "coingecko": "ethena",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "ENA",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "ENA-USDT",
+          "identityReceipt": "dae35a1c001ce1637cff328eb0a54858f740953d444fe5033048a1e11ac7067d"
+        },
+        {
+          "provider": "gate",
+          "market": "ENA_USDT",
+          "identityReceipt": "f43c6cd09d4e22c62ff885804aba55257678135828474351078676828d5abb35"
+        }
+      ]
+    },
+    "CRV": {
+      "id": "CRV",
+      "name": "Curve DAO",
+      "coingecko": "curve-dao-token",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "CRV",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "CRV-USDT",
+          "identityReceipt": "a5e26437448150566126a9c79d7e326f44f101e128a3678312e047f61ddd4b81"
+        },
+        {
+          "provider": "gate",
+          "market": "CRV_USDT",
+          "identityReceipt": "a5cff8ffa87068328a35999744722f64ac662c01600a9decdda9a1204a682105"
+        }
+      ]
+    },
+    "LDO": {
+      "id": "LDO",
+      "name": "Lido DAO",
+      "coingecko": "lido-dao",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "LDO",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "LDO-USDT",
+          "identityReceipt": "31d2164133469bb62b2dd6f83e2c555e507fc48c58616bfd2ea5513c2e3204d2"
+        },
+        {
+          "provider": "gate",
+          "market": "LDO_USDT",
+          "identityReceipt": "5e68be6cef14a90cd6966da77b099154d2d78200507f3ced153503ce71c5deac"
+        }
+      ]
+    },
+    "STX": {
+      "id": "STX",
+      "name": "Stacks",
+      "coingecko": "blockstack",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "STX",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "STX-USDT",
+          "identityReceipt": "a953c7adb012475241983562ef00c8396c0e7a16688f829d8c2dd90313a87da0"
+        },
+        {
+          "provider": "gate",
+          "market": "STX_USDT",
+          "identityReceipt": "4564d0b9ec91f2af4f6f666807ccb33c2a26637d219ac02121f13fc1c193e97e"
+        }
+      ]
+    },
+    "SHIB": {
+      "id": "SHIB",
+      "name": "Shiba Inu",
+      "coingecko": "shiba-inu",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "SHIB",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "SHIB-USDT",
+          "identityReceipt": "b59299b9989581a440cb0a31f6d77454bffee56bd165404c55b68b397d1a9535"
+        },
+        {
+          "provider": "gate",
+          "market": "SHIB_USDT",
+          "identityReceipt": "5083a668dfb21b58de49ac20aa33f0e57c35673281aa706e657cd71e124a3188"
+        }
+      ]
+    },
+    "FLOKI": {
+      "id": "FLOKI",
+      "name": "FLOKI",
+      "coingecko": "floki",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "FLOKI",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "FLOKI-USDT",
+          "identityReceipt": "2e6a1711a8fa50b0999f0c07713060f55998ffc11dd000858ac2777cc3d56815"
+        },
+        {
+          "provider": "gate",
+          "market": "FLOKI_USDT",
+          "identityReceipt": "86a9eb72935a22e4771f09d6e3ce7ca01921b25a94a29069506ce174283a0313"
+        }
+      ]
+    },
+    "PAXG": {
+      "id": "PAXG",
+      "name": "PAX Gold",
+      "coingecko": "pax-gold",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "PAXG",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "PAXG-USDT",
+          "identityReceipt": "60744ed7664c25159d788d530cd98164fb0e399ed122b0802284c4c42674c30f"
+        },
+        {
+          "provider": "gate",
+          "market": "PAXG_USDT",
+          "identityReceipt": "3dee4174f0d4819b09d5d2a124b6d218f2491d2b2c41f60d9bcd6aff15124087"
+        }
+      ]
+    },
+    "XAUT": {
+      "id": "XAUT",
+      "name": "Tether Gold",
+      "coingecko": "tether-gold",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "XAUT",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "XAUT-USDT",
+          "identityReceipt": "f8d8368553a3f1fbb91e2bc6ad7fc5e2c8b348edf5c9aa3a5df427fd02d7916e"
+        },
+        {
+          "provider": "gate",
+          "market": "XAUT_USDT",
+          "identityReceipt": "518ff3aeafcb8814aee94c7e2f3ff2652fe7ee0ee2aa2db4d35cb3aee4c58723"
+        }
+      ]
+    },
+    "WLD": {
+      "id": "WLD",
+      "name": "Worldcoin",
+      "coingecko": "worldcoin-wld",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "WLD",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "WLD-USDT",
+          "identityReceipt": "c7afb5e1f868772c93e03af82926d049b743aafa006d41cebdea4e69a93392a0"
+        },
+        {
+          "provider": "gate",
+          "market": "WLD_USDT",
+          "identityReceipt": "935bfe186cf10b39dbdff3f0109e8ab62a7a460777bd344e1661b9ac3b49f9cb"
+        }
+      ]
+    },
+    "TIA": {
+      "id": "TIA",
+      "name": "Celestia",
+      "coingecko": "celestia",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "TIA",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "TIA-USDT",
+          "identityReceipt": "9de7a87f555f75c1e725f0ffb377c95f9f43a4687f909c65ff0662695826e596"
+        },
+        {
+          "provider": "gate",
+          "market": "TIA_USDT",
+          "identityReceipt": "402195f4feaba20880dff491eacad8cda55865fc1dff0ac48b6b580721bbdcb1"
+        }
+      ]
+    },
+    "FET": {
+      "id": "FET",
+      "name": "Artificial Superintelligence Alliance",
+      "coingecko": "fetch-ai",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "FET",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "FET-USDT",
+          "identityReceipt": "7643a7dfe1fce986dbc8df4412fdc3a9b5dd2afa92557b1d6c4e72a50a1aa36b"
+        },
+        {
+          "provider": "gate",
+          "market": "FET_USDT",
+          "identityReceipt": "1420a94b6771400c6cd59b24ab224c0b186a9eaebbe4fac79f8679724b6e689a"
+        }
+      ]
+    },
+    "SAND": {
+      "id": "SAND",
+      "name": "The Sandbox",
+      "coingecko": "the-sandbox",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "SAND",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "SAND-USDT",
+          "identityReceipt": "38b2368fea582466629dc4772f4c9bf7d7c35152c6008422f4a6c0388703786f"
+        },
+        {
+          "provider": "gate",
+          "market": "SAND_USDT",
+          "identityReceipt": "d115affc487f09f00e3f70bba67f4800b90bbb604944e01c8d693d7372364eb3"
+        }
+      ]
+    },
+    "MANA": {
+      "id": "MANA",
+      "name": "Decentraland",
+      "coingecko": "decentraland",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "MANA",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "MANA-USDT",
+          "identityReceipt": "d1006bf83363d5db07f31a09e893c1f04ba23ea26362ba2208aa738e7e398bf4"
+        },
+        {
+          "provider": "gate",
+          "market": "MANA_USDT",
+          "identityReceipt": "6d21ce18dcbcfd3ff47b1cd9ba229fe58ad5abd108633e6cb90fa88d73aea3b5"
+        }
+      ]
+    },
+    "AXS": {
+      "id": "AXS",
+      "name": "Axie Infinity",
+      "coingecko": "axie-infinity",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "AXS",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "AXS-USDT",
+          "identityReceipt": "2798dcbaebfc7d8f9b832aadfc379b1519bfa2c256452a13f54137143be046a1"
+        },
+        {
+          "provider": "gate",
+          "market": "AXS_USDT",
+          "identityReceipt": "d0ddae5d27784586ae195db9046479c35b1aeb42f84019e5ac09a847c86208fa"
+        }
+      ]
+    },
+    "GALA": {
+      "id": "GALA",
+      "name": "GALA",
+      "coingecko": "gala",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "GALA",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "GALA-USDT",
+          "identityReceipt": "33925696b20c22c4c467383603f92d398856eb719ef4413a57fa9e48af2a482a"
+        },
+        {
+          "provider": "gate",
+          "market": "GALA_USDT",
+          "identityReceipt": "d4582a6acafc5e77926bd11fa6f1605ef8dc83334aff16f52e20d8faecc12b2a"
+        }
+      ]
+    },
+    "IMX": {
+      "id": "IMX",
+      "name": "Immutable",
+      "coingecko": "immutable-x",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "IMX",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "IMX-USDT",
+          "identityReceipt": "f7227d9d78e95de83831036674b9df2f0e6d89ef75157448e0b2c3e0033703eb"
+        },
+        {
+          "provider": "gate",
+          "market": "IMX_USDT",
+          "identityReceipt": "c03e349c738969ffbe4ccc5528f6c154d3c12a28bc894fde6fb826d6a2572c23"
+        }
+      ]
+    },
+    "STRK": {
+      "id": "STRK",
+      "name": "Starknet",
+      "coingecko": "starknet",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "STRK",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "STRK-USDT",
+          "identityReceipt": "6e2853a59e040317399f5db3329863c43c4cf69a2aee2013161656638f69d946"
+        },
+        {
+          "provider": "gate",
+          "market": "STRK_USDT",
+          "identityReceipt": "29909ca86b78db2c23c26a88cfe71cade771b23aaadd43c80996945d90d87b94"
+        }
+      ]
+    },
+    "ZK": {
+      "id": "ZK",
+      "name": "ZKsync",
+      "coingecko": "zksync",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "ZK",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "ZK-USDT",
+          "identityReceipt": "c3589bd6f729d4606cbe7de3e5a14906d946cead3f25242deb0c1803960dae3b"
+        },
+        {
+          "provider": "gate",
+          "market": "ZK_USDT",
+          "identityReceipt": "fb0830556f8641c6bb73053c7565cad9c6cdbb1c0045b64b75fa9d909270c18a"
+        }
+      ]
+    },
+    "ZRO": {
+      "id": "ZRO",
+      "name": "LayerZero",
+      "coingecko": "layerzero",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "ZRO",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "ZRO-USDT",
+          "identityReceipt": "7b72848e04ec259f4d2464fff05eb11ed7e8099b1c5fdf4242777fedcbbeca70"
+        },
+        {
+          "provider": "gate",
+          "market": "ZRO_USDT",
+          "identityReceipt": "11ae128a265fa6fbadd407ed2a22529d689b09516df8d6bc81e8f6ed0f98c6a8"
+        }
+      ]
+    },
+    "DYDX": {
+      "id": "DYDX",
+      "name": "dYdX",
+      "coingecko": "dydx-chain",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "DYDX",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "DYDX-USDT",
+          "identityReceipt": "5fb5746bdd34ffc1abc2625828f6fa00048ac4b96e7602170e7aec79456ca3dc"
+        },
+        {
+          "provider": "gate",
+          "market": "DYDX_USDT",
+          "identityReceipt": "f94233f457859708ad61effadc10fdc019e78eba1ac3f6e7e3ba99d3af75c8a6"
+        }
+      ]
+    },
+    "GRT": {
+      "id": "GRT",
+      "name": "The Graph",
+      "coingecko": "the-graph",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "GRT",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "GRT-USDT",
+          "identityReceipt": "11fada7f9c698d9239c3157d849d85203556eaf10fe5b67cc21939aa63c10548"
+        },
+        {
+          "provider": "gate",
+          "market": "GRT_USDT",
+          "identityReceipt": "46d647b04e07145014fa52d5ecceb1ec96c3ff009775c5d323205e1174e665c5"
+        }
+      ]
+    },
+    "THETA": {
+      "id": "THETA",
+      "name": "Theta Network",
+      "coingecko": "theta-token",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "THETA",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "THETA-USDT",
+          "identityReceipt": "7bf716be0333676d19a7d5323081464e2535774146cb4424555265e60670cd79"
+        },
+        {
+          "provider": "gate",
+          "market": "THETA_USDT",
+          "identityReceipt": "a0f783931f5ce6b1104d930a15da0f8636814e848fb1c237dcf55674a16c04d0"
+        }
+      ]
+    },
+    "XTZ": {
+      "id": "XTZ",
+      "name": "Tezos",
+      "coingecko": "tezos",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "XTZ",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "XTZ-USDT",
+          "identityReceipt": "657653cb6136a02d23c58458e8177b8069acc37e8b9bba2286ee21561046b79b"
+        },
+        {
+          "provider": "gate",
+          "market": "XTZ_USDT",
+          "identityReceipt": "32b44fa1b811e24b9260e52a003545aec519f5351d9a3893da7781f3b8098833"
+        }
+      ]
+    },
+    "IOTA": {
+      "id": "IOTA",
+      "name": "IOTA",
+      "coingecko": "iota",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "IOTA",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "IOTA-USDT",
+          "identityReceipt": "961cec1c34fdba8617decdbed81185c9aa7da8c59ba209cb1d3b12c53ceb6cb5"
+        },
+        {
+          "provider": "gate",
+          "market": "IOTA_USDT",
+          "identityReceipt": "7367136d54e3d3fd299d05b5d57566597039bc0832e87e090fc28c764e7a5930"
+        }
+      ]
+    },
+    "NEO": {
+      "id": "NEO",
+      "name": "NEO",
+      "coingecko": "neo",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "NEO",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "NEO-USDT",
+          "identityReceipt": "3259a30582116272285d04c6e43314752bc8f4b54152ea1f5fc4b2ee8870fd06"
+        },
+        {
+          "provider": "gate",
+          "market": "NEO_USDT",
+          "identityReceipt": "b0f90d07f0e7c1bd17dd279b26065264f59aa7501ca38c067a5941087877d2a4"
+        }
+      ]
+    },
+    "DASH": {
+      "id": "DASH",
+      "name": "Dash",
+      "coingecko": "dash",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "DASH",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "DASH-USDT",
+          "identityReceipt": "698d71070455a93c2f5215aa3ef0d4d8d4401eb86e6b8a7adb893667e55f9dfe"
+        },
+        {
+          "provider": "gate",
+          "market": "DASH_USDT",
+          "identityReceipt": "f8f6c156af4c918c2933529354090de368ffec703a88dcffa6a285658389e51e"
+        }
+      ]
+    },
+    "KAVA": {
+      "id": "KAVA",
+      "name": "Kava",
+      "coingecko": "kava",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "KAVA",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "gate",
+          "market": "KAVA_USDT",
+          "identityReceipt": "397fb47db96897e88d7c7842b5cc9f44ba621c000f179b4e85dadd8c1d5ea123"
+        },
+        {
+          "provider": "mexc",
+          "market": "KAVAUSDT",
+          "identityReceipt": "627a5d7d31834a81af5338ea03a2a3bedba2e65189081209b8d150b6c650ed2f"
+        }
+      ]
+    },
+    "SNX": {
+      "id": "SNX",
+      "name": "Synthetix",
+      "coingecko": "havven",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "SNX",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "SNX-USDT",
+          "identityReceipt": "d5094fa99806996e3c4cb5534e0d5f28f83af382c56b746b82a490034e2cb3a6"
+        },
+        {
+          "provider": "gate",
+          "market": "SNX_USDT",
+          "identityReceipt": "4e9cdc01a7f031b2cc5d28a92701d143dc3b9dc72f2691594da7e5a60e438d1e"
+        }
+      ]
+    },
+    "COMP": {
+      "id": "COMP",
+      "name": "Compound",
+      "coingecko": "compound-governance-token",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "COMP",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "COMP-USDT",
+          "identityReceipt": "f1f8d9a580ccaa0aa353860113a8ceb04c82679e2edc5e3776dd00c587523340"
+        },
+        {
+          "provider": "gate",
+          "market": "COMP_USDT",
+          "identityReceipt": "ccafd281210c99d1ec983725a06393f7a2c3ef21ef625e535a7848df7b7626ae"
+        }
+      ]
+    },
+    "SKY": {
+      "id": "SKY",
+      "name": "Sky",
+      "coingecko": "sky",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "SKY",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "SKY-USDT",
+          "identityReceipt": "d4f66cec116600b82d327932f61c0acda44d82679e1e1c87ea3cdf8166df57a3"
+        },
+        {
+          "provider": "gate",
+          "market": "SKY_USDT",
+          "identityReceipt": "b6f68535b63737117e18d511a075f6bce47b8fe784b647bdd0a47c0a5ff07410"
+        }
+      ]
+    },
+    "ENS": {
+      "id": "ENS",
+      "name": "Ethereum Name Service",
+      "coingecko": "ethereum-name-service",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "ENS",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "ENS-USDT",
+          "identityReceipt": "e82b2086612c802235b0340f4b21831b606d55bd40e0731dcc89c41684516d81"
+        },
+        {
+          "provider": "gate",
+          "market": "ENS_USDT",
+          "identityReceipt": "86fa833faa8afd35f9bfb8a381861ce9acaaa702982cb7174d580d9bc4cc1a67"
+        }
+      ]
+    },
+    "PENDLE": {
+      "id": "PENDLE",
+      "name": "Pendle",
+      "coingecko": "pendle",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "PENDLE",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "PENDLE-USDT",
+          "identityReceipt": "8c6ff1430b535e0a11538c56ab7c2447aa97ecae7c37a1dfc88cda4ddee006a5"
+        },
+        {
+          "provider": "gate",
+          "market": "PENDLE_USDT",
+          "identityReceipt": "8067d398309344e81a0d3a4115cd4ef2f3037cf2985a69e56c31cdf42bb4d6f7"
+        }
+      ]
+    },
+    "RUNE": {
+      "id": "RUNE",
+      "name": "THORChain",
+      "coingecko": "thorchain",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "RUNE",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "gate",
+          "market": "RUNE_USDT",
+          "identityReceipt": "ae3a08107744f3accc5087eb25d9726c3aaffdd655b88b55f547804f948fa7f2"
+        }
+      ]
+    },
+    "CAKE": {
+      "id": "CAKE",
+      "name": "PancakeSwap",
+      "coingecko": "pancakeswap-token",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "CAKE",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "gate",
+          "market": "CAKE_USDT",
+          "identityReceipt": "cf157c7ae1b00e7b57d445848a4fe2beffeacc196aeb8dfb438bd77c0debd4b7"
+        }
+      ]
+    },
+    "1INCH": {
+      "id": "1INCH",
+      "name": "1INCH",
+      "coingecko": "1inch",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "1INCH",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "1INCH-USDT",
+          "identityReceipt": "ae2213430e1d7194919a826b84358eb0c7e34c7e046b420252bbb80ea3f719d2"
+        },
+        {
+          "provider": "gate",
+          "market": "1INCH_USDT",
+          "identityReceipt": "5501ef56a6c26d3d6b1628ba7a3456a2cf30c8bffeef53cf020afefacab6f028"
+        }
+      ]
+    },
+    "SUSHI": {
+      "id": "SUSHI",
+      "name": "Sushi",
+      "coingecko": "sushi",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "SUSHI",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "SUSHI-USDT",
+          "identityReceipt": "cf81852986f994e95a1537bcc299cef85ba1f5ec830125e52192d50346207c95"
+        },
+        {
+          "provider": "gate",
+          "market": "SUSHI_USDT",
+          "identityReceipt": "2e615248c3a1b4158a5ed94dfaada4b5dd355c47227df20f5e09f598fb9fbc58"
+        }
+      ]
+    },
+    "CHZ": {
+      "id": "CHZ",
+      "name": "Chiliz",
+      "coingecko": "chiliz",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "CHZ",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "CHZ-USDT",
+          "identityReceipt": "0ff5aa9db732bcce64f28a28fd0558c2a2547e97515b1363701980fc93443c2e"
+        },
+        {
+          "provider": "gate",
+          "market": "CHZ_USDT",
+          "identityReceipt": "f3cd2a4d62ee0f9e603de0dace678330a7cdc062d3012d1bb6af489fe74a1722"
+        }
+      ]
+    },
+    "BAT": {
+      "id": "BAT",
+      "name": "Basic Attention",
+      "coingecko": "basic-attention-token",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "BAT",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "BAT-USDT",
+          "identityReceipt": "b242181aec63ffb4fe10cb41e759ec9370f5c5de80bb64e3309c270268acc194"
+        },
+        {
+          "provider": "gate",
+          "market": "BAT_USDT",
+          "identityReceipt": "69b0473c1b07840f92965822f9b628dead58c71fd5f751325a8ea786a309a305"
+        }
+      ]
+    },
+    "ENJ": {
+      "id": "ENJ",
+      "name": "Enjin Coin",
+      "coingecko": "enjincoin",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "ENJ",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "ENJ-USDT",
+          "identityReceipt": "b0102497f8495e3babab8abf8a9742e86acbabbe1bfdd2fd2ac488b47fc4095e"
+        },
+        {
+          "provider": "gate",
+          "market": "ENJ_USDT",
+          "identityReceipt": "ab6656acdc7e71b674160eca627a5a875595ca96c4e7b0eb4fa46621f29f0f28"
+        }
+      ]
+    },
+    "ZIL": {
+      "id": "ZIL",
+      "name": "Zilliqa",
+      "coingecko": "zilliqa",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "ZIL",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "ZIL-USDT",
+          "identityReceipt": "fdb8c9dd4f8c5dcf1088acd5c656785a669dc18b50572bb2828d5aa64208d903"
+        },
+        {
+          "provider": "gate",
+          "market": "ZIL_USDT",
+          "identityReceipt": "7cd7f0fa7184be903ba709784e92387170d7e4d40163fca1ac185e35b021eca2"
+        }
+      ]
+    },
+    "MINA": {
+      "id": "MINA",
+      "name": "Mina Protocol",
+      "coingecko": "mina-protocol",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "MINA",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "MINA-USDT",
+          "identityReceipt": "4a350935d4049d542f49574855d17bdadabbe911b1e11f20f7fe08ebe65e32f8"
+        },
+        {
+          "provider": "gate",
+          "market": "MINA_USDT",
+          "identityReceipt": "bb79859df18665ad8d2af8e547f51ef16f5e25b0c17ec6db4d136d82fb700f75"
+        }
+      ]
+    },
+    "CFX": {
+      "id": "CFX",
+      "name": "Conflux",
+      "coingecko": "conflux-token",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "CFX",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "CFX-USDT",
+          "identityReceipt": "2a64e1024fbfcdb22e2bbed4b921ac9a900da3561fef22430c6c3d00a39eb00f"
+        },
+        {
+          "provider": "gate",
+          "market": "CFX_USDT",
+          "identityReceipt": "e7504eeba142b055b80fa3d0dfbe907233e58c66ae5c1523831c2b9d9a7822e2"
+        }
+      ]
+    },
+    "JASMY": {
+      "id": "JASMY",
+      "name": "JasmyCoin",
+      "coingecko": "jasmycoin",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "JASMY",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "gate",
+          "market": "JASMY_USDT",
+          "identityReceipt": "f12e169b5ddac7a93c938885c5959ff64a225b277ff4520bdf047264a2b032c3"
+        },
+        {
+          "provider": "mexc",
+          "market": "JASMYUSDT",
+          "identityReceipt": "645e4a7ae2b222a2462546e7e548311f59e334b2e9977773cb4ee623571ec189"
+        }
+      ]
+    },
+    "KAS": {
+      "id": "KAS",
+      "name": "Kaspa",
+      "coingecko": "kaspa",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "KAS",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "gate",
+          "market": "KAS_USDT",
+          "identityReceipt": "499fff7010032b9db9849afdc83940706d2b46f881114bbd58ee6b4bfad98f9c"
+        },
+        {
+          "provider": "mexc",
+          "market": "KASUSDT",
+          "identityReceipt": "62948674964616641be669cb723f794f4e7b17878a63d2aac3e5b651c4fe58db"
+        }
+      ]
+    },
+    "KSM": {
+      "id": "KSM",
+      "name": "Kusama",
+      "coingecko": "kusama",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "KSM",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "KSM-USDT",
+          "identityReceipt": "1066e8a7708b1c3c9f93d90b5ec4caf42ed4d917a7041556045d2ab1ee934c9b"
+        },
+        {
+          "provider": "gate",
+          "market": "KSM_USDT",
+          "identityReceipt": "da3cdf2f7017a5ed2e3912fe54c981daa519fe6101b8901fde54025b96073bab"
+        }
+      ]
+    },
+    "ROSE": {
+      "id": "ROSE",
+      "name": "Oasis",
+      "coingecko": "oasis-network",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "ROSE",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "gate",
+          "market": "ROSE_USDT",
+          "identityReceipt": "6fe3b75551439009fb3eb983c06e6dccac8ea37dbd30065ba9984786063e42bc"
+        }
+      ]
+    },
+    "CELO": {
+      "id": "CELO",
+      "name": "Celo",
+      "coingecko": "celo",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "CELO",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "CELO-USDT",
+          "identityReceipt": "0498f5ae38374319b117fc32b178953f5b1a20fdae4f18f0926e24c4f65e89f8"
+        },
+        {
+          "provider": "gate",
+          "market": "CELO_USDT",
+          "identityReceipt": "7ba9cd5ea8b47d5b4f66a436001c3605c50ff3324ad8a79799ade4e1588c9142"
+        }
+      ]
+    },
+    "ZRX": {
+      "id": "ZRX",
+      "name": "0x Protocol",
+      "coingecko": "0x",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "ZRX",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "ZRX-USDT",
+          "identityReceipt": "2d10cc8e5dc8a9fb5bb123fffc49a80b7c163e1b3d93e1795b919f4c0a8b9867"
+        },
+        {
+          "provider": "gate",
+          "market": "ZRX_USDT",
+          "identityReceipt": "cdaeb61616d48c7a1a576e53aeb6e44c89e2a07715d1eb57242af8e10bbd50bf"
+        }
+      ]
+    },
+    "ZEN": {
+      "id": "ZEN",
+      "name": "Horizen",
+      "coingecko": "zencash",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "ZEN",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "ZEN-USDT",
+          "identityReceipt": "2eea71d53f0f990647487baaed0929d44b7dac1a61da4c1fac6b3892ebc719e2"
+        }
+      ]
+    },
+    "QTUM": {
+      "id": "QTUM",
+      "name": "Qtum",
+      "coingecko": "qtum",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "QTUM",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "QTUM-USDT",
+          "identityReceipt": "bee169b791f095f4ce767a8120e15948b80a8e33379af601dd83fc59706cec11"
+        },
+        {
+          "provider": "gate",
+          "market": "QTUM_USDT",
+          "identityReceipt": "e1321153c62070e568c5edf1e154161e1741c2dfdc86cde831b545b914ee6abf"
+        }
+      ]
+    },
+    "ZETA": {
+      "id": "ZETA",
+      "name": "ZetaChain",
+      "coingecko": "zetachain",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "ZETA",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "ZETA-USDT",
+          "identityReceipt": "09cfe694d3652a73e0ca9d2572bd93d288536e2f227bd2243e1539c9724fa3ad"
+        },
+        {
+          "provider": "gate",
+          "market": "ZETA_USDT",
+          "identityReceipt": "76d22a876b326118523dccc071996d97aa4caaa2813d93eae245b299c9bccdf9"
+        }
+      ]
+    },
+    "ACH": {
+      "id": "ACH",
+      "name": "Alchemy Pay",
+      "coingecko": "alchemy-pay",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "ACH",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "ACH-USDT",
+          "identityReceipt": "39e3df97e382c37d19400f9ce0e2634d3b0066c6b674d10558297fca5c66c52e"
+        },
+        {
+          "provider": "gate",
+          "market": "ACH_USDT",
+          "identityReceipt": "853953f9f7d0b1103fed4ae369d3ebafac55bcae2852ec3a9362a9bc914a6817"
+        }
+      ]
+    },
+    "ANKR": {
+      "id": "ANKR",
+      "name": "Ankr Network",
+      "coingecko": "ankr",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "ANKR",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "gate",
+          "market": "ANKR_USDT",
+          "identityReceipt": "d074603c99c5c7dcc1ff69ff0cd44bf4d7e9afa4f48fd5fa1aa10af4c029f760"
+        },
+        {
+          "provider": "mexc",
+          "market": "ANKRUSDT",
+          "identityReceipt": "a23210788f6e3ad691d6a87275f5eb4db59c02ef4f7c7ba9b728d3851804489e"
+        }
+      ]
+    },
+    "AMP": {
+      "id": "AMP",
+      "name": "Amp",
+      "coingecko": "amp-token",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "AMP",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "gate",
+          "market": "AMP_USDT",
+          "identityReceipt": "35b3c5865987cf853a59f858fb5aa4c61150f0f297ab7107f11fd570d850c1bb"
+        }
+      ]
+    },
+    "NMR": {
+      "id": "NMR",
+      "name": "Numeraire",
+      "coingecko": "numeraire",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "NMR",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "NMR-USDT",
+          "identityReceipt": "c44ce87ab1e751cd3deac1cd9666e3abe7bcba3db0ecc7f35043ab7e4630d7f8"
+        },
+        {
+          "provider": "gate",
+          "market": "NMR_USDT",
+          "identityReceipt": "19e64414bd71866bdce081c1d4c47b71aa42b84362bced901082f83ba556462d"
+        }
+      ]
+    },
+    "DEXE": {
+      "id": "DEXE",
+      "name": "DeXe",
+      "coingecko": "dexe",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "DEXE",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "gate",
+          "market": "DEXE_USDT",
+          "identityReceipt": "fba0ba2f9e102243f79aeb4c0b1049482b310edd4e61e83027d979a449357e3d"
+        }
+      ]
+    },
+    "CVX": {
+      "id": "CVX",
+      "name": "Convex Finance",
+      "coingecko": "convex-finance",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "CVX",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "CVX-USDT",
+          "identityReceipt": "29ab09521bedffe0149068ef6cbd4bab6bf038c75ef4e34b44e3c1aab0c5ded2"
+        },
+        {
+          "provider": "gate",
+          "market": "CVX_USDT",
+          "identityReceipt": "316d1d1dacecc337eaf87eb5b1a00a4baca12823d4361a3d76137f75f9133893"
+        }
+      ]
+    },
+    "YFI": {
+      "id": "YFI",
+      "name": "yearn.finance",
+      "coingecko": "yearn-finance",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "YFI",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "YFI-USDT",
+          "identityReceipt": "d301b4012a0ccee0abfd019075ba3ee1a6448ea3405035b3d5170e7ccc782a54"
+        },
+        {
+          "provider": "gate",
+          "market": "YFI_USDT",
+          "identityReceipt": "80115e9b863e3f87aa5f27dc41f35da122bbe1f0f05460018977f54fd5e7a15b"
+        }
+      ]
+    },
+    "YGG": {
+      "id": "YGG",
+      "name": "Yield Guild Games",
+      "coingecko": "yield-guild-games",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "YGG",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "YGG-USDT",
+          "identityReceipt": "f72db1b011e1a1805c145287e261313fe0217928a6c1754ee5b87845eb78acf4"
+        },
+        {
+          "provider": "gate",
+          "market": "YGG_USDT",
+          "identityReceipt": "8ea5989c3e579c7afbe24afac676205ce51f68e3fd0e5a5c5a7bcf3a8afffc7c"
+        }
+      ]
+    },
+    "AR": {
+      "id": "AR",
+      "name": "Arweave",
+      "coingecko": "arweave",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "AR",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "AR-USDT",
+          "identityReceipt": "ee21677d861a693deb021810884707bec068f05f1461fb2dc58b611f97f2ec4c"
+        },
+        {
+          "provider": "gate",
+          "market": "AR_USDT",
+          "identityReceipt": "be3e90d7423c2aed929c2cb5499769b9fe75a78ee2aae763c6ece031faf2962c"
+        }
+      ]
+    },
+    "CKB": {
+      "id": "CKB",
+      "name": "Nervos Network",
+      "coingecko": "nervos-network",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "CKB",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "gate",
+          "market": "CKB_USDT",
+          "identityReceipt": "2192e53106d086c34dadb21d50ad3f6d27e160c4ee8dd6ba5589675f01567230"
+        },
+        {
+          "provider": "mexc",
+          "market": "CKBUSDT",
+          "identityReceipt": "e58b4db464dd6628692254792e6c09e10dbc72588ab1e047784a92854282c3b9"
+        }
+      ]
+    },
+    "BLUR": {
+      "id": "BLUR",
+      "name": "Blur",
+      "coingecko": "blur",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "BLUR",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "BLUR-USDT",
+          "identityReceipt": "617ce0b2ac7dea6883109ee465a0feb833cd7e2c7bfd1f09886506d4b8d99cca"
+        },
+        {
+          "provider": "gate",
+          "market": "BLUR_USDT",
+          "identityReceipt": "44f791d1194b7139b7b44a956119fbfb93fb94cdac66b06f22faa84505c1b3ea"
+        }
+      ]
+    },
+    "FLOW": {
+      "id": "FLOW",
+      "name": "Flow",
+      "coingecko": "flow",
+      "metadataReceipt": "dca7e0513827b393c9148992eaa69d2b1cdd5d23e4ea1346c76f82bb8c700b16",
+      "base": "FLOW",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "FLOW-USDT",
+          "identityReceipt": "4f6877557bf29ae8631b02e1a4d3911185b66aecd1e5676b6b38589ada68649d"
+        },
+        {
+          "provider": "gate",
+          "market": "FLOW_USDT",
+          "identityReceipt": "d2f059d40169bd8ee75501245b40cbc78af2ed3487810a903d6dcedb92ac74bf"
+        }
+      ]
+    },
+    "NEIRO": {
+      "id": "NEIRO",
+      "name": "First Neiro on Ethereum",
+      "coingecko": "neiro-3",
+      "metadataReceipt": "37a6995394211826aee7f3eb663690a64bbbf3fa2f74dab21ebcf3302d3b81dc",
+      "base": "NEIRO",
+      "quote": "USDT",
+      "sources": [
+        {
+          "provider": "okx",
+          "market": "NEIRO-USDT",
+          "identityReceipt": "ad9b08da9bc293c475940fada2c2e29e3263ebd1c34f063d4f809b8808d43daf"
+        }
+      ]
+    }
+  }
+}
