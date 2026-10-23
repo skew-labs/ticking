@@ -1,6 +1,6 @@
 import {TickChart} from './chart.js';
 import {parseTrackPaint,seriesFromPaint,panesForWallet,shortWallet,walletAddress,sampleTrackPaint,columnForBridge,museLine} from './track-paint.js';
-import {classifyTrackIntent,trackResolveBody} from './track-intent.js';
+import {classifyTrackIntent,guardedResolveBody,trackResolveBody} from './track-intent.js';
 import trackCss from './track-style.js';
 
 export const HANDOFF_KEY='ticking.track.handoff.v1';
@@ -79,7 +79,7 @@ export function acceptTrackHandoff(body){
 }
 export async function resolveTrackQuery(query,{signal,fetchImpl=fetch}={}){
  const intent=classifyTrackIntent(query);
- if(intent.mode==='other')return null;
+ if(intent.mode!=='track'&&intent.mode!=='dump')return null;
  const r=await fetchImpl('/api/public/intelligence/resolve',{method:'POST',headers:{'content-type':'application/json',accept:'application/json'},body:JSON.stringify(trackResolveBody({query})),signal});
  if(!r.ok)throw Error('Track resolve failed ('+r.status+').');
  const body=await r.json();
@@ -96,8 +96,8 @@ export function installTrackGuard(){
   if(url.includes('/api/public/intelligence/resolve')&&typeof init?.body==='string'){
    try{
     const parsed=JSON.parse(init.body);
-    const intent=classifyTrackIntent(parsed?.query||'');
-    if(intent.mode!=='other'&&!parsed.guard)nextInit={...init,body:JSON.stringify({...trackResolveBody({query:parsed.query}),...parsed,listAddresses:false,track:true,mode:intent.mode,guard:intent})};
+    const guarded=guardedResolveBody(parsed);
+    if(guarded)nextInit={...init,body:JSON.stringify(guarded)};
    }catch{}
   }
   const response=await orig(input,nextInit);

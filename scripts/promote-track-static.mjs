@@ -10,17 +10,16 @@
  */
 import {createHash} from 'node:crypto';
 import {spawnSync} from 'node:child_process';
-import {mkdirSync, readFileSync, readdirSync, writeFileSync} from 'node:fs';
+import {existsSync, mkdirSync, readFileSync, readdirSync, unlinkSync, writeFileSync} from 'node:fs';
 import {dirname, join, resolve} from 'node:path';
 import {pathToFileURL} from 'node:url';
-import * as esbuild from 'esbuild';
 
 const BASE = {
-  shell: 'track-shell-XQ7HHZ26.js',
-  agent: 'console-agent-4BQUAKQK.js',
-  console: 'console-SFPUDGQ2.js',
-  workspace: 'workspace-BNB2WVBA.js',
-  app: 'app-TYCMKHBN.js',
+  shell: 'track-shell-SPIWJDUZ.js',
+  agent: 'console-agent-XFNF7DZA.js',
+  console: 'console-N7KR7DWQ.js',
+  workspace: 'workspace-KPIZJF5T.js',
+  app: 'app-UVYRWMGQ.js',
 };
 const ell = '\\u2026';
 const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
@@ -41,13 +40,26 @@ function replaceOnce(source, from, to, label) {
   return source.replace(from, to);
 }
 
-export function patchAgent(source, shellName) {
+function researchGo(fn) {
+  return `if(${fn}(e)){const box=document.querySelector("[data-tkx-ta]");if(box)box.hidden=true;location.hash="#/console/workspace/"+encodeURIComponent("wallet:"+e.toLowerCase());return}`
+    + `if(/^[a-z][a-z0-9]{1,15}:0x[0-9a-f]{40}$/i.test(e)){const box=document.querySelector("[data-tkx-ta]");if(box)box.hidden=true;location.hash="#/console/workspace/"+encodeURIComponent(e);return}`
+    + `if(/^(?:sol|solana|arb|arbitrum|pump)(?:\\s+chart)?$/i.test(String(e).trim())){const box=document.querySelector("[data-tkx-ta]");if(box)box.hidden=true;location.hash="#/console/workspace/"+encodeURIComponent(/pump/i.test(e)?"PUMP":/arb/i.test(e)?"ARB":"SOL");return}`
+    + `if(/^(?:chart|price|market)\\s+(?:of\\s+)?([A-Za-z][A-Za-z0-9]{1,12})$/i.test(String(e).trim())){const box=document.querySelector("[data-tkx-ta]");if(box)box.hidden=true;const sym=String(e).trim().match(/^(?:chart|price|market)\\s+(?:of\\s+)?([A-Za-z][A-Za-z0-9]{1,12})$/i);location.hash="#/console/workspace/"+encodeURIComponent(sym[1].toUpperCase());return}`
+    + `if(/^(?:map|flow|wallet map)$/i.test(String(e).trim())){const box=document.querySelector("[data-tkx-ta]");if(box)box.hidden=true;location.hash="#/console/workspace/auto?q="+encodeURIComponent(String(e).trim());return}`
+    + `if(/\\b(?:dumps?|dumped|dumping|suspect(?:ed)?)\\b|의심|덤프|where did the money go|follow (?:the )?(?:money|hop)|wallet trail|wallet activity|transaction trail|tx trail|flow of funds|whale trail|whale wallet|map this wallet|investigate this wallet|on-?chain activity|0x[a-fA-F0-9]{40}/i.test(e)){const box=document.querySelector("[data-tkx-ta]");if(box)box.hidden=true;const w=(String(e).match(/0x[a-fA-F0-9]{40}/)||[])[0];location.hash=w?"#/console/workspace/"+encodeURIComponent("wallet:"+w.toLowerCase()):"#/console/workspace/auto?q="+encodeURIComponent(e);return}`;
+}
+
+function applyLegacyAgent(source, shellName) {
   let next = source;
+  const imported = next.match(/import\{mountTrackWorkspace\}from"\/_app\/chunks\/(track-shell-[A-Z2-7]{8}\.js)"/);
+  if (!imported) throw new Error('legacy agent import missing');
+  next = replaceOnce(
+    next,
+    imported[0],
+    `import{mountTrackWorkspace,acceptTrackHandoff,resolveTrackQuery,classifyTrackIntent}from"/_app/chunks/${shellName}"`,
+    'legacy agent import',
+  );
   const pairs = [
-    [
-      `import{mountTrackWorkspace}from"/_app/chunks/${BASE.shell}"`,
-      `import{mountTrackWorkspace,acceptTrackHandoff,resolveTrackQuery,classifyTrackIntent}from"/_app/chunks/${shellName}"`,
-    ],
     ['What would you like to track?', 'Track it on the chart'],
     [
       'Muse opens the asset chart, follows wallets and adds recorded activity to the same workspace.',
@@ -81,6 +93,141 @@ export function patchAgent(source, shellName) {
     'agent try',
   );
   return next;
+}
+
+export function patchAgent(source, shellName) {
+  let next = source.includes('What would you like to track?') ? applyLegacyAgent(source, shellName) : source;
+  const shells = [...new Set(next.match(/track-shell-[A-Z2-7]{8}\.js/g) || [])];
+  if (shells.length !== 1) throw new Error(`agent shell ref ${shells.join(',') || 'missing'}`);
+  if (shells[0] !== shellName) next = next.replaceAll(shells[0], shellName);
+  // market gate: a symbol opens the workspace chart; track and dump still resolve.
+  if (!next.includes('intent.mode==="market"')) {
+    const gate = 'if(intent.mode!=="other"){';
+    if (!next.includes(gate)) throw new Error('agent mode gate missing');
+    next = next.replaceAll(
+      gate,
+      'if(intent.mode==="market"&&intent.route){location.hash=intent.route;return}if((intent.mode==="track"||intent.mode==="dump")&&intent.route&&!intent.wallet){location.hash=intent.route;return}if(intent.mode==="track"||intent.mode==="dump"){',
+    );
+  }
+  next = next.replaceAll(
+    'A wallet question paints hops on one workspace chart. Dump and suspect stay dump tags.',
+    'A wallet, its trail, and the market stay on one workspace chart. Dump and suspect stay dump tags.',
+  );
+  next = next.replaceAll('<h1>Track it on the chart</h1>', '<h1>One workspace chart</h1>');
+  const oldPlaceholder = `placeholder="Wallet, or where did the money go from 0x${ell}"`;
+  const newPlaceholder = `placeholder="Wallet, SOL, or where did the money go from 0x${ell}"`;
+  if (next.includes(oldPlaceholder)) next = next.replaceAll(oldPlaceholder, newPlaceholder);
+  if (!next.includes('<h1>One workspace chart</h1>')) throw new Error('agent heading missing');
+  if (!next.includes('intent.mode==="market"')) throw new Error('market gate missing');
+  if (next.includes('intent.mode!=="other"')) throw new Error('agent kept the broad mode gate');
+  return next;
+}
+
+export function patchExplorerSearch(source) {
+  if (source.includes('Paint this wallet on the workspace chart') && source.includes('"#/console/workspace/"+encodeURIComponent("wallet:"+e.toLowerCase())')) return source;
+  let next = source;
+  const pairs = [
+    [
+      'subtitle:"Open this address on every mapped chain",route:"#/investigate/"+e.toLowerCase()',
+      'subtitle:"Paint this wallet on the workspace chart",route:"#/console/workspace/"+encodeURIComponent("wallet:"+e.toLowerCase())',
+    ],
+    [
+      '{...e,route:"#/investigate/"+s+"?"+t.toString()}',
+      '{...e,route:"#/console/workspace/"+encodeURIComponent("wallet:"+s)+"?"+t.toString()}',
+    ],
+    [
+      'e.type==="wallet"&&h(t)?{...e,route:"#/investigate/"+t}',
+      'e.type==="wallet"&&h(t)?{...e,route:"#/console/workspace/"+encodeURIComponent("wallet:"+t)}',
+    ],
+    [
+      'route:"#/investigate/"+String(e.id).toLowerCase()',
+      'route:"#/console/workspace/"+encodeURIComponent(String(e.id).toLowerCase())',
+    ],
+    [
+      'route:"#/investigate/"+encodeURIComponent(e.id)',
+      'route:"#/console/workspace/"+encodeURIComponent(e.id)',
+    ],
+    [
+      'route:"#/investigate/"+e.chain+":"+t',
+      'route:"#/console/workspace/"+encodeURIComponent(e.chain+":"+t)',
+    ],
+  ];
+  let applied = 0;
+  for (const [from, to] of pairs) {
+    const count = next.split(from).length - 1;
+    if (!count) continue;
+    next = next.replaceAll(from, to);
+    applied += count;
+  }
+  for (const fn of ['m', 'h']) {
+    const from = `if(${fn}(e)||/^[a-z][a-z0-9]{1,15}:0x[0-9a-f]{40}$/i.test(e)){location.hash="#/investigate/"+e.toLowerCase();return}`;
+    if (!next.includes(from)) continue;
+    next = next.replaceAll(from, researchGo(fn));
+    applied += 1;
+  }
+  if (!applied) throw new Error('explorer search patch matched nothing');
+  if (next.includes('location.hash="#/investigate/"+e.toLowerCase()')) throw new Error('search still opens investigate for a wallet');
+  if (next.includes('Open this address on every mapped chain')) throw new Error('search subtitle still says mapped chain');
+  if (!next.includes('Paint this wallet on the workspace chart')) throw new Error('search wallet route missing');
+  return next;
+}
+
+function patchResearchCopy(source) {
+  const pairs = [
+    [
+      '<h1 id="flow-title">Onchain Explorer</h1><p>Map wallets across chains. Track token ownership, protocols, and transactions over time.</p>',
+      '<h1 id="flow-title">Onchain research</h1><p>Wallet activity, transaction trails, and market charts in one workspace.</p>',
+    ],
+    ['Nine-chain Whale Tracker', 'Workspace chart'],
+    ['<b>Whale Tracker</b>', '<b>Workspace chart</b>'],
+    ['"Whale Tracker"', '"Workspace chart"'],
+    ['>Whale Tracker<', '>Workspace chart<'],
+    ['Follow large purchases and transfers', 'Paint a wallet trail on one chart'],
+    ['placeholder="Search by wallet address, token, protocol, or transaction"', 'placeholder="Wallet, trail, or market"'],
+    ['placeholder="Search wallet, token, protocol or tx"', 'placeholder="Wallet, trail, or market"'],
+    ['aria-label="Search wallets, tokens, protocols and transactions"', 'aria-label="Search a wallet, trail, or market"'],
+  ];
+  let next = source;
+  for (const [from, to] of pairs) {
+    if (next.includes(from)) next = next.replaceAll(from, to);
+  }
+  if (!next.includes('Onchain research')) throw new Error('home hero missing');
+  if (next.includes('Map wallets across chains')) throw new Error('home hero still maps wallets');
+  if (next.includes('Whale Tracker')) throw new Error('home still says Whale Tracker');
+  return next;
+}
+
+export function patchHomeChunk(source) {
+  let next = patchResearchCopy(source);
+  const helpFrom = 'Multichain search \\xB7 Token history \\xB7 Ask Ticking';
+  const helpTo = 'Wallet, trail, or market \\xB7 one workspace chart';
+  if (!next.includes(helpFrom)) throw new Error('home search help missing');
+  next = next.replaceAll(helpFrom, helpTo);
+  const statusFrom = 'Finding matching wallets, tokens and protocols\\u2026';
+  const statusTo = 'Opening one workspace\\u2026';
+  if (!next.includes(statusFrom)) throw new Error('home search status missing');
+  next = next.replaceAll(statusFrom, statusTo);
+  const observerFrom = 'let i=new IntersectionObserver(d=>{d.some(h=>h.isIntersecting)&&e()},{rootMargin:"150px"});i.observe(t.querySelector(".flow-market-section"));let l=new URLSearchParams(location.hash.split("?")[1]||"");return l.get("view")==="map"&&/^0x[a-fA-F0-9]{40}$/.test(l.get("address")||"")&&(location.hash="#/investigate/"+l.get("address"))';
+  const observerTo = 'const arm=()=>{let i=new IntersectionObserver(d=>{d.some(h=>h.isIntersecting)&&e()},{rootMargin:"0px"});const section=t.querySelector(".flow-market-section");section&&i.observe(section)};window.requestIdleCallback?requestIdleCallback(arm,{timeout:1500}):setTimeout(arm,800);let l=new URLSearchParams(location.hash.split("?")[1]||"");return l.get("view")==="map"&&/^0x[a-fA-F0-9]{40}$/.test(l.get("address")||"")&&(location.hash="#/console/workspace/"+encodeURIComponent("wallet:"+String(l.get("address")).toLowerCase()))';
+  if (!next.includes(observerFrom)) throw new Error('home market observer missing');
+  next = next.replaceAll(observerFrom, observerTo);
+  return next;
+}
+
+export function patchHomeHtml(source) {
+  let next = patchResearchCopy(source);
+  const helpFrom = 'Multichain search · Token history · Ask Ticking';
+  const helpTo = 'Wallet, trail, or market · one workspace chart';
+  if (!next.includes(helpFrom)) throw new Error('home html search help missing');
+  return next.replaceAll(helpFrom, helpTo);
+}
+
+export function patchRouteChunk(source) {
+  const from = 'return l&&/^0x[a-fA-F0-9]{40}$/.test(l)?"#/investigate/"+l+(e?"?chain="+e:""):"#/map"+';
+  const to = 'return l&&/^0x[a-fA-F0-9]{40}$/.test(l)?"#/console/workspace/"+encodeURIComponent("wallet:"+l.toLowerCase())+(e?"?chain="+encodeURIComponent(e):""):"#/map"+';
+  if (source.includes('#/console/workspace/"+encodeURIComponent("wallet:"+l.toLowerCase())')) return source;
+  if (!source.includes(from)) throw new Error('route chunk wallet branch missing');
+  return source.replaceAll(from, to);
 }
 
 async function mirror() {
@@ -219,6 +366,123 @@ function writeHashed(folder, prefix, bytes) {
   return name;
 }
 
+function walkTextFiles(root) {
+  const files = [];
+  const stack = [root];
+  while (stack.length) {
+    const dir = stack.pop();
+    for (const ent of readdirSync(dir, {withFileTypes: true})) {
+      const path = join(dir, ent.name);
+      if (ent.isDirectory()) stack.push(path);
+      else if (/\.(js|mjs|html|css|json|svg|webmanifest|txt)$/.test(ent.name)) files.push(path);
+    }
+  }
+  return files;
+}
+
+function replaceToken(from, to) {
+  const touched = [];
+  for (const file of walkTextFiles(out)) {
+    const text = readFileSync(file, 'utf8');
+    if (!text.includes(from)) continue;
+    writeFileSync(file, text.replaceAll(from, to));
+    touched.push(file);
+  }
+  return touched;
+}
+
+function owns(file) {
+  const base = file.slice(file.lastIndexOf('/') + 1);
+  return /^(?:track-shell|console-agent|workspace|app|explorer-search)-[A-Z2-7]{8}\.js$/.test(base)
+    || /^console-[A-Z2-7]{8}\.js$/.test(base);
+}
+
+function sealDirty(start) {
+  const owned = new Set(start);
+  let pending = new Set(start);
+  for (let pass = 0; pass < 8 && pending.size; pass++) {
+    const batch = [...pending];
+    pending = new Set();
+    for (const file of batch) {
+      if (!existsSync(file) || !file.endsWith('.js')) continue;
+      const base = file.slice(file.lastIndexOf('/') + 1);
+      const match = /^(.*)-[A-Z2-7]{8}\.js$/.exec(base);
+      if (!match) continue;
+      const bytes = readFileSync(file);
+      const next = `${match[1]}-${contentTag(bytes)}.js`;
+      if (next === base) continue;
+      const dest = join(file.slice(0, file.lastIndexOf('/')), next);
+      writeFileSync(dest, bytes);
+      owned.add(dest);
+      const touched = replaceToken(base, next);
+      for (const item of touched) {
+        if (item === file || !item.endsWith('.js')) continue;
+        if (owned.has(item) || owns(item)) pending.add(item);
+      }
+    }
+  }
+  const unsettled = [...pending].filter(file => {
+    if (!existsSync(file) || !file.endsWith('.js')) return false;
+    const base = file.slice(file.lastIndexOf('/') + 1);
+    const match = /^(.*)-[A-Z2-7]{8}\.js$/.exec(base);
+    if (!match) return false;
+    return `${match[1]}-${contentTag(readFileSync(file))}.js` !== base;
+  });
+  if (unsettled.length) throw new Error(`hash seal did not settle: ${unsettled.slice(0, 8).join(', ')}`);
+}
+
+function patchResearchEntry() {
+  const chunk = name => join(out, '_app/chunks', name);
+  const searches = readdirSync(join(out, '_app/chunks')).filter(name => name.startsWith('explorer-search-') && name.endsWith('.js'));
+  const dirty = [];
+  for (const name of searches) {
+    const path = chunk(name);
+    const source = readFileSync(path, 'utf8');
+    if (!source.includes('#/investigate/') && !source.includes('Open this address on every mapped chain')) continue;
+    writeFileSync(path, patchExplorerSearch(source));
+    dirty.push(path);
+  }
+  if (!dirty.length) throw new Error('no search chunk patched');
+  for (const name of ['chunk-HTODKWZW.js', 'chunk-YYIE6Q3F.js']) {
+    const path = chunk(name);
+    const source = readFileSync(path, 'utf8');
+    writeFileSync(path, name.startsWith('chunk-HTOD') ? patchHomeChunk(source) : patchRouteChunk(source));
+    dirty.push(path);
+  }
+  const indexPath = join(out, 'index.html');
+  writeFileSync(indexPath, patchHomeHtml(readFileSync(indexPath, 'utf8')));
+  sealDirty(dirty);
+  const index = readFileSync(indexPath, 'utf8');
+  if (!index.includes('Onchain research') || index.includes('Map wallets across chains') || index.includes('Whale Tracker')) {
+    throw new Error('index research copy missing');
+  }
+  const app = (index.match(/\/_app\/(app-[A-Z2-7]{8}\.js)/) || [])[1];
+  if (!app) throw new Error('index app hash missing');
+  const chunks = readdirSync(join(out, '_app/chunks'));
+  const home = chunks.find(name => index.includes(name) && readFileSync(chunk(name), 'utf8').includes('id="flow-title">Onchain research'));
+  if (!home) throw new Error('home chunk missing after seal');
+  const homeText = readFileSync(chunk(home), 'utf8');
+  if (!homeText.includes('requestIdleCallback') || homeText.includes('rootMargin:"150px"') || homeText.includes('#/investigate/')) {
+    throw new Error('home chunk still eager or still investigates');
+  }
+  const search = chunks.filter(name => name.startsWith('explorer-search-'));
+  for (const name of search) {
+    const text = readFileSync(chunk(name), 'utf8');
+    if (text.includes('location.hash="#/investigate/"+e.toLowerCase()') || text.includes('Open this address on every mapped chain')) {
+      throw new Error(`search chunk ${name} still investigates`);
+    }
+  }
+  const routeHits = chunks.filter(name => readFileSync(chunk(name), 'utf8').includes('wallet:"+l.toLowerCase()'));
+  const route = routeHits.find(hit => chunks.some(name => name !== hit && readFileSync(chunk(name), 'utf8').includes(hit)));
+  if (!route) throw new Error('route chunk wallet branch missing after seal');
+  if (!index.includes(home) || !readFileSync(join(out, '_app', app), 'utf8').includes(home)) {
+    throw new Error('home chunk is not on the app graph');
+  }
+  return {home, route, search, app};
+}
+
+async function main() {
+const esbuild = await import('esbuild');
 const report = await mirror();
 const dir = sourceDir();
 writeEntry(dir);
@@ -254,12 +518,12 @@ let app = readFileSync(join(out, '_app', BASE.app), 'utf8');
 app = replaceOnce(app, BASE.workspace, workspaceName, 'app workspace ref');
 const appName = writeHashed('_app', 'app', Buffer.from(app));
 const shellText = shellBytes.toString('utf8');
-for (const needle of ['setTrackPaint', 'mountTrackWorkspace', 'classifyTrackIntent', 'data-track-form', 'dumpTagsOnly', 'columnForBridge', 'Math.min(480']) {
+for (const needle of ['setTrackPaint', 'mountTrackWorkspace', 'classifyTrackIntent', 'data-track-form', 'dumpTagsOnly', 'columnForBridge', 'Math.min(480', 'Fast Feed is latency paint only']) {
   if (!shellText.includes(needle)) throw new Error(`shell missing ${needle}`);
 }
 if (shellText.includes('whale-tracker')) throw new Error('shell still names whale-tracker');
 const agentText = readFileSync(join(out, '_app/chunks', agentName), 'utf8');
-for (const needle of ['resolveTrackQuery', 'classifyTrackIntent', shellName, 'Track it on the chart', 'Reading the trail', 'wallet:']) {
+for (const needle of ['resolveTrackQuery', 'classifyTrackIntent', shellName, 'One workspace chart', 'Reading the trail', 'wallet:', 'intent.mode==="market"']) {
   if (!agentText.includes(needle)) throw new Error(`agent missing ${needle}`);
 }
 if (agentText.includes('What would you like to track?')) throw new Error('agent kept the old prompt');
@@ -272,18 +536,52 @@ if (!appText.includes(workspaceName)) throw new Error('app wiring missing');
 let index = readFileSync(join(out, 'index.html'), 'utf8');
 index = replaceOnce(index, `/_app/${BASE.app}`, `/_app/${appName}`, 'index app hash');
 writeFileSync(join(out, 'index.html'), index);
+for (const stale of [BASE.shell, BASE.agent, BASE.console, BASE.workspace]) {
+  const stalePath = join(out, '_app/chunks', stale);
+  if (existsSync(stalePath)) unlinkSync(stalePath);
+}
+const staleApp = join(out, '_app', BASE.app);
+if (existsSync(staleApp)) unlinkSync(staleApp);
+const research = patchResearchEntry();
+const chunkText = name => readFileSync(join(out, '_app/chunks', name), 'utf8');
+const liveAppText = readFileSync(join(out, '_app', research.app), 'utf8');
+const liveWorkspace = (liveAppText.match(/workspace-[A-Z2-7]{8}\.js/) || [])[0];
+if (!liveWorkspace || !chunkText(liveWorkspace).includes('mountTrackerPage')) throw new Error('app lost the workspace');
+const liveWorkspaceText = chunkText(liveWorkspace);
+const liveShell = (liveWorkspaceText.match(/track-shell-[A-Z2-7]{8}\.js/) || [])[0];
+const liveConsole = (liveWorkspaceText.match(/console-[A-Z2-7]{8}\.js/) || [])[0];
+if (!liveShell || !chunkText(liveShell).includes('setTrackPaint')) throw new Error('workspace lost the shell');
+if (!liveConsole || !/^console-[A-Z2-7]{8}\.js$/.test(liveConsole)) throw new Error('workspace lost the console');
+const liveAgent = (chunkText(liveConsole).match(/console-agent-[A-Z2-7]{8}\.js/) || [])[0];
+if (!liveAgent || !chunkText(liveAgent).includes('One workspace chart') || !chunkText(liveAgent).includes('intent.mode==="market"')) {
+  throw new Error('console lost the research agent');
+}
 const exploration = readFileSync(join(out, 'workspace-exploration.css'));
 if (exploration.length < 1000 || !exploration.subarray(0, 80).toString('utf8').includes('market workspace')) {
   throw new Error('workspace-exploration.css missing');
 }
 console.log(JSON.stringify({
   marker: 'TRACK_PROMOTE_V2',
+  patchResearchEntry: true,
   ...report,
-  shell: shellName,
-  agent: agentName,
-  console: consoleName,
-  workspace: workspaceName,
-  app: appName,
+  shell: liveShell,
+  agent: liveAgent,
+  console: liveConsole,
+  workspace: liveWorkspace,
+  app: research.app,
+  home: research.home,
+  route: research.route,
+  search: research.search,
   exploration: exploration.length,
-  shellBytes: shellBytes.length,
+  shellBytes: readFileSync(join(out, '_app/chunks', liveShell)).length,
 }));
+}
+
+function invokedDirectly() {
+  const arg = process.argv[1] || '';
+  if (!arg) return false;
+  if (/\/(?:build|promote|promote-track-static)\.mjs$/.test(arg)) return true;
+  try { return pathToFileURL(resolve(arg)).href === import.meta.url; } catch { return false; }
+}
+
+if (invokedDirectly()) await main();

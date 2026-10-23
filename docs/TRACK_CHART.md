@@ -19,14 +19,14 @@ Preview fixture only: `#/console/workspace/wallet:0x…?sample=1`.
 Current build, also recorded in `terminal/track-build.json`:
 
 - `/terminal/dist/_app/track-paint-MMRLVUHN.js`
-- `/terminal/dist/_app/track-intent-JIG26E7Z.js`
-- `/terminal/dist/_app/track-workspace-W32A4OSN.js`
+- `/terminal/dist/_app/track-intent-4WDFIVLB.js`
+- `/terminal/dist/_app/track-workspace-475TJCMQ.js`
 
 ## Feel and guard
 
 Wallet chips and bridge chips are buttons. A wallet chip adds that wallet's chart in the same incident. A bridge chip or side column opens the destination chain chart (`eth` resolves to `ethereum`). Replay defaults to 900ms and at most 8 steps. `#/tracker` is a one-row wallet form (`data-track-form`) and does not mount Flow.
 
-`terminal/src/track-intent.js` classifies the query before resolve. Track intent sends `mode:"track"`, `listAddresses:false`, and a Perceive / Plan / Act guard that paints hops on the workspace chart. Dump and suspect send `mode:"dump"` and keep dump tags only. A bare token such as PUMP stays on the asset chart. An empty live resolve does not replace a handoff that already has markers. Search responses with `searchGuard` `+track` and `route` `#/console/workspace/wallet:…` are stored and opened as that workspace.
+`terminal/src/track-intent.js` classifies the query before resolve. Wallet activity, a transaction trail, and a market chart are one incident: track and dump call resolve and paint on the workspace chart; `SOL`, `ARB`, and `PUMP` open that workspace chart directly. Dump and suspect stay dump tags. Fast Feed with no wallet stays off the track resolve. A bare `map` or `flow` opens `#/console/workspace/auto`, not a map page and not investigate. Solana, Arbitrum, and Robinhood Chain are the chain hints on a wallet route. An empty live resolve does not replace a handoff that already has markers. Search responses with `searchGuard` `+track` and `route` `#/console/workspace/wallet:…` are stored and opened as that workspace.
 
 The hash is 8 characters from the first 5 bytes of SHA-256, encoded with the same alphabet as the products `/_app` names.
 
