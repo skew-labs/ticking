@@ -12,6 +12,7 @@ import {createHash} from 'node:crypto';
 import {spawnSync} from 'node:child_process';
 import {mkdirSync, readFileSync, readdirSync, writeFileSync} from 'node:fs';
 import {dirname, join, resolve} from 'node:path';
+import {pathToFileURL} from 'node:url';
 import * as esbuild from 'esbuild';
 
 const BASE = {
@@ -72,6 +73,12 @@ export function patchAgent(source, shellName) {
     'if(e.signal.aborted)return;let p=y.workspace',
     'if(e.signal.aborted)return;const route=acceptTrackHandoff(y);if(route){location.hash=route;return}let p=y.workspace',
     'agent handoff',
+  );
+  next = replaceOnce(
+    next,
+    '}catch(o){e.signal.aborted||(c.textContent=o.message)}finally{n=!1,e.signal.aborted||(s.querySelector("button").disabled=!1)}}return s.addEventListener',
+    '}catch(o){e.signal.aborted||(c.textContent=o.message)}}catch(o){e.signal.aborted||(c.textContent=o.message)}finally{n=!1,e.signal.aborted||(s.querySelector("button").disabled=!1)}}return s.addEventListener',
+    'agent try',
   );
   return next;
 }
@@ -228,6 +235,10 @@ const shellBytes = readFileSync('track-shell.js');
 const shellName = writeHashed('_app/chunks', 'track-shell', shellBytes);
 const agentSource = readFileSync(join(out, '_app/chunks', BASE.agent), 'utf8');
 const agent = patchAgent(agentSource, shellName);
+writeFileSync('agent-syntax.mjs', agent);
+const syntax = spawnSync(process.execPath, ['--input-type=module', '-e', `await import(${JSON.stringify(pathToFileURL(resolve('agent-syntax.mjs')).href)})`], {encoding: 'utf8'});
+const syntaxErr = `${syntax.stderr || ''}\n${syntax.stdout || ''}`;
+if (syntaxErr.includes('SyntaxError') || syntaxErr.includes('Missing catch')) throw new Error(`agent syntax\n${syntaxErr.slice(0, 600)}`);
 const agentName = writeHashed('_app/chunks', 'console-agent', Buffer.from(agent));
 let consoleJs = readFileSync(join(out, '_app/chunks', BASE.console), 'utf8');
 consoleJs = replaceOnce(consoleJs, BASE.agent, agentName, 'console agent ref');
