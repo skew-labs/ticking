@@ -19,9 +19,10 @@ function text(value,max=80){
 }
 function kindOf(value){
  const raw=text(value,32).toLowerCase();
+ if(raw==='dump'||raw==='suspect'||raw.includes('dump')||raw.includes('suspect'))return 'dump';
  if(KINDS.has(raw))return raw;
  if(raw.includes('buy'))return 'buy';
- if(raw.includes('sell')||raw.includes('dump'))return raw.includes('dump')?'dump':'sell';
+ if(raw.includes('sell'))return 'sell';
  if(raw.includes('bridge'))return 'bridge';
  if(raw.includes('swap'))return 'swap';
  if(raw.includes('transfer'))return 'transfer';
@@ -32,10 +33,15 @@ function kindOf(value){
 }
 function unwrap(input){
  if(!input||typeof input!=='object')return null;
- if(input.handoff?.next?.request)return input.handoff.next.request;
- if(input.next?.request)return input.next.request;
- if(input.request&&typeof input.request==='object')return input.request;
+ const request=input.handoff?.next?.request||input.next?.request;
+ if(request&&typeof request==='object'){
+  const dumpTagsOnly=request.dumpTagsOnly===true||request.mode==='dump'||input.mode==='dump'||input.guard?.dumpTagsOnly===true;
+  return {...request,museSummary:request.museSummary||request.muse?.summary||input.message||'',mode:request.mode||input.mode,dumpTagsOnly};
+ }
+ if(input.request&&typeof input.request==='object'&&(input.request.chartMarkers||input.request.markers||input.request.track!=null))return unwrap({...input.request,message:input.request.museSummary||input.message});
  if(input.paint&&typeof input.paint==='object')return unwrap(input.paint);
+ if(input.result&&typeof input.result==='object')return unwrap(input.result);
+ if(input.data&&typeof input.data==='object'&&(input.data.handoff||input.data.chartMarkers||input.data.markers))return unwrap(input.data);
  return input;
 }
 function markerFrom(raw,index){
@@ -49,6 +55,7 @@ function markerFrom(raw,index){
  const frozenCex=kind==='frozen'||kind==='cex';
  const solid=raw.solid===true||(frozenCex&&labeled&&raw.dashed!==true);
  const dashed=raw.dashed===true||raw.unknown===true||(frozenCex&&!solid);
+ const actionTag=kind==='buy'||kind==='sell'||kind==='transfer'||kind==='swap'||kind==='dump'||kind==='tag';
  return {
   id:text(raw.id,80)||`${kind}:${time}:${wallet||index}`,
   kind,time,timeEnd:timeMs(raw.timeEnd??raw.t1??raw.end),
@@ -59,7 +66,7 @@ function markerFrom(raw,index){
   dst:text(raw.dst??raw.bridge?.dst,24)||null,
   bandId:text(raw.bandId??raw.band,80)||null,
   solid,dashed,labeled,
-  chip:kind==='hop'||kind==='frozen'||kind==='cex'||raw.role==='chip'||raw.chip===true,
+  chip:!actionTag&&(kind==='hop'||kind==='frozen'||kind==='cex'||kind==='bridge'||raw.role==='chip'||raw.chip===true),
  };
 }
 function bandFrom(raw,index,markers){
@@ -103,7 +110,7 @@ function museFrom(raw,summary){
  const muse=raw?.muse&&typeof raw.muse==='object'?raw.muse:{};
  const replay=muse.replay??raw?.replay;
  const enabled=replay===true||(replay&&typeof replay==='object'&&replay.enabled!==false);
- const replayMs=Math.max(200,Math.min(8000,Number(muse.replayMs??replay?.replayMs??raw?.replayMs)||1500));
+ const replayMs=Math.max(200,Math.min(8000,Number(muse.replayMs??replay?.replayMs??raw?.replayMs)||900));
  const beside=muse.beside&&typeof muse.beside==='object'?muse.beside:null;
  return {
   summary:text(muse.summary??summary??raw?.museSummary,280),
@@ -117,9 +124,10 @@ function museFrom(raw,summary){
 export function parseTrackPaint(input){
  const raw=unwrap(input);
  if(!raw)return emptyPaint();
- const markers=(Array.isArray(raw.chartMarkers)?raw.chartMarkers:Array.isArray(raw.markers)?raw.markers:[]).slice(0,400).map(markerFrom).filter(Boolean);
- const bands=(Array.isArray(raw.bands)?raw.bands:[]).slice(0,80).map((b,i)=>bandFrom(b,i,markers)).filter(Boolean);
- const sideColumns=(Array.isArray(raw.sideColumns)?raw.sideColumns:Array.isArray(raw.side_columns)?raw.side_columns:[]).slice(0,12).map(columnFrom).filter(Boolean);
+ const dumpOnly=raw.dumpTagsOnly===true||raw.mode==='dump';
+ const markers=(Array.isArray(raw.chartMarkers)?raw.chartMarkers:Array.isArray(raw.markers)?raw.markers:[]).slice(0,400).map(markerFrom).filter(Boolean).filter(m=>!dumpOnly||m.kind==='dump');
+ const bands=dumpOnly?[]:(Array.isArray(raw.bands)?raw.bands:[]).slice(0,80).map((b,i)=>bandFrom(b,i,markers)).filter(Boolean);
+ const sideColumns=dumpOnly?[]:(Array.isArray(raw.sideColumns)?raw.sideColumns:Array.isArray(raw.side_columns)?raw.side_columns:[]).slice(0,12).map(columnFrom).filter(Boolean);
  const muse=museFrom(raw,raw.museSummary);
  return {
   schema:TRACK_SCHEMA,
@@ -131,7 +139,7 @@ export function parseTrackPaint(input){
  };
 }
 function emptyPaint(){
- return {schema:TRACK_SCHEMA,track:false,listAddresses:false,chartMarkers:[],bands:[],sideColumns:[],muse:{summary:'',beside:null,replay:false,replayMs:1500},suppressedAddressList:false};
+ return {schema:TRACK_SCHEMA,track:false,listAddresses:false,chartMarkers:[],bands:[],sideColumns:[],muse:{summary:'',beside:null,replay:false,replayMs:900},suppressedAddressList:false};
 }
 export function paintTimes(paint){
  const times=[];
@@ -155,20 +163,45 @@ export function replayFrames(paint){
  const times=[...new Set(paintTimes(paint))].sort((a,b)=>a-b);
  if(!times.length)return [];
  const replayMs=paint.muse.replayMs||1500;
- const steps=Math.min(times.length,12);
+ const steps=Math.min(times.length,8);
  return Array.from({length:steps},(_,i)=>{
   const at=Math.round(i*replayMs/Math.max(1,steps-1));
   const time=times[Math.round(i*(times.length-1)/Math.max(1,steps-1))];
   return {at,time};
  });
 }
-export function panesForWallet(paint,wallet){
+export function panesForWallet(paint,wallet,symbol){
  const address=walletAddress(wallet);
  if(!address)return [];
  const mine=(paint?.chartMarkers||[]).filter(m=>m.wallet===address);
+ const asked=text(symbol,32);
+ if(asked){
+  const markers=mine.filter(m=>m.symbol===asked||!m.symbol);
+  return [{wallet:address,symbol:asked,title:`${asked} · ${shortWallet(address)}`,markers}];
+ }
  const symbols=[...new Set(mine.map(m=>m.symbol).filter(Boolean))];
- if(!symbols.length)return [{wallet:address,symbol:null,title:shortWallet(address),markers:mine}];
- return symbols.map((symbol,i)=>({wallet:address,symbol,title:`${symbol} · ${shortWallet(address)}`,markers:mine.filter(m=>m.symbol===symbol||(!m.symbol&&i===0))}));
+ if(symbols.length<=1){
+  const only=symbols[0]||null;
+  return [{wallet:address,symbol:only,title:only?`${only} · ${shortWallet(address)}`:shortWallet(address),markers:mine}];
+ }
+ return symbols.map(item=>({wallet:address,symbol:item,title:`${item} · ${shortWallet(address)}`,markers:mine.filter(m=>m.symbol===item)}));
+}
+const CHAIN_ALIAS={eth:'ethereum',ethereum:'ethereum',arb:'arbitrum',arbitrum:'arbitrum',op:'optimism',optimism:'optimism',base:'base',sol:'solana',solana:'solana',matic:'polygon',polygon:'polygon',avax:'avalanche',avalanche:'avalanche',bnb:'bsc',bsc:'bsc'};
+export function chainId(value){
+ const s=text(value,32).toLowerCase().replace(/[^a-z0-9]/g,'');
+ return s?(CHAIN_ALIAS[s]||s):null;
+}
+export function columnForBridge(paint,bridge){
+ const dst=chainId(bridge?.dst||bridge?.chain||bridge?.label);
+ const found=(paint?.sideColumns||[]).find(c=>chainId(c.chain)===dst||chainId(c.label)===dst);
+ if(found)return found;
+ if(!dst)return null;
+ const markers=(paint?.chartMarkers||[]).filter(m=>chainId(m.chain)===dst||chainId(m.dst)===dst);
+ return {id:`bridge:${dst}`,chain:dst,label:text(bridge?.dst||bridge?.label||dst,32),dotted:true,markers};
+}
+export function museLine(summary){
+ const line=String(summary??'').replace(/0x[a-fA-F0-9]{40}/gi,'a wallet').replace(/\s+/g,' ').trim();
+ return line.slice(0,180);
 }
 export function shortWallet(address){
  const a=walletAddress(address)||String(address||'');
@@ -222,8 +255,8 @@ export class TrackPaintLayer{
    ctx.save();ctx.fillStyle=b.dotted?'rgba(96,165,250,.13)':'rgba(54,198,188,.14)';ctx.fillRect(b.x,top,b.width,Math.max(8,bottom-top));
    ctx.strokeStyle=b.dotted?'#60a5fa':'#36c6bc';ctx.lineWidth=1.25;ctx.setLineDash(b.dotted?[3,4]:[]);ctx.strokeRect(b.x,top,b.width,Math.max(8,bottom-top));ctx.restore();
   }
-  for(const t of laid.tags){
-   ctx.save();ctx.strokeStyle=tagColor(t.kind);ctx.globalAlpha=.85;ctx.setLineDash([3,3]);ctx.beginPath();ctx.moveTo(t.x,top);ctx.lineTo(t.x,bottom);ctx.stroke();ctx.restore();
+  for(const t of [...laid.tags,...laid.chips]){
+   ctx.save();ctx.strokeStyle=tagColor(t.kind);ctx.globalAlpha=t.chip?0.55:0.85;ctx.setLineDash(t.kind==='bridge'||t.dashed?[2,3]:[]);ctx.beginPath();ctx.moveTo(t.x,top);ctx.lineTo(t.x,bottom);ctx.stroke();ctx.restore();
   }
   if(this.cursor!=null){
    const x=view.x(view.indexAt(this.cursor));
@@ -239,12 +272,15 @@ export class TrackPaintLayer{
   });
   laid.chips.forEach(c=>{
    const y=(this.chart.priceTop||18)+(this.chart.priceHeight||120)-28-c.lane*22;
-   const face=c.solid?'solid':c.dashed?'dashed':'chip';
-   bits.push(`<button type="button" class="track-chip ${face} kind-${esc(c.kind)}" style="left:${c.x}px;top:${y}px" data-track-wallet="${esc(c.wallet||'')}" data-track-chain="${esc(c.chain||'')}" data-track-symbol="${esc(c.symbol||'')}">${esc(c.label||shortWallet(c.wallet))}</button>`);
+   const face=c.kind==='bridge'?'bridge':c.solid?'solid':c.dashed?'dashed':'chip';
+   const bridge=c.kind==='bridge'?` data-track-bridge="${esc(c.id)}" data-track-src="${esc(c.src||'')}" data-track-dst="${esc(c.dst||c.chain||'')}"`:'';
+   const label=c.kind==='bridge'?`Open ${c.dst||c.chain||'chain'} chart`:c.label||shortWallet(c.wallet);
+   const hint=c.kind==='bridge'?'Open the chain chart in this incident':'Open this wallet chart';
+   bits.push(`<button type="button" class="track-chip ${face} kind-${esc(c.kind)}" style="left:${c.x}px;top:${y}px" title="${esc(hint)}" aria-label="${esc(hint)}" data-track-kind="${esc(c.kind)}" data-track-wallet="${esc(c.wallet||'')}" data-track-chain="${esc(c.chain||'')}" data-track-symbol="${esc(c.symbol||'')}"${bridge}>${esc(label)}</button>`);
   });
   for(const b of laid.bands){
    if(!(b.src&&b.dst))continue;
-   bits.push(`<button type="button" class="track-chip bridge" style="left:${b.x+8}px;top:${top+6}px" data-track-bridge="${esc(b.id)}" data-track-src="${esc(b.src)}" data-track-dst="${esc(b.dst)}">${esc(b.src)}→${esc(b.dst)}</button>`);
+   bits.push(`<button type="button" class="track-chip bridge" style="left:${b.x+8}px;top:${top+6}px" title="Open the ${esc(b.dst)} chart" aria-label="Open the ${esc(b.dst)} chart" data-track-bridge="${esc(b.id)}" data-track-src="${esc(b.src)}" data-track-dst="${esc(b.dst)}">Open ${esc(b.dst)} chart</button>`);
   }
   const beside=this.paint.muse?.beside;
   if(beside?.wallet)bits.push(`<button type="button" class="track-beside" data-track-wallet="${esc(beside.wallet)}">${esc(beside.cta||'Follow next hop')}</button>`);
@@ -255,7 +291,7 @@ export class TrackPaintLayer{
   if(bridge){this.hooks.onBridge?.({id:bridge.dataset.trackBridge,src:bridge.dataset.trackSrc,dst:bridge.dataset.trackDst});return;}
   const chip=event.target.closest('[data-track-wallet]');
   if(!chip?.dataset.trackWallet)return;
-  this.hooks.onWallet?.({address:chip.dataset.trackWallet,chain:chip.dataset.trackChain||null,symbol:chip.dataset.trackSymbol||null});
+  this.hooks.onWallet?.({address:chip.dataset.trackWallet,chain:chip.dataset.trackChain||null,symbol:chip.dataset.trackSymbol||null,kind:chip.dataset.trackKind||null,paint:this.paint});
  }
  play(){
   this.stop();
@@ -294,6 +330,6 @@ export function sampleTrackPaint(seed='0x278d858f05b94576c1e6f73285886876ff6ef8d
   ],
   bands:[{id:'hop-band',t0:t,t1:t+8*60_000,wallets:[wallet,hop],label:'A→B'},{id:'bridge-band',t0:t+12*60_000,t1:t+16*60_000,src:'arb',dst:'eth',dotted:true,label:'arb→eth',wallets:[wallet]}],
   sideColumns:[{id:'eth',chain:'ethereum',label:'ETH',dotted:true,markers:[{kind:'transfer',time:t+15*60_000,wallet,label:'transfer',chain:'ethereum'}]}],
-  muse:{summary:'Sample paint for the workspace chart.',beside:{cta:'Follow next hop',wallet:hop},replay:true,replayMs:1500},
+  muse:{summary:'Sample paint for the workspace chart.',beside:{cta:'Follow next hop',wallet:hop},replay:true,replayMs:900},
  });
 }

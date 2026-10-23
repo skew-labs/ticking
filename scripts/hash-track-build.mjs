@@ -13,26 +13,35 @@ export function contentTag(bytes){
 }
 const paintSrc=readFileSync(resolve(root,'terminal/src/track-paint.js'));
 const paintTag=contentTag(paintSrc);
+const intentSrc=readFileSync(resolve(root,'terminal/src/track-intent.js'));
+const intentTag=contentTag(intentSrc);
 const rel=name=>`from ${"'"}${name}${"'"}`;
-const chartSpec='.'+'/chart.js',paintSpec='.'+'/track-paint.js';
-const workspaceSrc=readFileSync(resolve(root,'terminal/src/track-workspace.js'),'utf8').replace(rel(chartSpec),rel('/terminal/src/chart.js')).replace(rel(paintSpec),rel(`./track-paint-${paintTag}.js`));
+const chartSpec='.'+'/chart.js',paintSpec='.'+'/track-paint.js',intentSpec='.'+'/track-intent.js';
+const workspaceSrc=readFileSync(resolve(root,'terminal/src/track-workspace.js'),'utf8').replace(rel(chartSpec),rel('/terminal/src/chart.js')).replace(rel(paintSpec),rel(`./track-paint-${paintTag}.js`)).replace(rel(intentSpec),rel(`./track-intent-${intentTag}.js`));
 const workspaceTag=contentTag(workspaceSrc);
 const out=resolve(root,'terminal/dist/_app');
 rmSync(out,{recursive:true,force:true});
 mkdirSync(out,{recursive:true});
 const paintName=`track-paint-${paintTag}.js`;
+const intentName=`track-intent-${intentTag}.js`;
 const workspaceName=`track-workspace-${workspaceTag}.js`;
 writeFileSync(resolve(out,paintName),paintSrc);
+writeFileSync(resolve(out,intentName),intentSrc);
 writeFileSync(resolve(out,workspaceName),workspaceSrc);
 writeFileSync(resolve(out,'track-style.js'),readFileSync(resolve(root,'terminal/src/track-style.js')));
+let previous={};
+try{previous=JSON.parse(readFileSync(resolve(root,'terminal/track-build.json'),'utf8'));}catch{}
 const manifest={
  schema:'ticking.track-build.v1',
  paint:`/terminal/dist/_app/${paintName}`,
+ intent:`/terminal/dist/_app/${intentName}`,
  workspace:`/terminal/dist/_app/${workspaceName}`,
  sha256:{
   paint:createHash('sha256').update(paintSrc).digest('hex'),
+  intent:createHash('sha256').update(intentSrc).digest('hex'),
   workspace:createHash('sha256').update(workspaceSrc).digest('hex'),
  },
+ ...(previous.production?{production:previous.production}:{}),
 };
 writeFileSync(resolve(root,'terminal/track-build.json'),JSON.stringify(manifest,null,2)+'\n');
 console.log(JSON.stringify(manifest));

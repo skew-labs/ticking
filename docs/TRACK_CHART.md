@@ -13,16 +13,26 @@ Preview fixture only: `#/console/workspace/wallet:0x…?sample=1`.
 `node scripts/hash-track-build.mjs` writes `terminal/track-build.json` and:
 
 - `/terminal/dist/_app/track-paint-<hash>.js`
+- `/terminal/dist/_app/track-intent-<hash>.js`
 - `/terminal/dist/_app/track-workspace-<hash>.js`
 
 Current build, also recorded in `terminal/track-build.json`:
 
-- `/terminal/dist/_app/track-paint-KTW5KUBS.js`
-- `/terminal/dist/_app/track-workspace-GLSXQH6B.js`
+- `/terminal/dist/_app/track-paint-MMRLVUHN.js`
+- `/terminal/dist/_app/track-intent-JIG26E7Z.js`
+- `/terminal/dist/_app/track-workspace-W32A4OSN.js`
+
+## Feel and guard
+
+Wallet chips and bridge chips are buttons. A wallet chip adds that wallet's chart in the same incident. A bridge chip or side column opens the destination chain chart (`eth` resolves to `ethereum`). Replay defaults to 900ms and at most 8 steps. `#/tracker` is a one-row wallet form (`data-track-form`) and does not mount Flow.
+
+`terminal/src/track-intent.js` classifies the query before resolve. Track intent sends `mode:"track"`, `listAddresses:false`, and a Perceive / Plan / Act guard that paints hops on the workspace chart. Dump and suspect send `mode:"dump"` and keep dump tags only. A bare token such as PUMP stays on the asset chart. An empty live resolve does not replace a handoff that already has markers. Search responses with `searchGuard` `+track` and `route` `#/console/workspace/wallet:…` are stored and opened as that workspace.
 
 The hash is 8 characters from the first 5 bytes of SHA-256, encoded with the same alphabet as the products `/_app` names.
 
 ## Promote
+
+`scripts/promote-track-static.mjs` crawls the live static tree, bundles this repo's track sources, and rewrites the app, workspace, console, and agent hashes. Alias only after a wallet workspace with `?sample=1` shows markers, a hop chip opens a second chart in that incident, a bridge chip opens the chain chart, and `#/tracker` is the wallet form.
 
 Production aliases `ticking.dev`, `skew.deals`, and `www.skew.deals` point at the products static build that paints track markers on the workspace TickChart.
 

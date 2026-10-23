@@ -3,8 +3,9 @@ import {readFileSync} from 'node:fs';
 import {spawnSync} from 'node:child_process';
 import {dirname,resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
-import {parseTrackPaint,layoutTrack,replayFrames,panesForWallet,seriesFromPaint,TRACK_SCHEMA} from '../src/track-paint.js';
-import {loadTrackPaint,parseWorkspaceHash,trackerRedirect} from '../src/track-workspace.js';
+import {parseTrackPaint,layoutTrack,replayFrames,panesForWallet,seriesFromPaint,columnForBridge,museLine,TRACK_SCHEMA} from '../src/track-paint.js';
+import {loadTrackPaint,parseWorkspaceHash,trackerRedirect,shouldOpenWallet,trackRouteFromResolve,acceptTrackHandoff} from '../src/track-workspace.js';
+import {classifyTrackIntent,trackResolveBody,TRACK_GUARD_TEXT} from '../src/track-intent.js';
 
 const handoff={
  state:'ready',route:'#/console/workspace/wallet:0x278d858f05b94576c1e6f73285886876ff6ef8d2',
@@ -74,9 +75,44 @@ assert.equal(route.chain,'arbitrum');
 assert.equal(trackerRedirect('#/tracker'),'');
 assert.equal(trackerRedirect('#/tracker?address=0x278d858f05b94576c1e6f73285886876ff6ef8d2&chain=arbitrum'),'#/console/workspace/wallet%3A0x278d858f05b94576c1e6f73285886876ff6ef8d2?chain=arbitrum');
 assert.equal(trackerRedirect('#/terminal/SOL'),null);
+const dump=parseTrackPaint({mode:'dump',chartMarkers:[
+ {kind:'sell',time:1_700_000_000_000,label:'sell'},
+ {kind:'suspect',time:1_700_000_060_000,label:'suspect'},
+ {kind:'dump',time:1_700_000_120_000,label:'dump'},
+]});
+assert.equal(dump.chartMarkers.length,2);
+assert.ok(dump.chartMarkers.every(m=>m.kind==='dump'&&m.chip===false));
+assert.equal(parseTrackPaint({chartMarkers:[{kind:'suspect',time:1_700_000_000_000,label:'suspect'}]}).chartMarkers[0].kind,'dump');
+const bridgeCol=columnForBridge(paint,{dst:'eth'});
+assert.equal(bridgeCol.chain,'ethereum');
+assert.equal(bridgeCol.markers.length,1);
+assert.equal(museLine('Paid 0x278d858f05b94576c1e6f73285886876ff6ef8d2 then left'),'Paid a wallet then left');
+const quick=replayFrames(parseTrackPaint({chartMarkers:[{kind:'buy',time:1_700_000_000_000,label:'buy'},{kind:'sell',time:1_700_000_060_000,label:'sell'}],muse:{replay:true}}));
+assert.equal(quick.at(-1).at,900);
+assert.ok(quick.length<=8);
+assert.equal(shouldOpenWallet('0x278d858f05b94576c1e6f73285886876ff6ef8d2',{address:'0x278d858f05b94576c1e6f73285886876ff6ef8d2',kind:'cex'}),false);
+assert.equal(shouldOpenWallet('0x278d858f05b94576c1e6f73285886876ff6ef8d2',{address:hop,kind:'hop'}),true);
+assert.equal(shouldOpenWallet('0x278d858f05b94576c1e6f73285886876ff6ef8d2',{address:'0x278d858f05b94576c1e6f73285886876ff6ef8d2',kind:'bridge',dst:'eth'}),false);
+const trackIntent=classifyTrackIntent('where did the money go from 0x278d858f05b94576c1e6f73285886876ff6ef8d2');
+assert.equal(trackIntent.mode,'track');
+assert.equal(trackIntent.listAddresses,false);
+assert.equal(trackIntent.perceive,'track');
+assert.equal(trackIntent.act,'chartMarkers');
+assert.equal(trackIntent.route.startsWith('#/console/workspace/wallet%3A'),true);
+assert.equal(classifyTrackIntent('suspect dump 0xd8da6bf26964af9d7eed9e03e53415d37aa96045').mode,'dump');
+assert.equal(classifyTrackIntent('PUMP').mode,'other');
+assert.equal(trackResolveBody({query:trackIntent.route&&'where did the money go from 0x278d858f05b94576c1e6f73285886876ff6ef8d2'}).guard.text,TRACK_GUARD_TEXT);
+const routed=trackRouteFromResolve({state:'ready',route:'#/console/workspace/wallet:0x278d858f05b94576c1e6f73285886876ff6ef8d2',searchGuard:'search-guard-7+track',message:'Opening workspace chart to paint the trail.',handoff:{next:{request:{track:true,listAddresses:false,chartMarkers:[]}}}});
+assert.equal(routed,'#/console/workspace/wallet:0x278d858f05b94576c1e6f73285886876ff6ef8d2');
+assert.equal(acceptTrackHandoff({state:'ready',title:'Markets'}),null);
 const live=await loadTrackPaint({wallet:'0x278d858f05b94576c1e6f73285886876ff6ef8d2',chain:'arbitrum',fetchImpl:async(url,opts)=>{
  assert.equal(url,'/api/public/intelligence/resolve');
  assert.match(opts.body,/where did the money go from 0x278d858f05b94576c1e6f73285886876ff6ef8d2 on arbitrum/);
+ const sent=JSON.parse(opts.body);
+ assert.equal(sent.listAddresses,false);
+ assert.equal(sent.mode,'track');
+ assert.equal(sent.guard.perceive,'track');
+ assert.equal(sent.guard.act,'chartMarkers');
  return {ok:true,json:async()=>handoff};
 }});
 assert.equal(live.source,'resolve');
@@ -85,6 +121,11 @@ assert.equal(live.paint.listAddresses,false);
 const kept=await loadTrackPaint({wallet:'0x278d858f05b94576c1e6f73285886876ff6ef8d2',handoff,fetchImpl:async()=>({ok:false,status:503})});
 assert.equal(kept.source,'handoff');
 assert.equal(kept.paint.bands.length,2);
+const emptyLive=await loadTrackPaint({wallet:'0x278d858f05b94576c1e6f73285886876ff6ef8d2',handoff,fetchImpl:async()=>({ok:true,json:async()=>({state:'ready',message:'Opening workspace chart to paint the trail.',searchGuard:'search-guard-7+track',handoff:{next:{request:{track:true,listAddresses:false,chartMarkers:[],bands:[],sideColumns:[]}}}})})});
+assert.equal(emptyLive.source,'handoff');
+assert.equal(emptyLive.paint.chartMarkers.length,5);
+const told=await loadTrackPaint({wallet:'0x1111111111111111111111111111111111111111',fetchImpl:async()=>({ok:true,json:async()=>({message:'Opening workspace chart to paint the trail.',handoff:{next:{request:{track:true,listAddresses:false,chartMarkers:[]}}}})})});
+assert.match(told.paint.muse.summary,/Opening workspace chart/);
 assert.ok(seriesFromPaint(paint).every(b=>b.synthetic&&b.volume===0));
 assert.equal(seriesFromPaint(parseTrackPaint({chartMarkers:[],bands:[],sideColumns:[]})).length,0);
 
@@ -97,5 +138,10 @@ assert.match(manifest.paint,/\/terminal\/dist\/_app\/track-paint-[A-Z2-7]{8}\.js
 assert.match(manifest.workspace,/\/terminal\/dist\/_app\/track-workspace-[A-Z2-7]{8}\.js/);
 const hashed=readFileSync(resolve(root,manifest.workspace.slice(1)),'utf8');
 assert.match(hashed,/track-paint-[A-Z2-7]{8}\.js/);
+assert.match(hashed,/track-intent-[A-Z2-7]{8}\.js/);
 assert.doesNotMatch(hashed,/from '\.\/track-paint\.js'/);
+assert.doesNotMatch(hashed,/from '\.\/track-intent\.js'/);
+assert.match(hashed,/setTrackPaint/);
+assert.match(hashed,/data-track-form/);
+assert.doesNotMatch(hashed,/whale-tracker/);
 console.log(JSON.stringify({passed:true,markers:paint.chartMarkers.length,bands:paint.bands.length,replaySteps:frames.length,paint:manifest.paint,workspace:manifest.workspace}));

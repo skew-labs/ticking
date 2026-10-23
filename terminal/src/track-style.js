@@ -20,13 +20,17 @@ export default `.track-workspace,.track-retired{max-width:1180px;margin:0 auto;p
 .track-paint-ui{position:absolute;inset:0;z-index:3;pointer-events:none}
 .track-tag,.track-chip,.track-beside{position:absolute;pointer-events:auto;font:600 10px/1 "DM Sans",sans-serif}
 .track-tag{transform:translateX(-50%);padding:2px 6px;border-radius:999px;background:#fff;border:1px solid currentColor;white-space:nowrap}
-.track-tag.kind-buy{color:#239a82}.track-tag.kind-sell,.track-tag.kind-dump{color:#f97316}.track-tag.kind-transfer{color:#7564c3}.track-tag.kind-bridge{color:#3b82f6}.track-tag.kind-swap{color:#d97706}
-.track-chip{transform:translateX(-50%);border-radius:999px;padding:3px 8px;background:#fff;cursor:pointer;border:1px dashed #98a0b3;color:#1c2230}
+.track-tag.kind-buy{color:#239a82}.track-tag.kind-sell{color:#d36a79}.track-tag.kind-dump{color:#c2410c;background:#fff7ed}.track-tag.kind-transfer{color:#7564c3}.track-tag.kind-bridge{color:#3b82f6}.track-tag.kind-swap{color:#d97706}
+.track-chip{transform:translateX(-50%);border-radius:999px;padding:4px 9px;background:#fff;cursor:pointer;border:1px dashed #98a0b3;color:#1c2230;box-shadow:0 1px 2px rgba(28,34,48,.08)}
+.track-chip:hover,.track-chip:focus-visible{outline:2px solid #7564c3;outline-offset:1px;z-index:1}
 .track-chip.solid{border-style:solid;background:#111827;color:#fff}
 .track-chip.dashed{border-style:dashed;background:#fff}
-.track-chip.bridge{transform:none;border-style:dashed;border-color:#60a5fa;color:#1d4ed8}
+.track-chip.bridge{transform:none;border-style:dashed;border-color:#2563eb;color:#1d4ed8;background:#eff6ff;font-weight:700}
 .track-beside{right:12px;bottom:42px;left:auto;top:auto;border:0;border-radius:8px;background:#7564c3;color:#fff;padding:8px 10px;cursor:pointer}
-.track-retired form{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
-.track-retired input{border:1px solid #d9deea;border-radius:8px;padding:8px 10px;min-width:280px;font:inherit}
+.track-retired{padding-top:16px}
+.track-retired h1{font-size:22px}
+.track-retired form{display:flex;gap:8px;margin-top:8px;align-items:flex-end}
+.track-retired label{display:grid;gap:4px;flex:1;font-size:12px;color:#5c6578}
+.track-retired input{border:1px solid #d9deea;border-radius:8px;padding:8px 10px;min-width:0;width:100%;font:inherit}
 @media(max-width:800px){.track-charts.is-multi,.track-layout:has(.track-side:not([hidden])){grid-template-columns:1fr}.track-chart-host{height:420px}}
 `;
