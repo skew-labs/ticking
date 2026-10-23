@@ -69,7 +69,7 @@ for (const file of ['agent-patched.mjs', 'search-patched.mjs', 'lazy-patched.mjs
 const promote = readFileSync(new URL('../../scripts/promote-track-static.mjs', import.meta.url), 'utf8');
 assert.equal(promote.includes('patchResearchEntry'), true);
 assert.equal(promote.includes('market gate'), true);
-assert.equal(promote.includes('track-shell-LPE3ULGM.js'), true);
+assert.equal(promote.includes('track-shell-LI33TFB4.js'), true);
 assert.equal(promote.includes('console tracker label missing'), true);
 assert.equal(promote.includes('chart trail silhouette'), true);
 console.log(JSON.stringify({passed: true, root: root.pathname}));

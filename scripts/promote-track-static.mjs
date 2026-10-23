@@ -16,11 +16,11 @@ import {pathToFileURL} from 'node:url';
 
 // chart trail silhouette — baseline is the live workspace chart deploy.
 const BASE = {
-  shell: 'track-shell-LPE3ULGM.js',
-  agent: 'console-agent-VYVSH3Q3.js',
-  console: 'console-XGD2I6YX.js',
-  workspace: 'workspace-GQIMGUXH.js',
-  app: 'app-RTEAHYSG.js',
+  shell: 'track-shell-LI33TFB4.js',
+  agent: 'console-agent-EKD36Y3A.js',
+  console: 'console-LQ3AIWC2.js',
+  workspace: 'workspace-FTE7RKJ7.js',
+  app: 'app-6SXSQPWV.js',
 };
 const ell = '\\u2026';
 const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
