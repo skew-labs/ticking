@@ -1,5 +1,6 @@
 import {TickChart} from './chart.js';
 import {parseTrackPaint,seriesFromPaint,panesForWallet,shortWallet,walletAddress,sampleTrackPaint} from './track-paint.js';
+import trackCss from './track-style.js';
 
 export const HANDOFF_KEY='ticking.track.handoff.v1';
 const CHAIN=/^[a-z]{2,20}$/;
@@ -58,7 +59,24 @@ export async function loadTrackPaint({wallet,chain,handoff,sample,fetchImpl=fetc
 
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 
+export function ensureTrackStyle(){
+ if(typeof document==='undefined'||document.getElementById('ticking-track-style'))return;
+ const node=document.createElement('style');
+ node.id='ticking-track-style';
+ node.textContent=trackCss;
+ document.head.append(node);
+}
+
+export function mountTrackerPage(root,{params}={}){
+ ensureTrackStyle();
+ const search=params instanceof URLSearchParams?params:new URLSearchParams(params||'');
+ const next=trackerRedirect(`#/tracker${search.size?`?${search}`:''}`);
+ if(next){location.replace(next);return ()=>{};}
+ return mountTrackerRetired(root);
+}
+
 export function mountTrackerRetired(root){
+ ensureTrackStyle();
  root.innerHTML=`<section class="track-retired"><h1>Tracking opens on the workspace chart</h1><p>One incident stays on one workspace. Paste a wallet to open its chart.</p><form><label>Wallet<input name="wallet" required autocomplete="off" spellcheck="false" placeholder="0x…"></label><button type="submit">Open workspace</button></form><p role="status"></p></section>`;
  const form=root.querySelector('form'),status=root.querySelector('[role=status]');
  const onSubmit=e=>{
@@ -72,6 +90,7 @@ export function mountTrackerRetired(root){
 }
 
 export function mountTrackWorkspace(root,{incident,wallet,chain,sample}={}){
+ ensureTrackStyle();
  const abort=new AbortController();
  let disposed=false;
  const charts=[];

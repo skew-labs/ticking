@@ -178,12 +178,12 @@ export function shortWallet(address){
 const TAG_COLOR={buy:'#239a82',sell:'#d36a79',dump:'#f97316',transfer:'#7564c3',bridge:'#60a5fa',swap:'#f5b041',hop:'#36c6bc',frozen:'#111827',cex:'#111827',tag:'#7b8496'};
 export function tagColor(kind){return TAG_COLOR[kind]||TAG_COLOR.tag;}
 
-export function layoutTrack(paint,view){
+export function layoutTrack(paint,view,chart){
  const markers=paint?.chartMarkers||[];
  const xAt=time=>{
   if(!view?.indexAt||!view?.x)return null;
   const x=view.x(view.indexAt(time));
-  const plot=view.width||view.plotWidth||0;
+  const plot=view.width||view.plotWidth||chart?.plotWidth||chart?.width||0;
   if(!Number.isFinite(x)||x<-40||x>plot+40)return null;
   return x;
  };
@@ -216,7 +216,7 @@ export class TrackPaintLayer{
   this.canvas.width=Math.round(width*dpr);this.canvas.height=Math.round(height*dpr);this.canvas.style.width=width+'px';this.canvas.style.height=height+'px';
   const ctx=this.canvas.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,width,height);
   const view=chart.view;if(!view){this.ui.replaceChildren();return;}
-  const laid=layoutTrack(this.paint,view);
+  const laid=layoutTrack(this.paint,view,chart);
   const top=chart.priceTop||18,bottom=(chart.priceTop||18)+(chart.priceHeight||height*.6);
   for(const b of laid.bands){
    ctx.save();ctx.fillStyle=b.dotted?'rgba(96,165,250,.13)':'rgba(54,198,188,.14)';ctx.fillRect(b.x,top,b.width,Math.max(8,bottom-top));

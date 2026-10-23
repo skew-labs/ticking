@@ -17,20 +17,21 @@ Preview fixture only: `#/console/workspace/wallet:0x…?sample=1`.
 
 Current build, also recorded in `terminal/track-build.json`:
 
-- `/terminal/dist/_app/track-paint-FKRTISRS.js`
-- `/terminal/dist/_app/track-workspace-5O47HKEK.js`
+- `/terminal/dist/_app/track-paint-KTW5KUBS.js`
+- `/terminal/dist/_app/track-workspace-GLSXQH6B.js`
 
 The hash is 8 characters from the first 5 bytes of SHA-256, encoded with the same alphabet as the products `/_app` names.
 
 ## Promote
 
-Observed products shell on 2026-10-23, before this paint:
+Production aliases `ticking.dev`, `skew.deals`, and `www.skew.deals` point at the products static build that paints track markers on the workspace TickChart.
 
 | | |
 | --- | --- |
-| Deployment | `dpl_8kWWQ53PMJXzv6aA4m2T5UabAKaZ` |
-| App entry | `/_app/app-L5AHZFB4.js` |
-| Workspace mount | `/_app/chunks/console-agent-BQIUIGP4.js` (`mountConsoleAgent`) |
-| Chart class | `/_app/chunks/chunk-WHR7ZWX6.js` |
+| Deployment | `dpl_3ReWzi9d84dBa2Hrmx4s8Be7M1X2` |
+| App entry | `/_app/app-TYCMKHBN.js` |
+| Track shell | `/_app/chunks/track-shell-XQ7HHZ26.js` (`setTrackPaint`, `mountTrackWorkspace`, `mountTrackerPage`) |
+| Wallet mount | `/_app/chunks/console-agent-4BQUAKQK.js` |
+| Rollback | `dpl_8kWWQ53PMJXzv6aA4m2T5UabAKaZ` (`/_app/app-L5AHZFB4.js`) |
 
-That shell does not call `setTrackPaint`. Promote by rebuilding the products static output with this TickChart (`setTrackPaint`) and the hashed `track-paint` module, then upload a new Vercel deployment of that output. Alias it to production only after a wallet workspace shows markers from a resolve handoff, a chip opens a second chart without leaving the incident, and `#/tracker` no longer mounts Flow chrome. Record the new `dpl_` id next to `terminal/track-build.json`. Roll back by aliasing the deployment above.
+Checked on production after the alias: a wallet workspace with `?sample=1` shows buy, sell, bridge, hop, CEX, and unlabeled markers; a hop chip opens a second chart in the same incident; `#/tracker` renders the retired workspace prompt and does not mount Flow chrome. A live resolve for that public wallet returned zero markers, so the sample query is the visual proof. Roll back by aliasing `dpl_8kWWQ53PMJXzv6aA4m2T5UabAKaZ`.

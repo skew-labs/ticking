@@ -24,6 +24,7 @@ const paintName=`track-paint-${paintTag}.js`;
 const workspaceName=`track-workspace-${workspaceTag}.js`;
 writeFileSync(resolve(out,paintName),paintSrc);
 writeFileSync(resolve(out,workspaceName),workspaceSrc);
+writeFileSync(resolve(out,'track-style.js'),readFileSync(resolve(root,'terminal/src/track-style.js')));
 const manifest={
  schema:'ticking.track-build.v1',
  paint:`/terminal/dist/_app/${paintName}`,
