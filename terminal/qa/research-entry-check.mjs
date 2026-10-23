@@ -85,7 +85,7 @@ for (const file of ['agent-patched.mjs', 'search-patched.mjs', 'lazy-patched.mjs
 const promote = readFileSync(new URL('../../scripts/promote-track-static.mjs', import.meta.url), 'utf8');
 assert.equal(promote.includes('patchResearchEntry'), true);
 assert.equal(promote.includes('market gate'), true);
-assert.equal(promote.includes('track-shell-733NEGSU.js'), true);
+assert.equal(promote.includes('track-shell-KTQN6OSF.js'), true);
 assert.equal(promote.includes('console tracker label missing'), true);
 assert.equal(promote.includes('chart trail silhouette'), true);
 assert.equal(promote.includes('mountMintWorkspace'), true);

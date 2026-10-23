@@ -9,13 +9,13 @@
     "workspace": "034532293a2db511d44bff431c0939002c52ec47bf165a9a3b8ddfde7dabc3f7"
   },
   "production": {
-    "deployment": "dpl_CxGb7iij23HfMzYKYJrZxUt2sFFV",
+    "deployment": "dpl_68mtTVqtdT5EWEPksr1R9JL6MY7S",
     "rollback": "dpl_8kWWQ53PMJXzv6aA4m2T5UabAKaZ",
-    "app": "/_app/app-TOMNXDUH.js",
-    "shell": "/_app/chunks/track-shell-733NEGSU.js",
-    "agent": "/_app/chunks/console-agent-67GTD2KQ.js",
-    "workspace": "/_app/chunks/workspace-SCTOOQHM.js",
-    "console": "/_app/chunks/console-S36XXMPC.js",
+    "app": "/_app/app-OL2I62PQ.js",
+    "shell": "/_app/chunks/track-shell-KTQN6OSF.js",
+    "agent": "/_app/chunks/console-agent-VLHCXSXE.js",
+    "workspace": "/_app/chunks/workspace-6Z5UX4JG.js",
+    "console": "/_app/chunks/console-3PCHZ3GL.js",
     "home": "/_app/chunks/chunk-JGQFL2MX.js"
   }
 }

@@ -14,13 +14,13 @@ import {existsSync, mkdirSync, readFileSync, readdirSync, unlinkSync, writeFileS
 import {dirname, join, resolve} from 'node:path';
 import {pathToFileURL} from 'node:url';
 
-// chart trail silhouette — baseline is the live mint chart deploy.
+// chart trail silhouette — baseline is the live hop-loop chart deploy.
 const BASE = {
-  shell: 'track-shell-733NEGSU.js',
-  agent: 'console-agent-67GTD2KQ.js',
-  console: 'console-S36XXMPC.js',
-  workspace: 'workspace-SCTOOQHM.js',
-  app: 'app-TOMNXDUH.js',
+  shell: 'track-shell-KTQN6OSF.js',
+  agent: 'console-agent-VLHCXSXE.js',
+  console: 'console-3PCHZ3GL.js',
+  workspace: 'workspace-6Z5UX4JG.js',
+  app: 'app-OL2I62PQ.js',
 };
 const ell = '\\u2026';
 const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
