@@ -1,6 +1,7 @@
 import {parseInterval} from './intervals.js';
 import {DrawingLayer} from './drawings.js';
 import {normalizeIndicators,computeIndicators,paintIndicators,sameIndicatorInput} from './indicators.js';
+import {TrackPaintLayer,parseTrackPaint} from './track-paint.js';
 const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
 const niceStep=x=>{const p=10**Math.floor(Math.log10(x)),n=x/p;return (n<1.5?1:n<2.25?2:n<3.75?2.5:n<7.5?5:10)*p;};
 function precision(step){const power=Math.floor(Math.log10(step)),mantissa=step/10**power;return clamp(-power+(Math.abs(mantissa-2.5)<1e-7?1:0),0,14);}
@@ -83,6 +84,7 @@ export class TickChart {
  pan(direction){this.offset=this.clampOffset(this.offset+direction*12);this.requestDraw();}
  reset(){this.count=this.options.compact?55:88;this.offset=0;this.manualScale=null;this.autoScale=null;this.requestDraw();}
  goToLatest(){this.offset=0;this.manualScale=null;this.autoScale=null;this.pointer=null;this.requestDraw();this.container.dispatchEvent(new CustomEvent('latestrequest'));}
+ setTrackPaint(paint,hooks){if(!this.trackLayer)this.trackLayer=new TrackPaintLayer(this);if(hooks)this.trackLayer.setHooks(hooks);this.trackLayer.setPaint(parseTrackPaint(paint));}
  addLevel(){this.drawingLayer?.setTool('horizontal');}
  yToPrice(y){return this.max-(y-this.priceTop)/this.priceHeight*(this.max-this.min);}
  touchGesture(e){
@@ -121,7 +123,7 @@ export class TickChart {
   ctx.fillStyle=bg;ctx.fillRect(0,0,width,height);this.series=this.options.series??[];this.offset=this.clampOffset(this.offset);
   const compact=this.options.compact,gap=compact?3:6,logicalStart=this.series.length-this.offset-this.count+gap,end=Math.min(this.series.length,Math.max(1,Math.ceil(this.series.length-this.offset)+1)),begin=Math.max(0,Math.floor(logicalStart)-1);
   this.visible=this.series.slice(begin,end);
-  if(!this.visible.length){this.view=null;this.legend.hidden=true;this.navigation.style.display='none';this.tooltip.style.display='none';this.overlay.getContext('2d').clearRect(0,0,this.overlay.width,this.overlay.height);ctx.fillStyle=text;ctx.font='14px "DM Sans",sans-serif';ctx.textAlign='center';ctx.fillText(this.options.emptyMessage||'No chart data available.',width/2,height/2);return;}
+  if(!this.visible.length){this.view=null;this.legend.hidden=true;this.navigation.style.display='none';this.tooltip.style.display='none';this.overlay.getContext('2d').clearRect(0,0,this.overlay.width,this.overlay.height);ctx.fillStyle=text;ctx.font='14px "DM Sans",sans-serif';ctx.textAlign='center';ctx.fillText(this.options.emptyMessage||'No chart data available.',width/2,height/2);this.trackLayer?.sync();return;}
   const period=parseInterval(this.engineData?.interval||this.options.interval).milliseconds,configs=this.options.indicators,key=JSON.stringify(configs)+':'+period;
   if(this.studyCacheKey!==key||configs.length&&this.studySeries!==this.series&&!sameIndicatorInput(this.studySeries,this.series)){this.studies=computeIndicators(this.series,configs,period);this.studyCacheKey=key;}
   this.studySeries=this.series;
@@ -192,7 +194,7 @@ export class TickChart {
   this.indicatorPanes=paintIndicators(ctx,compact?this.studies.filter(s=>!s.definition.pane):this.studies,{begin,end,x,y,width:plotWidth,top:this.priceTop,bottom:priceBottom,dark,grid,text,format:this.formatPrice,volumeBottom:mainHeight});
   const transition=this.engineData?.history?.sourceTransition*1000;
   if(Number.isFinite(transition)&&transition>=data[0].time&&transition<=data.at(-1).time+period){const seam=x(indexAt(transition));ctx.save();ctx.strokeStyle=accent+'80';ctx.setLineDash([3,4]);ctx.beginPath();ctx.moveTo(seam,this.priceTop);ctx.lineTo(seam,plotHeight);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle=accent;ctx.font='500 10px "DM Sans",sans-serif';ctx.fillText('Solana observations →',clamp(seam+6,5,Math.max(5,plotWidth-130)),this.priceTop+10);ctx.restore();}
-  this.drawingLayer?.paint(ctx);ctx.fillStyle=dark?'#31374a':'#eceef4';ctx.font=`700 ${compact?22:32}px "DM Sans",sans-serif`;ctx.fillText('ticking',15,mainHeight-16);this.drawCrosshair();
+  this.drawingLayer?.paint(ctx);ctx.fillStyle=dark?'#31374a':'#eceef4';ctx.font=`700 ${compact?22:32}px "DM Sans",sans-serif`;ctx.fillText('ticking',15,mainHeight-16);this.trackLayer?.sync();this.drawCrosshair();
   const rangeKey=[begin,end,this.series[0]?.time,this.series.at(-1)?.time].join(':');if(rangeKey!==this.rangeKey){this.rangeKey=rangeKey;this.container.dispatchEvent(new CustomEvent('viewchange',{detail:{begin,end,total:this.series.length}}));}
  }
  updateLegend(c){
@@ -214,5 +216,5 @@ export class TickChart {
   const time=c?.time??v.anchor(p).time,label=new Date(time).toISOString().slice(v.period>=86400000?0:5,19).replace('T',' '),tw=ctx.measureText(label).width+16,tx=clamp(cx-tw/2,0,Math.max(0,v.width-tw));ctx.fillStyle=this.colors.dark?'#596078':'#7b8496';ctx.fillRect(tx,v.axisTop,tw,27);ctx.fillStyle='#fff';ctx.fillText(label,tx+8,v.axisTop+13);
   if(c){this.tooltip.style.display='block';this.tooltip.style.left='8px';this.tooltip.style.top='46px';this.tooltip.style.maxWidth=(this.plotWidth-16)+'px';this.tooltip.style.whiteSpace='normal';const names={binance_spot:'Binance',binance_spot_gap:'Binance gap archive',binance_alpha_gap:'Binance Alpha gap archive',binance_alpha:'Binance Alpha',solana_pool_mark:'Pool state · indicative',geckoterminal_pool_reference:'Pool history · reference',solana_reference:'Solana',gate_spot_reference:'Gate reference',alpha_spot_reference:'Alpha reference',bybit_spot_reference:'Bybit reference',okx_spot_reference:'OKX reference',okx:'OKX',gate:'Gate',mexc:'MEXC',binance_spot_reference:'Binance reference',solana_wrapped_reference:'Solana wrapped reference',ticking_reference_reconstruction:'Reconstructed reference'},source=c.sources?.map(s=>names[s]||s).join(' + '),quality=c.synthetic?' · Carried close · execution coverage unknown':c.quality?.basis==='mixed'?` · Mixed: ${c.quality.observedMinutes} recorded / ${c.quality.referenceMinutes} reference / ${c.quality.estimatedMinutes} estimated minutes · Volume from recorded trades only`:c.estimateMethod==='median_venue_ohlc_v1'?' · Composite reference · '+(c.components?.length||c.sources?.length||0)+' sources · '+(c.excludedComponents?.length||c.excludedComponentCount||0)+' exclusions · not traded OHLC':c.estimated?' · Reconstructed reference · not traded OHLC':c.referenceOnly?' · Reference price · not native executions':c.synthetic?' · Carried close · execution coverage unknown':'';this.tooltip.textContent=`O ${this.formatPrice(c.open)}  H ${this.formatPrice(c.high)}  L ${this.formatPrice(c.low)}  C ${this.formatPrice(c.close)}${source?' · '+source+' · '+c.quoteCurrency:''}${quality}`;this.container.dispatchEvent(new CustomEvent('candlehover',{detail:c}));}
  }
- destroy(){this.destroyed=true;cancelAnimationFrame(this.frame);cancelAnimationFrame(this.crosshairFrame);this.abort.abort();this.drawingLayer?.destroy();this.resizeObserver.disconnect();this.intersectionObserver?.disconnect();this.container.replaceChildren();}
+ destroy(){this.destroyed=true;cancelAnimationFrame(this.frame);cancelAnimationFrame(this.crosshairFrame);this.abort.abort();this.trackLayer?.destroy();this.drawingLayer?.destroy();this.resizeObserver.disconnect();this.intersectionObserver?.disconnect();this.container.replaceChildren();}
 }

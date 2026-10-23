@@ -1,4 +1,30 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ticking · Pro source preview</title><link rel="stylesheet" href="/terminal/base.css"><link rel="stylesheet" href="/terminal/terminal.css"><link rel="stylesheet" href="/terminal/chart-tools.css"></head><body class="pro-active"><header class="demo-nav"><strong>ticking</strong><span>Pro terminal · source preview · read only</span></header><main id="app"></main><script type="module">
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ticking · Pro source preview</title><link rel="stylesheet" href="/terminal/base.css"><link rel="stylesheet" href="/terminal/terminal.css"><link rel="stylesheet" href="/terminal/chart-tools.css"><link rel="stylesheet" href="/terminal/track-workspace.css"></head><body class="pro-active"><header class="demo-nav"><strong>ticking</strong><span>Pro terminal · source preview · read only</span></header><main id="app"></main><script type="module">
 import {terminalPage,mountTerminal} from '/terminal/src/pro-terminal.js';
-let dispose;function render(){dispose?.();const root=document.querySelector('#app');root.innerHTML=terminalPage();let id='SOL';try{id=decodeURIComponent(location.hash.split('/')[2]||'SOL')}catch{}dispose=mountTerminal(root,{ident:id})}window.addEventListener('hashchange',render);window.addEventListener('pagehide',()=>dispose?.(),{once:true});render();
+import {mountTrackWorkspace,mountTrackerRetired,parseWorkspaceHash,trackerRedirect} from '/terminal/src/track-workspace.js';
+let dispose;
+function render(){
+ dispose?.();dispose=null;
+ const redirect=trackerRedirect(location.hash);
+ if(typeof redirect==='string'){
+  if(redirect){location.replace(redirect);return;}
+  document.body.classList.remove('pro-active');
+  const root=document.querySelector('#app');root.replaceChildren();
+  dispose=mountTrackerRetired(root);
+  document.title='Workspace track — ticking';
+  return;
+ }
+ const ws=parseWorkspaceHash(location.hash),root=document.querySelector('#app');
+ if(ws?.wallet){
+  document.body.classList.remove('pro-active');root.replaceChildren();
+  dispose=mountTrackWorkspace(root,ws);
+  document.title=(ws.wallet.slice(0,6)+'… · Workspace — ticking');
+  return;
+ }
+ document.body.classList.add('pro-active');
+ root.innerHTML=terminalPage();
+ let id='SOL';
+ try{id=decodeURIComponent((ws?.ident)||location.hash.split('/')[2]||'SOL')}catch{}
+ dispose=mountTerminal(root,{ident:id});
+}
+window.addEventListener('hashchange',render);window.addEventListener('pagehide',()=>dispose?.(),{once:true});render();
 </script></body></html>

@@ -1,0 +1,9 @@
+{
+  "schema": "ticking.track-build.v1",
+  "paint": "/terminal/dist/_app/track-paint-FKRTISRS.js",
+  "workspace": "/terminal/dist/_app/track-workspace-5O47HKEK.js",
+  "sha256": {
+    "paint": "2aa3344a324c43e99287436cb1886a0db0e0fa5c8fb1e550b048073f82bed0d0",
+    "workspace": "ebb9f3a88aefb48bb4da9eaba71dab8bf88fe58c0144506bec97b62de3ba55e6"
+  }
+}
