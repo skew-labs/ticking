@@ -243,7 +243,7 @@ assert.match(workspace,/document\.hidden/);
 assert.doesNotMatch(workspace,/Fast Feed is a research/);
 
 const promote=readFileSync(new URL('../../scripts/promote-track-static.mjs',import.meta.url),'utf8');
-for(const needle of ['latencyPaintOnly','binance_1s','/api/public/engine/fast-feed','solana-not-tip','Arbitrum tip','wickRejects','track-shell-QSAI55JM.js']){
+for(const needle of ['latencyPaintOnly','binance_1s','/api/public/engine/fast-feed','solana-not-tip','Arbitrum tip','wickRejects','track-shell-FIUEPEKE.js']){
  assert.equal(promote.includes(needle),true,needle);
 }
 

@@ -44,14 +44,14 @@ Production aliases `ticking.dev`, `skew.deals`, and `www.skew.deals` point at th
 
 | | |
 | --- | --- |
-| Deployment | `dpl_8MKWCc5whGbnkYTEakyCWDYZWWKx` |
-| App entry | `/_app/app-F7WCGX7K.js` |
-| Track shell | `/_app/chunks/track-shell-QSAI55JM.js` (`setTrackPaint`, `mountTrackWorkspace`, `mountMintWorkspace`, `mountTrackerPage`, `classifyTrackIntent`, `data-track-ask`, `latencyPaintOnly`) |
-| Wallet mount | `/_app/chunks/console-agent-R33GK2ST.js` |
-| Workspace router | `/_app/chunks/workspace-MATF5CJ5.js` |
-| Console | `/_app/chunks/console-D2OTCW4V.js` |
+| Deployment | `dpl_4NFCHsxoo4js6a1863JhCLzN145f` |
+| App entry | `/_app/app-UN5WLLFX.js` |
+| Track shell | `/_app/chunks/track-shell-FIUEPEKE.js` (`setTrackPaint`, `mountTrackWorkspace`, `mountMintWorkspace`, `mountTrackerPage`, `classifyTrackIntent`, `data-track-ask`, `latencyPaintOnly`, `wickRejects`) |
+| Wallet mount | `/_app/chunks/console-agent-6ALYMWX4.js` |
+| Workspace router | `/_app/chunks/workspace-G5CM2ZT2.js` |
+| Console | `/_app/chunks/console-JHLUHRPZ.js` |
 | Home | `/_app/chunks/chunk-JGQFL2MX.js` |
 | Route | `/_app/chunks/chunk-OJVUMUFG.js` |
 | Rollback | `dpl_8kWWQ53PMJXzv6aA4m2T5UabAKaZ` (`/_app/app-L5AHZFB4.js`) |
 
-Checked on `ticking.dev` after the alias: the homepage still loads `chunk-JGQFL2MX.js`, and the app entry is `app-F7WCGX7K.js`. The shell is `track-shell-QSAI55JM.js` (211757 bytes) and contains `latencyPaintOnly`, `binance_1s`, and `/api/public/engine/fast-feed`. `#/console/workspace/wallet:…?sample=1` paints “Sample paint on this workspace chart.” and shows “Ask this chart”. A question whose resolve returns no markers stays on that hash and reads “This question stays on this chart.” A hop chip opens a second chart. A dump tag stays a focus button. An Arbitrum mint whose tip pull is missing keeps the chart and does not invent candles. Roll back by aliasing `dpl_8kWWQ53PMJXzv6aA4m2T5UabAKaZ`. The alias this deploy replaced was `dpl_68mtTVqtdT5EWEPksr1R9JL6MY7S`.
+Checked on `ticking.dev` after the alias: the homepage still loads `chunk-JGQFL2MX.js`, and the app entry is `app-UN5WLLFX.js`. The shell is `track-shell-FIUEPEKE.js` (218332 bytes, sha256 `2a284791445b3149693a3bc60c739984796f823e18e372d3e176a2c258f8115d`) and contains `wickRejects`, `latencyPaintOnly`, `binance_1s`, and `/api/public/engine/fast-feed`. `#/console/workspace/wallet:…?sample=1` paints “Sample paint on this workspace chart.” and shows “Ask this chart”. A question whose resolve returns no markers stays on that hash and reads “This question stays on this chart.” A hop chip opens a second chart. A dump tag stays a focus button. An Arbitrum mint paints a Fast Feed print that arrives with a swapped wick or a single `px`, and the subtitle reads “Arbitrum tip · latency paint”. A missed tip pull keeps the chart. Roll back by aliasing `dpl_8kWWQ53PMJXzv6aA4m2T5UabAKaZ`. The alias this deploy replaced was `dpl_8MKWCc5whGbnkYTEakyCWDYZWWKx`.
