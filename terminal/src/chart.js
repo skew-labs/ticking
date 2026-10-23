@@ -1,6 +1,7 @@
 import {parseInterval} from './intervals.js';
 import {DrawingLayer} from './drawings.js';
 import {normalizeIndicators,computeIndicators,paintIndicators,sameIndicatorInput} from './indicators.js';
+import {TrackPaintLayer,parseTrackPaint} from './track-paint.js';
 const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
 const niceStep=x=>{const p=10**Math.floor(Math.log10(x)),n=x/p;return (n<1.5?1:n<2.25?2:n<3.75?2.5:n<7.5?5:10)*p;};
 function precision(step){const power=Math.floor(Math.log10(step)),mantissa=step/10**power;return clamp(-power+(Math.abs(mantissa-2.5)<1e-7?1:0),0,14);}
@@ -83,6 +84,7 @@ export class TickChart {
  pan(direction){this.offset=this.clampOffset(this.offset+direction*12);this.requestDraw();}
  reset(){this.count=this.options.compact?55:88;this.offset=0;this.manualScale=null;this.autoScale=null;this.requestDraw();}
  goToLatest(){this.offset=0;this.manualScale=null;this.autoScale=null;this.pointer=null;this.requestDraw();this.container.dispatchEvent(new CustomEvent('latestrequest'));}
+ setTrackPaint(paint,hooks){if(!this.trackLayer)this.trackLayer=new TrackPaintLayer(this);if(hooks)this.trackLayer.setHooks(hooks);const n=this.series?.length||this.options.series?.length||0;if(n>8){this.count=Math.min(480,n+8);this.offset=0;}this.trackLayer.setPaint(parseTrackPaint(paint));}
  addLevel(){this.drawingLayer?.setTool('horizontal');}
  yToPrice(y){return this.max-(y-this.priceTop)/this.priceHeight*(this.max-this.min);}
  touchGesture(e){
@@ -116,18 +118,22 @@ export class TickChart {
   const width=this.container.clientWidth,height=this.container.clientHeight;if(!width||!height)return;this.renderStats.baseFrames++;
   this.height=height;const dpr=Math.min(devicePixelRatio||1,3,Math.sqrt(8000000/(width*height)));this.dpr=dpr;
   for(const canvas of [this.canvas,this.overlay]){const w=Math.round(width*dpr),h=Math.round(height*dpr);if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;canvas.style.width=width+'px';canvas.style.height=height+'px';}}
-  const ctx=this.canvas.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);
+  const ctx=this._ctx||(this._ctx=this.canvas.getContext('2d',{alpha:false,desynchronized:true}));ctx.setTransform(dpr,0,0,dpr,0,0);
   const dark=this.options.theme==='dark',bg=dark?'#1a1e2d':'#fff',grid=dark?'#2b3040':'#eef0f5',text=dark?'#a0a9bd':'#798395',up='#239a82',down='#d36a79',accent='#7564c3';this.colors={dark,bg,grid,text,up,down};
-  ctx.fillStyle=bg;ctx.fillRect(0,0,width,height);this.series=this.options.series??[];this.offset=this.clampOffset(this.offset);
+  this.series=this.options.series??[];this.offset=this.clampOffset(this.offset);
   const compact=this.options.compact,gap=compact?3:6,logicalStart=this.series.length-this.offset-this.count+gap,end=Math.min(this.series.length,Math.max(1,Math.ceil(this.series.length-this.offset)+1)),begin=Math.max(0,Math.floor(logicalStart)-1);
   this.visible=this.series.slice(begin,end);
-  if(!this.visible.length){this.view=null;this.legend.hidden=true;this.navigation.style.display='none';this.tooltip.style.display='none';this.overlay.getContext('2d').clearRect(0,0,this.overlay.width,this.overlay.height);ctx.fillStyle=text;ctx.font='14px "DM Sans",sans-serif';ctx.textAlign='center';ctx.fillText(this.options.emptyMessage||'No chart data available.',width/2,height/2);return;}
-  const period=parseInterval(this.engineData?.interval||this.options.interval).milliseconds,configs=this.options.indicators,key=JSON.stringify(configs)+':'+period;
+  if(!this.visible.length){this._frameSig='';this.view=null;this.legend.hidden=true;this.navigation.style.display='none';this.tooltip.style.display='none';this.overlay.getContext('2d').clearRect(0,0,this.overlay.width,this.overlay.height);ctx.fillStyle=bg;ctx.fillRect(0,0,width,height);ctx.fillStyle=text;ctx.font='14px "DM Sans",sans-serif';ctx.textAlign='center';ctx.fillText(this.options.emptyMessage||'No chart data available.',width/2,height/2);this.trackLayer?.sync();return;}
+  const intervalLabel=this.engineData?.interval||this.options.interval;
+  if(this._parsedLabel!==intervalLabel){this._parsed=parseInterval(intervalLabel);this._parsedLabel=intervalLabel;}
+  const period=this._parsed.milliseconds,configs=this.options.indicators;
+  if(this._configs!==configs){this._configKey=JSON.stringify(configs);this._configs=configs;}
+  const key=this._configKey+':'+period;
   if(this.studyCacheKey!==key||configs.length&&this.studySeries!==this.series&&!sameIndicatorInput(this.studySeries,this.series)){this.studies=computeIndicators(this.series,configs,period);this.studyCacheKey=key;}
   this.studySeries=this.series;
   const paneHeight=Math.max(68,Math.min(110,height*.19)),oscillators=compact?[]:this.studies.filter(s=>s.definition.pane);oscillators.forEach(s=>s.paneHeight=paneHeight);
-  const data=this.visible;let min=Infinity,max=-Infinity,maxVol=Number.MIN_VALUE;
-  for(const bar of data){min=Math.min(min,bar.low);max=Math.max(max,bar.high);maxVol=Math.max(maxVol,bar.volume);}
+  const data=this.visible;let min=Infinity,max=-Infinity,maxVol=Number.MIN_VALUE,stamp=data.length;
+  for(const bar of data){min=Math.min(min,bar.low);max=Math.max(max,bar.high);maxVol=Math.max(maxVol,bar.volume);stamp=(Math.imul(stamp|0,31)+((bar.time/1000)|0)+((bar.close*1e4)|0)+((bar.high*1e4)|0)+((bar.low*1e4)|0)+((bar.volume*100)|0))|0;}
   for(const study of this.studies){if(study.definition.pane)continue;for(const line of Object.values(study.lines))for(let i=begin;i<Math.min(end,line.length);i++){const value=line[i];if(value!==null){min=Math.min(min,value);max=Math.max(max,value);}}}
   const reference=Math.abs(data.at(-1).close),range=Math.max(max-min,reference*1e-6,Number.MIN_VALUE);
   const scaleKey=[data[0].time,data.at(-1).time,this.offset,this.count,height,key,this.options.volume].join(':');
@@ -140,7 +146,9 @@ export class TickChart {
   const priceDigits=Math.max(digits,reference>=1?2:Math.min(12,Math.max(2,5-Math.floor(Math.log10(reference||1)))));
   this.formatPrice=p=>formatPrice(p,priceDigits);const axisPrice=p=>formatPrice(p,digits);
   const fontSize=compact?10:width<450?11:12;ctx.font=`500 ${fontSize}px "DM Sans",sans-serif`;ctx.textBaseline='middle';
-  const measured=Math.max(ctx.measureText(this.formatPrice(this.min)).width,ctx.measureText(this.formatPrice(this.max)).width)+18;
+  const measureKey=`${digits}:${fontSize}:${this.formatPrice(this.min)}:${this.formatPrice(this.max)}`;
+  if(this._measureKey!==measureKey){this._measured=Math.max(ctx.measureText(this.formatPrice(this.min)).width,ctx.measureText(this.formatPrice(this.max)).width)+18;this._measureKey=measureKey;}
+  const measured=this._measured;
   this.axisWidth=Math.max(this.axisWidth||0,Math.ceil(measured/12)*12,84);const right=compact?58:Math.min(this.axisWidth,Math.max(76,Math.min(144,width*.34))),bottom=30,plotWidth=Math.max(40,width-right),plotHeight=height-bottom;
   const mainHeight=plotHeight-oscillators.length*paneHeight;
   this.plotWidth=plotWidth;this.priceTop=compact?18:44;this.priceHeight=Math.max(30,mainHeight*(this.options.volume?(compact?.83:.76):1)-this.priceTop-(!this.options.volume?8:0));const priceBottom=this.priceTop+this.priceHeight,volumeTop=priceBottom+18;
@@ -152,19 +160,31 @@ export class TickChart {
   const timeAt=index=>{if(index<0)return data[0].time+index*period;const i=Math.min(data.length-1,Math.floor(index)),next=data[i+1];return data[i].time+(index-i)*(next?next.time-data[i].time:period);};
   const candleAtX=p=>{const i=Math.floor(p/step-left);return i>=0&&i<data.length?data[i]:null;};
   this.view={width:plotWidth,height:mainHeight,axisTop:plotHeight,step,period,series:this.series,price:this.formatPrice,candleAtX,x,y,indexAt,left,value:p=>this.yToPrice(p),screen:p=>({x:x(indexAt(p.time)),y:y(p.price)}),anchor:p=>({time:timeAt(p.x/step-left-.5),price:this.yToPrice(p.y)})};
+  const lastBar=data.at(-1);
+  const frameSig=`${width}|${height}|${dpr}|${begin}|${end}|${this.offset}|${this.count}|${this.min}|${this.max}|${data[0]?.time}|${lastBar?.time}|${lastBar?.close}|${lastBar?.high}|${lastBar?.low}|${this.options.mode}|${this.options.theme}|${key}|${this.options.volume}|${stamp}`;
+  if(frameSig===this._frameSig){this.trackLayer?.sync();return;}
+  this._frameSig=frameSig;
+  ctx.fillStyle=bg;ctx.fillRect(0,0,width,height);
   ctx.textAlign='left';
   const crisp=p=>(Math.round(p*dpr)+.5)/dpr;
-  for(let val=Math.ceil(this.min/tick)*tick,n=0;val<=this.max+tick*1e-8&&n<12;val+=tick,n++){const gy=crisp(y(val));ctx.strokeStyle=grid;ctx.lineWidth=1/dpr;ctx.beginPath();ctx.moveTo(0,gy);ctx.lineTo(plotWidth,gy);ctx.stroke();ctx.fillStyle=text;ctx.fillText(axisPrice(val),plotWidth+8,gy);}
+  ctx.beginPath();const priceLabels=[];
+  for(let val=Math.ceil(this.min/tick)*tick,n=0;val<=this.max+tick*1e-8&&n<12;val+=tick,n++){const gy=crisp(y(val));ctx.moveTo(0,gy);ctx.lineTo(plotWidth,gy);priceLabels.push([gy,axisPrice(val)]);}
+  ctx.strokeStyle=grid;ctx.lineWidth=1/dpr;ctx.stroke();ctx.fillStyle=text;for(const [gy,label] of priceLabels)ctx.fillText(label,plotWidth+8,gy);
   ctx.strokeStyle=grid;ctx.beginPath();ctx.moveTo(plotWidth,0);ctx.lineTo(plotWidth,plotHeight);ctx.moveTo(0,plotHeight);ctx.lineTo(width,plotHeight);ctx.stroke();
   const ticks=Math.max(2,Math.min(10,Math.floor(plotWidth/100))),stride=Math.max(1,Math.ceil(this.count/ticks)),rawStride=stride*period,timeStride=[1000,3000,5000,15000,30000,45000,60000,180000,300000,900000,1800000,3600000,10800000,21600000,43200000,86400000,259200000,604800000,2592000000,7776000000,31536000000].find(s=>s>=rawStride)||Math.ceil(rawStride/31536000000)*31536000000;let lastLabelRight=-100,lastTickDay=null,lastBucket=null;this.timeAxisTicks=[];
+  if(this._labelFont!==fontSize){this._labelWidth=new Map();this._labelFont=fontSize;}
+  const isoOf=t=>{let s=this._iso?.get(t);if(s)return s;s=new Date(t).toISOString();(this._iso||=new Map());if(this._iso.size>96)this._iso.clear();this._iso.set(t,s);return s;};
   // Axis labels belong to observed bar coordinates. Empty space to the left of
   // sparse history must not imply months/years of retained candles.
-  for(let index=0;index<data.length;index++){const time=data[index].time,bucket=Math.floor(time/timeStride);if(bucket===lastBucket)continue;lastBucket=bucket;const gx=x(index),date=new Date(time),span=data.at(-1).time-data[0].time;
+  for(let index=0;index<data.length;index++){const time=data[index].time,bucket=Math.floor(time/timeStride);if(bucket===lastBucket)continue;lastBucket=bucket;const gx=x(index),span=data.at(-1).time-data[0].time;
    if(index===0&&time%timeStride>=period)continue;
-   const iso=date.toISOString(),day=iso.slice(0,10),label=period>=604800000||span>31536000000?iso.slice(0,7):period>=86400000?iso.slice(5,10):span>86400000&&day!==lastTickDay?iso.slice(5,10):period<60000&&span<86400000?iso.slice(11,19):iso.slice(11,16),tw=ctx.measureText(label).width;
+   const iso=isoOf(time),day=iso.slice(0,10),label=period>=604800000||span>31536000000?iso.slice(0,7):period>=86400000?iso.slice(5,10):span>86400000&&day!==lastTickDay?iso.slice(5,10):period<60000&&span<86400000?iso.slice(11,19):iso.slice(11,16);let tw=this._labelWidth.get(label);if(tw==null){tw=ctx.measureText(label).width;if(this._labelWidth.size>96)this._labelWidth.clear();this._labelWidth.set(label,tw);}
    if(gx-tw/2<lastLabelRight+16||gx-tw/2<0||gx+tw/2>plotWidth)continue;lastLabelRight=gx+tw/2;lastTickDay=day;this.timeAxisTicks.push({time,label,x:gx});
-   ctx.strokeStyle=grid;ctx.lineWidth=1/dpr;ctx.beginPath();ctx.moveTo(crisp(gx),this.priceTop);ctx.lineTo(crisp(gx),plotHeight);ctx.stroke();ctx.fillStyle=text;ctx.textAlign='center';ctx.fillText(label,gx,height-13);
   }
+  ctx.strokeStyle=grid;ctx.lineWidth=1/dpr;ctx.beginPath();
+  for(const tick of this.timeAxisTicks){const gx=crisp(tick.x);ctx.moveTo(gx,this.priceTop);ctx.lineTo(gx,plotHeight);}
+  ctx.stroke();ctx.fillStyle=text;ctx.textAlign='center';
+  for(const tick of this.timeAxisTicks)ctx.fillText(tick.label,tick.x,height-13);
   ctx.textAlign='left';
   const wickPixels=Math.max(1,Math.min(Math.floor(dpr),Math.floor(step*dpr)));let bodyPixels=Math.max(wickPixels,Math.min(Math.floor(28*dpr),Math.floor(step*.68*dpr)));if(bodyPixels>=2&&bodyPixels%2!==wickPixels%2)bodyPixels--;const body=bodyPixels/dpr;this.renderGeometry={wickPixels,bodyPixels,dpr};
   ctx.save();ctx.beginPath();ctx.rect(0,volumeTop,plotWidth,Math.max(0,mainHeight-volumeTop));ctx.clip();
@@ -192,7 +212,7 @@ export class TickChart {
   this.indicatorPanes=paintIndicators(ctx,compact?this.studies.filter(s=>!s.definition.pane):this.studies,{begin,end,x,y,width:plotWidth,top:this.priceTop,bottom:priceBottom,dark,grid,text,format:this.formatPrice,volumeBottom:mainHeight});
   const transition=this.engineData?.history?.sourceTransition*1000;
   if(Number.isFinite(transition)&&transition>=data[0].time&&transition<=data.at(-1).time+period){const seam=x(indexAt(transition));ctx.save();ctx.strokeStyle=accent+'80';ctx.setLineDash([3,4]);ctx.beginPath();ctx.moveTo(seam,this.priceTop);ctx.lineTo(seam,plotHeight);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle=accent;ctx.font='500 10px "DM Sans",sans-serif';ctx.fillText('Solana observations →',clamp(seam+6,5,Math.max(5,plotWidth-130)),this.priceTop+10);ctx.restore();}
-  this.drawingLayer?.paint(ctx);ctx.fillStyle=dark?'#31374a':'#eceef4';ctx.font=`700 ${compact?22:32}px "DM Sans",sans-serif`;ctx.fillText('ticking',15,mainHeight-16);this.drawCrosshair();
+  this.drawingLayer?.paint(ctx);ctx.fillStyle=dark?'#31374a':'#eceef4';ctx.font=`700 ${compact?22:32}px "DM Sans",sans-serif`;ctx.fillText('ticking',15,mainHeight-16);this.trackLayer?.sync();this.drawCrosshair();
   const rangeKey=[begin,end,this.series[0]?.time,this.series.at(-1)?.time].join(':');if(rangeKey!==this.rangeKey){this.rangeKey=rangeKey;this.container.dispatchEvent(new CustomEvent('viewchange',{detail:{begin,end,total:this.series.length}}));}
  }
  updateLegend(c){
@@ -214,5 +234,5 @@ export class TickChart {
   const time=c?.time??v.anchor(p).time,label=new Date(time).toISOString().slice(v.period>=86400000?0:5,19).replace('T',' '),tw=ctx.measureText(label).width+16,tx=clamp(cx-tw/2,0,Math.max(0,v.width-tw));ctx.fillStyle=this.colors.dark?'#596078':'#7b8496';ctx.fillRect(tx,v.axisTop,tw,27);ctx.fillStyle='#fff';ctx.fillText(label,tx+8,v.axisTop+13);
   if(c){this.tooltip.style.display='block';this.tooltip.style.left='8px';this.tooltip.style.top='46px';this.tooltip.style.maxWidth=(this.plotWidth-16)+'px';this.tooltip.style.whiteSpace='normal';const names={binance_spot:'Binance',binance_spot_gap:'Binance gap archive',binance_alpha_gap:'Binance Alpha gap archive',binance_alpha:'Binance Alpha',solana_pool_mark:'Pool state · indicative',geckoterminal_pool_reference:'Pool history · reference',solana_reference:'Solana',gate_spot_reference:'Gate reference',alpha_spot_reference:'Alpha reference',bybit_spot_reference:'Bybit reference',okx_spot_reference:'OKX reference',okx:'OKX',gate:'Gate',mexc:'MEXC',binance_spot_reference:'Binance reference',solana_wrapped_reference:'Solana wrapped reference',ticking_reference_reconstruction:'Reconstructed reference'},source=c.sources?.map(s=>names[s]||s).join(' + '),quality=c.synthetic?' · Carried close · execution coverage unknown':c.quality?.basis==='mixed'?` · Mixed: ${c.quality.observedMinutes} recorded / ${c.quality.referenceMinutes} reference / ${c.quality.estimatedMinutes} estimated minutes · Volume from recorded trades only`:c.estimateMethod==='median_venue_ohlc_v1'?' · Composite reference · '+(c.components?.length||c.sources?.length||0)+' sources · '+(c.excludedComponents?.length||c.excludedComponentCount||0)+' exclusions · not traded OHLC':c.estimated?' · Reconstructed reference · not traded OHLC':c.referenceOnly?' · Reference price · not native executions':c.synthetic?' · Carried close · execution coverage unknown':'';this.tooltip.textContent=`O ${this.formatPrice(c.open)}  H ${this.formatPrice(c.high)}  L ${this.formatPrice(c.low)}  C ${this.formatPrice(c.close)}${source?' · '+source+' · '+c.quoteCurrency:''}${quality}`;this.container.dispatchEvent(new CustomEvent('candlehover',{detail:c}));}
  }
- destroy(){this.destroyed=true;cancelAnimationFrame(this.frame);cancelAnimationFrame(this.crosshairFrame);this.abort.abort();this.drawingLayer?.destroy();this.resizeObserver.disconnect();this.intersectionObserver?.disconnect();this.container.replaceChildren();}
+ destroy(){this.destroyed=true;cancelAnimationFrame(this.frame);cancelAnimationFrame(this.crosshairFrame);this.abort.abort();this.trackLayer?.destroy();this.drawingLayer?.destroy();this.resizeObserver.disconnect();this.intersectionObserver?.disconnect();this.container.replaceChildren();}
 }

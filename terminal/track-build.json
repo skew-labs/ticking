@@ -1,0 +1,21 @@
+{
+  "schema": "ticking.track-build.v1",
+  "paint": "/terminal/dist/_app/track-paint-TLDU4CLQ.js",
+  "intent": "/terminal/dist/_app/track-intent-VXMKGBGD.js",
+  "workspace": "/terminal/dist/_app/track-workspace-FA3BO4LE.js",
+  "sha256": {
+    "paint": "9ac74e09703b9a6cdd768b4b4a970ff805e4478d065e3b2974faa5a1107ac51c",
+    "intent": "add8a304c3c9d283b609d0dc54aaea7ee69c2b85c780dbe17d9ed0b7d369875b",
+    "workspace": "2836177164a7b20c48e6219746756b57d53dc79910c2ac57b1bbf3624f83b813"
+  },
+  "production": {
+    "deployment": "dpl_4NFCHsxoo4js6a1863JhCLzN145f",
+    "rollback": "dpl_8kWWQ53PMJXzv6aA4m2T5UabAKaZ",
+    "app": "/_app/app-UN5WLLFX.js",
+    "shell": "/_app/chunks/track-shell-FIUEPEKE.js",
+    "agent": "/_app/chunks/console-agent-6ALYMWX4.js",
+    "workspace": "/_app/chunks/workspace-G5CM2ZT2.js",
+    "console": "/_app/chunks/console-JHLUHRPZ.js",
+    "home": "/_app/chunks/chunk-JGQFL2MX.js"
+  }
+}
