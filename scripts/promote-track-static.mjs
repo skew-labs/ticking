@@ -151,10 +151,11 @@ export function patchAgent(source, shellName) {
     const mintIf = 'if(e?.(),n=t,String(t.ident).startsWith("mint:")||t.ident==="launch"||new URLSearchParams(String(c).split("?")[1]||"").get("launch")==="1"){const params=new URLSearchParams(String(c).split("?")[1]||"");const mint=String(t.ident).startsWith("mint:")?t.ident.slice(5):params.get("mint")||"";e=mountMintWorkspace(r,{ident:t.ident,mint,chain:t.chain,query:params.get("q")||"",sample:params.get("sample")==="1",symbol:String(t.ident).startsWith("mint:")||t.ident==="launch"?"":t.ident});document.title=(mint?mint.slice(0,4)+"…":t.ident)+" · Mint chart — ticking";return}if(String(t.ident).startsWith("wallet:")';
     next = next.replace(walletIf, mintIf);
   }
-  if (!next.includes('intent.mode==="mint"')) {
-    const marketGate = 'if(intent.mode==="market"&&intent.route){location.hash=intent.route;return}';
+  const marketGate = 'if(intent.mode==="market"&&intent.route){location.hash=intent.route;return}';
+  const mintSubmit = `if(intent.mode==="mint"){c.textContent="Opening the mint chart${ell}";let route=intent.route;try{const y=await resolveTrackQuery(l.value,{signal:e.signal});if(e.signal.aborted)return;route=acceptTrackHandoff(y)||intent.route}catch(o){if(e.signal.aborted)return}if(route)location.hash=route;return}${marketGate}`;
+  if (!next.includes('let route=intent.route;try{const y=await resolveTrackQuery')) {
+    if (next.includes('intent.mode==="mint"')) throw new Error('mint submit is missing the chart fallback');
     if (!next.includes(marketGate)) throw new Error('agent market gate missing for mint');
-    const mintSubmit = `if(intent.mode==="mint"){c.textContent="Opening the mint chart${ell}";const y=await resolveTrackQuery(l.value,{signal:e.signal});if(e.signal.aborted)return;const route=acceptTrackHandoff(y)||intent.route;if(route)location.hash=route;return}${marketGate}`;
     next = next.replace(marketGate, mintSubmit);
   }
   if (!next.includes('mountMintWorkspace') || !next.includes('intent.mode==="mint"') || !next.includes('Opening the mint chart')) {
@@ -293,11 +294,30 @@ export function patchHomeHtml(source) {
 }
 
 export function patchRouteChunk(source) {
+  let next = source;
   const from = 'return l&&/^0x[a-fA-F0-9]{40}$/.test(l)?"#/investigate/"+l+(e?"?chain="+e:""):"#/map"+';
   const to = 'return l&&/^0x[a-fA-F0-9]{40}$/.test(l)?"#/console/workspace/"+encodeURIComponent("wallet:"+l.toLowerCase())+(e?"?chain="+encodeURIComponent(e):""):"#/map"+';
-  if (source.includes('#/console/workspace/"+encodeURIComponent("wallet:"+l.toLowerCase())')) return source;
-  if (!source.includes(from)) throw new Error('route chunk wallet branch missing');
-  return source.replaceAll(from, to);
+  if (!next.includes('#/console/workspace/"+encodeURIComponent("wallet:"+l.toLowerCase())')) {
+    if (!next.includes(from)) throw new Error('route chunk wallet branch missing');
+    next = next.replaceAll(from, to);
+  }
+  if (!next.includes('o==="launch"')) {
+    const qFrom = 'o==="auto"&&f&&r.set("q",String(f).slice(0,400))';
+    if (!next.includes(qFrom)) throw new Error('route q builder missing');
+    next = next.replace(qFrom, '(o==="auto"||o==="launch")&&f&&r.set("q",String(f).slice(0,400)),L==="1"&&r.set("launch","1")');
+  }
+  if (!next.includes('launch:L=null')) {
+    const args = 'q:f=null,chain:i=null}={})';
+    if (!next.includes(args)) throw new Error('route builder args missing');
+    next = next.replace(args, 'q:f=null,chain:i=null,launch:L=null}={})');
+  }
+  if (!next.includes('launch:e.get("launch")')) {
+    const call = 'q:e.get("q"),chain:e.get("chain")})';
+    if (!next.includes(call)) throw new Error('route parse args missing');
+    next = next.replace(call, 'q:e.get("q"),chain:e.get("chain"),launch:e.get("launch")})');
+  }
+  if (!next.includes('o==="launch"') || !next.includes('launch:e.get("launch")')) throw new Error('route dropped the mint launch query');
+  return next;
 }
 
 async function mirror() {
@@ -561,6 +581,7 @@ function patchResearchEntry() {
   const routeHits = chunks.filter(name => readFileSync(chunk(name), 'utf8').includes('wallet:"+l.toLowerCase()'));
   const route = routeHits.find(hit => chunks.some(name => name !== hit && readFileSync(chunk(name), 'utf8').includes(hit)));
   if (!route) throw new Error('route chunk wallet branch missing after seal');
+  if (!readFileSync(chunk(route), 'utf8').includes('o==="launch"')) throw new Error('route chunk dropped the mint launch query');
   if (!index.includes(home) || !readFileSync(join(out, '_app', app), 'utf8').includes(home)) {
     throw new Error('home chunk is not on the app graph');
   }

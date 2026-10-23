@@ -51,6 +51,9 @@ const route = patchRouteChunk(readFileSync(live.route, 'utf8'));
 assert.equal(route.includes('#/investigate/'), false);
 assert.equal(route.includes('#/console/workspace/"+encodeURIComponent("wallet:"+l.toLowerCase())'), true);
 assert.equal(route.includes('"#/map"'), true);
+assert.equal(route.includes('o==="launch"'), true);
+assert.equal(route.includes('launch:e.get("launch")'), true);
+assert.equal(route.includes('L==="1"&&r.set("launch","1")'), true);
 
 const agent = patchAgent(readFileSync(live.agent, 'utf8'), 'track-shell-TESTHASH.js');
 assert.equal(agent.includes('track-shell-TESTHASH.js'), true);
@@ -62,6 +65,7 @@ assert.equal(agent.includes('A wallet, its trail, and the market stay on one wor
 assert.equal(agent.includes('intent.mode==="mint"'), true);
 assert.equal(agent.includes('mountMintWorkspace'), true);
 assert.equal(agent.includes('Opening the mint chart'), true);
+assert.equal(agent.includes('let route=intent.route;try{const y=await resolveTrackQuery'), true);
 writeFileSync('/tmp/research/agent-patched.mjs', agent);
 writeFileSync('/tmp/research/search-patched.mjs', search);
 writeFileSync('/tmp/research/lazy-patched.mjs', lazy);
