@@ -44,14 +44,14 @@ Production aliases `ticking.dev`, `skew.deals`, and `www.skew.deals` point at th
 
 | | |
 | --- | --- |
-| Deployment | `dpl_68mtTVqtdT5EWEPksr1R9JL6MY7S` |
-| App entry | `/_app/app-OL2I62PQ.js` |
-| Track shell | `/_app/chunks/track-shell-KTQN6OSF.js` (`setTrackPaint`, `mountTrackWorkspace`, `mountMintWorkspace`, `mountTrackerPage`, `classifyTrackIntent`, `data-track-ask`) |
-| Wallet mount | `/_app/chunks/console-agent-VLHCXSXE.js` |
-| Workspace router | `/_app/chunks/workspace-6Z5UX4JG.js` |
-| Console | `/_app/chunks/console-3PCHZ3GL.js` |
+| Deployment | `dpl_8MKWCc5whGbnkYTEakyCWDYZWWKx` |
+| App entry | `/_app/app-F7WCGX7K.js` |
+| Track shell | `/_app/chunks/track-shell-QSAI55JM.js` (`setTrackPaint`, `mountTrackWorkspace`, `mountMintWorkspace`, `mountTrackerPage`, `classifyTrackIntent`, `data-track-ask`, `latencyPaintOnly`) |
+| Wallet mount | `/_app/chunks/console-agent-R33GK2ST.js` |
+| Workspace router | `/_app/chunks/workspace-MATF5CJ5.js` |
+| Console | `/_app/chunks/console-D2OTCW4V.js` |
 | Home | `/_app/chunks/chunk-JGQFL2MX.js` |
 | Route | `/_app/chunks/chunk-OJVUMUFG.js` |
 | Rollback | `dpl_8kWWQ53PMJXzv6aA4m2T5UabAKaZ` (`/_app/app-L5AHZFB4.js`) |
 
-Checked on `ticking.dev` after the alias: the homepage heading is “Onchain research”. `#/console/workspace/wallet:…?sample=1` paints “Sample paint on this workspace chart.” and shows “Ask this chart”. A question whose resolve returns no markers stays on that hash and reads “This question stays on this chart.” A resolve body that carries a hop graph paints “Hop loop on this chart.” and opens the next hop as “Same case · wallet chart”. A dump tag stays a focus button. `#/console/workspace/mint:…?sample=1` paints “Sample mint on this workspace chart.” on the same ask form. Roll back by aliasing `dpl_8kWWQ53PMJXzv6aA4m2T5UabAKaZ`. The alias this deploy replaced was `dpl_CxGb7iij23HfMzYKYJrZxUt2sFFV`.
+Checked on `ticking.dev` after the alias: the homepage still loads `chunk-JGQFL2MX.js`, and the app entry is `app-F7WCGX7K.js`. The shell is `track-shell-QSAI55JM.js` (211757 bytes) and contains `latencyPaintOnly`, `binance_1s`, and `/api/public/engine/fast-feed`. `#/console/workspace/wallet:…?sample=1` paints “Sample paint on this workspace chart.” and shows “Ask this chart”. A question whose resolve returns no markers stays on that hash and reads “This question stays on this chart.” A hop chip opens a second chart. A dump tag stays a focus button. An Arbitrum mint whose tip pull is missing keeps the chart and does not invent candles. Roll back by aliasing `dpl_8kWWQ53PMJXzv6aA4m2T5UabAKaZ`. The alias this deploy replaced was `dpl_68mtTVqtdT5EWEPksr1R9JL6MY7S`.
