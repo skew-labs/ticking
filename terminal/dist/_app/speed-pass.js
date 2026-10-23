@@ -23,11 +23,29 @@ export function isBinance1s(bar){
  return sources.includes('binance_1s');
 }
 export function barTime(bar){
- const n=Number(bar?.time??bar?.t);
- if(!Number.isFinite(n)||n<=0)return null;
- const ms=n<1e12?Math.round(n*1000):Math.round(n);
- return Math.floor(ms/1000)*1000;
+ const raw=bar?.time??bar?.t??bar?.ts??bar?.timestamp;
+ if(raw==null||raw==='')return null;
+ let n=typeof raw==='number'?raw:Number(raw);
+ if(!Number.isFinite(n)||n<=0){
+  if(typeof raw!=='string')return null;
+  n=Date.parse(raw);
+  if(!Number.isFinite(n)||n<=0)return null;
+ }
+ if(n>=1e18)n=n/1e6;
+ else if(n>=1e15)n=n/1e3;
+ else if(n<1e12)n=n*1000;
+ return Math.floor(n/1000)*1000;
 }
+function readNum(raw,keys){
+ if(!raw||typeof raw!=='object')return null;
+ for(const key of keys){
+  if(raw[key]==null||raw[key]==='')continue;
+  const n=Number(raw[key]);
+  if(Number.isFinite(n))return n;
+ }
+ return null;
+}
+function roundPx(n){return Math.round(n*1e8)/1e8;}
 export function ohlcOk(bar){
  const open=Number(bar?.open),high=Number(bar?.high),low=Number(bar?.low),close=Number(bar?.close);
  if(!(open>0&&high>0&&low>0&&close>0))return null;
@@ -35,21 +53,125 @@ export function ohlcOk(bar){
  const volume=Number(bar?.volume);
  return {open,high,low,close,volume:Number.isFinite(volume)&&volume>=0?volume:0};
 }
-/** Clamp a tip wick to ±5% of the body. Historical Binance bars are not passed here. */
-export function sanitizeTipBar(raw,band=WICK_BAND){
+/** Read a Fast Feed print. A missing or swapped wick stays with the body. */
+export function decodeTipSample(raw){
+ if(Array.isArray(raw)){
+  const time=barTime({time:raw[0]});
+  if(time==null)return null;
+  const nums=[];
+  for(let i=1;i<raw.length&&i<6;i++){
+   const n=Number(raw[i]);
+   if(!Number.isFinite(n))break;
+   nums.push(n);
+  }
+  if(nums.length>=4&&nums[0]>0&&nums[3]>0)return {time,open:nums[0],high:nums[1],low:nums[2],close:nums[3],volume:nums[4]>=0?nums[4]:0};
+  if(nums.length>=1&&nums[0]>0)return {time,open:nums[0],high:nums[0],low:nums[0],close:nums[0],volume:0};
+  return null;
+ }
+ if(!raw||typeof raw!=='object')return null;
  const time=barTime(raw);
- const px=ohlcOk(raw);
- if(time==null||!px)return null;
- const top=Math.max(px.open,px.close),bot=Math.min(px.open,px.close);
- const round=n=>Math.round(n*1e8)/1e8;
- const high=Math.min(px.high,round(top*(1+band)));
- const low=Math.max(px.low,round(bot*(1-band)));
- if(!(low<=bot&&top<=high))return null;
+ if(time==null)return null;
+ const scale=readNum(raw,['scale','pxScale']);
+ const div=scale>1?scale:1;
+ const num=keys=>{
+  const n=readNum(raw,keys);
+  return n==null?null:n/div;
+ };
+ const open=num(['open','o']);
+ const close=num(['close','c']);
+ const px=num(['px','price','p','mid','last','mark']);
+ const bid=num(['bid','b']);
+ const ask=num(['ask','a']);
+ if(open!=null&&!(open>0))return null;
+ if(close!=null&&!(close>0))return null;
+ let bodyOpen=open,bodyClose=close??(px>0?px:null);
+ if(!(bodyClose>0)&&bid>0&&ask>0)bodyClose=(bid+ask)/2;
+ if(!(bodyOpen>0))bodyOpen=bodyClose??(px>0?px:null);
+ if(!(bodyClose>0))bodyClose=bodyOpen;
+ if(!(bodyOpen>0&&bodyClose>0))return null;
+ let high=num(['high','h']);
+ let low=num(['low','l']);
+ if(!(high>0)&&!(low>0)&&bid>0&&ask>0){
+  high=Math.max(bid,ask,bodyOpen,bodyClose);
+  low=Math.min(bid,ask,bodyOpen,bodyClose);
+ }
+ if(!(high>0))high=Math.max(bodyOpen,bodyClose);
+ if(!(low>0))low=Math.min(bodyOpen,bodyClose);
+ const volumeRaw=readNum(raw,['volume','v','vol','qty','size']);
+ const volume=Number.isFinite(volumeRaw)&&volumeRaw>=0?volumeRaw:0;
+ return {time,open:bodyOpen,high,low,close:bodyClose,volume};
+}
+function finishTipBar(sample,band){
+ const {time,open,close}=sample;
+ const top=Math.max(open,close),bot=Math.min(open,close);
+ let high=sample.high,low=sample.low;
+ if(!(high>0))high=top;
+ if(!(low>0))low=bot;
+ if(high<low){const swap=high;high=low;low=swap;}
+ if(high<top)high=top;
+ if(low>bot)low=bot;
+ high=Math.min(high,roundPx(top*(1+band)));
+ low=Math.max(low,roundPx(bot*(1-band)));
+ if(!(low>0&&high>0&&low<=bot&&top<=high))return null;
  return {
-  time,open:px.open,high,low,close:px.close,volume:px.volume,
+  time,open,high,low,close,volume:sample.volume>=0?sample.volume:0,
   source:'tip_hot',coverage:'tip_hot',latencyPaintOnly:true,
   synthetic:false,
  };
+}
+/** One 1s bar per second. Prints outside the 5% band become the wick, not a dropped sample. */
+export function aggregateTipSamples(samples,band=WICK_BAND){
+ const list=Array.isArray(samples)?samples:[];
+ const start=Math.max(0,list.length-2000);
+ const groups=new Map();
+ let failed=0;
+ for(let i=start;i<list.length;i++){
+  const decoded=decodeTipSample(list[i]);
+  if(!decoded){failed+=1;continue;}
+  let rows=groups.get(decoded.time);
+  if(!rows){
+   if(groups.size>=480)groups.delete(groups.keys().next().value);
+   rows=[];
+   groups.set(decoded.time,rows);
+  }
+  if(rows.length<32)rows.push(decoded);
+ }
+ const bars=[];
+ for(const [time,rows] of groups){
+  if(rows.length===1){
+   const tip=finishTipBar(rows[0],band);
+   if(tip)bars.push(tip);
+   else failed+=1;
+   continue;
+  }
+  let anchor=rows[0].close,bestN=0;
+  for(const row of rows){
+   let near=0;
+   for(const other of rows)if(other.close>0&&Math.abs(other.close/row.close-1)<=band)near+=1;
+   if(near>bestN){bestN=near;anchor=row.close;}
+  }
+  const hi=roundPx(anchor*(1+band)),lo=roundPx(anchor*(1-band));
+  const inBand=rows.filter(row=>row.close<=hi&&row.close>=lo);
+  const body=inBand.length?inBand:[rows[0]];
+  const open=inBand.length?body[0].open:Math.min(hi,Math.max(lo,rows[0].open));
+  const close=inBand.length?body[body.length-1].close:Math.min(hi,Math.max(lo,rows[rows.length-1].close));
+  let high=Math.max(open,close),low=Math.min(open,close),volume=0;
+  for(const row of rows){
+   high=Math.max(high,row.high,row.open,row.close);
+   low=Math.min(low,row.low>0?row.low:low,row.open,row.close);
+   volume+=row.volume||0;
+  }
+  const tip=finishTipBar({time,open,high,low,close,volume},band);
+  if(tip)bars.push(tip);
+  else failed+=1;
+ }
+ return {bars,failed};
+}
+/** Clamp a tip wick to ±5% of the body. Historical Binance bars are not passed here. */
+export function sanitizeTipBar(raw,band=WICK_BAND){
+ const decoded=decodeTipSample(raw);
+ if(!decoded)return null;
+ return finishTipBar(decoded,band);
 }
 export function barAgeMs(bar,now){
  const time=barTime(bar);
@@ -66,20 +188,26 @@ export function mergeBars1s(base,incoming,{now=Date.now(),band=WICK_BAND}={}){
   if(time!=null)byTime.set(time,bar);
  }
  const dropped=[];
- for(const raw of Array.isArray(incoming)?incoming:[]){
+ const incomingRows=Array.isArray(incoming)?incoming:[];
+ const tips=[];
+ const venue=[];
+ for(const raw of incomingRows){
+  if(isBinance1s(raw))venue.push(raw);
+  else tips.push(raw);
+ }
+ const aggregated=aggregateTipSamples(tips,band);
+ for(let i=0;i<aggregated.failed;i++)dropped.push(null);
+ for(const tip of aggregated.bars){
+  if(!tipFresh(tip,now)){dropped.push(tip.time);continue;}
+  if(isBinance1s(byTime.get(tip.time)))continue;
+  byTime.set(tip.time,tip);
+ }
+ for(const raw of venue){
   const time=barTime(raw);
   if(time==null||!tipFresh({time},now)){dropped.push(time);continue;}
-  const prior=byTime.get(time);
-  if(isBinance1s(prior)&&!isBinance1s(raw))continue;
-  if(isBinance1s(raw)){
-   const px=ohlcOk(raw);
-   if(!px){dropped.push(time);continue;}
-   byTime.set(time,{time,open:px.open,high:px.high,low:px.low,close:px.close,volume:px.volume,source:'binance_1s',synthetic:false,latencyPaintOnly:false});
-   continue;
-  }
-  const tip=sanitizeTipBar(raw,band);
-  if(!tip){dropped.push(time);continue;}
-  byTime.set(time,tip);
+  const px=ohlcOk(raw);
+  if(!px){dropped.push(time);continue;}
+  byTime.set(time,{time,open:px.open,high:px.high,low:px.low,close:px.close,volume:px.volume,source:'binance_1s',synthetic:false,latencyPaintOnly:false});
  }
  const series=[...byTime.values()].sort((a,b)=>a.time-b.time).slice(-480);
  return {series,dropped,coverage:'tip_hot',latencyPaintOnly:true,failSoft:true};
@@ -109,6 +237,42 @@ export function fastFeedUrl({chain,symbol,mint}={}){
  return `/api/public/engine/fast-feed?${params}`;
 }
 
+const SAMPLE_KEYS=['bars_1s','candles','bars','prices','prints','samples','ticks','wickRejects','rejected','rejects'];
+function normSymbol(value){return String(value||'').toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,16);}
+function sameMarket(raw,symbol,mint){
+ if(!raw||typeof raw!=='object'||Array.isArray(raw))return true;
+ const sym=raw.symbol??raw.ticker??raw.pair;
+ const id=raw.mint??raw.address??raw.token;
+ if(symbol&&sym){
+  const want=normSymbol(symbol),got=normSymbol(sym);
+  if(want&&got&&want!==got&&!got.startsWith(want))return false;
+ }
+ if(mint&&id&&String(id).toLowerCase()!==String(mint).toLowerCase())return false;
+ return true;
+}
+/** Applied bars and wick-rejected prints, newest 2000, bounded so a hot feed cannot grow the chart. */
+export function fastFeedSamples(body,symbol,mint){
+ const out=[];
+ const take=obj=>{
+  if(!obj||typeof obj!=='object'||Array.isArray(obj))return;
+  for(const key of SAMPLE_KEYS){
+   const rows=obj[key];
+   if(!Array.isArray(rows)||!rows.length)continue;
+   const from=Math.max(0,rows.length-2000);
+   for(let i=from;i<rows.length;i++){
+    if(sameMarket(rows[i],symbol,mint))out.push(rows[i]);
+   }
+  }
+ };
+ if(Array.isArray(body)){
+  for(const row of body.slice(-2000))if(sameMarket(row,symbol,mint))out.push(row);
+  return out.slice(-2000);
+ }
+ take(body);
+ take(body?.data);
+ return out.length>2000?out.slice(-2000):out;
+}
+
 export async function pullFastFeed({chain,symbol,mint,fetchImpl=fetch,signal,now=Date.now()}={}){
  if(!isTipChain(chain))return {ok:false,coverage:'idle',bars:[],reason:'solana-not-tip'};
  if(!fastFeedDue(now))return {ok:false,coverage:'scheduled',bars:[],at:FAST_FEED_AT};
@@ -116,8 +280,8 @@ export async function pullFastFeed({chain,symbol,mint,fetchImpl=fetch,signal,now
   const response=await fetchImpl(fastFeedUrl({chain,symbol,mint}),{signal,headers:{accept:'application/json'}});
   if(!response.ok)return {ok:false,coverage:'fail_soft',bars:[],status:response.status};
   const body=await response.json();
-  const bars=Array.isArray(body?.bars_1s)?body.bars_1s:Array.isArray(body?.candles)?body.candles:[];
-  return {ok:true,coverage:body?.coverage==='tip_hot'||body?.coverage==='hot'?'tip_hot':'tip_hot',bars};
+  const bars=fastFeedSamples(body,symbol,mint);
+  return {ok:true,coverage:'tip_hot',bars,latencyPaintOnly:true,failSoft:true};
  }catch(error){
   if(error?.name==='AbortError')throw error;
   return {ok:false,coverage:'fail_soft',bars:[],error:error?.message||'fast feed unavailable'};

@@ -4,7 +4,7 @@ import {performance} from 'node:perf_hooks';
 import {classifyTrackIntent} from '../src/track-intent.js';
 import {
  FAST_FEED_AT,HOT_MS,SPEED_OPTS,WICK_BAND,
- applyTip,fastFeedUrl,isBinance1s,isTipChain,mergeBars1s,paintOpenSecond,prewarmBuckets,pullFastFeed,runSpeedOpts,sanitizeTipBar,shouldPaintTip,
+ applyTip,decodeTipSample,fastFeedSamples,fastFeedUrl,isBinance1s,isTipChain,mergeBars1s,paintOpenSecond,prewarmBuckets,pullFastFeed,runSpeedOpts,sanitizeTipBar,shouldPaintTip,
 } from '../src/speed-pass.js';
 
 const ids=SPEED_OPTS.map(row=>row[0]);
@@ -123,6 +123,79 @@ const thrown=await pullFastFeed({
 assert.equal(thrown.coverage,'fail_soft');
 assert.equal(thrown.ok,false);
 
+const repaired=sanitizeTipBar({time:1_700_000_000_000,open:10,high:10.1,low:9.9,close:10.2});
+assert.equal(repaired.close,10.2);
+assert.equal(repaired.high,10.2);
+assert.ok(repaired.low<=10&&repaired.low>=9.5);
+assert.equal(repaired.latencyPaintOnly,true);
+const printed=sanitizeTipBar({ts:1_700_000_000_000_000_000,px:100});
+assert.equal(printed.time,1_700_000_000_000);
+assert.equal(printed.close,100);
+assert.equal(printed.high,100);
+const quoted=sanitizeTipBar({t:1_700_000_000,bid:99,ask:101});
+assert.equal(quoted.close,100);
+assert.equal(quoted.high,101);
+assert.equal(quoted.low,99);
+const scaled=sanitizeTipBar({time:1_700_000_000_000,o:100*1e8,h:400*1e8,l:1e8,c:100*1e8,scale:1e8});
+assert.equal(scaled.close,100);
+assert.equal(scaled.high,105);
+assert.equal(scaled.low,95);
+const tuple=sanitizeTipBar([1_700_000_000,100,200,1,100,2]);
+assert.equal(tuple.high,105);
+assert.equal(tuple.low,95);
+assert.equal(tuple.volume,2);
+assert.equal(decodeTipSample({time:1_700_000_000_000,open:0,high:1,low:1,close:1}),null);
+const mixed=mergeBars1s([], [
+ {time:1_700_000_000_000,open:100,high:100,low:100,close:100,symbol:'WETH'},
+ {time:1_700_000_000_000,open:100,high:10.1,low:9.9,close:100.2,symbol:'WETH'},
+ {time:1_700_000_000_000,px:1000,symbol:'WETH'},
+ {time:1_700_000_001_000,px:100,symbol:'WETH'},
+], {now:1_700_000_001_000});
+assert.equal(mixed.series.length,2);
+assert.equal(mixed.series[0].close,100.2);
+assert.equal(mixed.series[0].high,105.21);
+assert.ok(mixed.series[0].low>=95);
+assert.equal(mixed.series[0].source,'tip_hot');
+assert.equal(mixed.series[1].close,100);
+assert.equal(mixed.failSoft,true);
+const other=fastFeedSamples({
+ bars_1s:[{time:1,symbol:'WETH',px:1},{time:2,symbol:'ARB',px:2}],
+ wickRejects:[{time:3,px:3},{time:4,symbol:'WETHUSD',px:4}],
+}, 'WETH');
+assert.deepEqual(other.map(row=>row.px??row.symbol),[1,3,4]);
+let rejectUrl='';
+const rejects=await pullFastFeed({
+ chain:'arbitrum',symbol:'WETH',now:FAST_FEED_AT,
+ fetchImpl:async url=>({ok:true,json:async()=>{
+  rejectUrl=url;
+  return {
+   coverage:'tip_hot',
+   applied:1,
+   bars_1s:[{time:FAST_FEED_AT,open:100,high:100,low:100,close:100,symbol:'WETH'}],
+   wickRejects:[
+    {time:FAST_FEED_AT,open:100,high:10.1,low:9.9,close:100.2,symbol:'WETH'},
+    {t:Math.floor(FAST_FEED_AT/1000)+1,px:100,symbol:'WETH'},
+    {time:FAST_FEED_AT+2000,o:100,h:400,l:1,c:100,symbol:'WETH'},
+    {time:FAST_FEED_AT+3000,o:100,h:400,l:1,c:100,symbol:'PEPE'},
+   ],
+  };
+ }}),
+});
+assert.equal(rejects.ok,true);
+assert.equal(rejects.failSoft,true);
+assert.equal(rejects.bars.length,4);
+const painted=mergeBars1s([], rejects.bars, {now:FAST_FEED_AT+3000});
+assert.equal(painted.series.length,3);
+assert.equal(painted.series[0].close,100.2);
+assert.equal(painted.series[0].high,100.2);
+assert.equal(painted.series[0].low,95);
+assert.equal(painted.series[1].close,100);
+assert.equal(painted.series[2].high,105);
+assert.equal(painted.series[2].low,95);
+assert.equal(painted.series[2].close,100);
+assert.match(rejectUrl,/symbol=WETH/);
+assert.equal(painted.series.every(bar=>bar.latencyPaintOnly&&bar.coverage==='tip_hot'),true);
+
 const buckets=prewarmBuckets([
  {time:1_700_000_000_000,open:1,high:2,low:1,close:2,volume:1},
  {time:1_700_000_004_000,open:2,high:3,low:1,close:1,volume:1},
@@ -170,7 +243,7 @@ assert.match(workspace,/document\.hidden/);
 assert.doesNotMatch(workspace,/Fast Feed is a research/);
 
 const promote=readFileSync(new URL('../../scripts/promote-track-static.mjs',import.meta.url),'utf8');
-for(const needle of ['latencyPaintOnly','binance_1s','/api/public/engine/fast-feed','solana-not-tip','Arbitrum tip','track-shell-QSAI55JM.js']){
+for(const needle of ['latencyPaintOnly','binance_1s','/api/public/engine/fast-feed','solana-not-tip','Arbitrum tip','wickRejects','track-shell-QSAI55JM.js']){
  assert.equal(promote.includes(needle),true,needle);
 }
 

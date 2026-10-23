@@ -696,7 +696,7 @@ let app = readFileSync(join(out, '_app', BASE.app), 'utf8');
 app = replaceOnce(app, BASE.workspace, workspaceName, 'app workspace ref');
 const appName = writeHashed('_app', 'app', Buffer.from(app));
 const shellText = shellBytes.toString('utf8');
-for (const needle of ['setTrackPaint', 'mountTrackWorkspace', 'mountMintWorkspace', 'classifyTrackIntent', 'data-track-form', 'data-track-ask', 'dumpTagsOnly', 'columnForBridge', 'Math.min(480', 'Fast Feed is latency paint only', 'Map the hop loop onto that chart', 'data-track-focus', 'Replay trail', 'Waiting for the first prints on this mint.', 'This question stays on this chart.', 'Hop loop on this chart.', 'latencyPaintOnly', 'binance_1s', '/api/public/engine/fast-feed', 'solana-not-tip', 'Arbitrum tip']) {
+for (const needle of ['setTrackPaint', 'mountTrackWorkspace', 'mountMintWorkspace', 'classifyTrackIntent', 'data-track-form', 'data-track-ask', 'dumpTagsOnly', 'columnForBridge', 'Math.min(480', 'Fast Feed is latency paint only', 'Map the hop loop onto that chart', 'data-track-focus', 'Replay trail', 'Waiting for the first prints on this mint.', 'This question stays on this chart.', 'Hop loop on this chart.', 'latencyPaintOnly', 'binance_1s', '/api/public/engine/fast-feed', 'solana-not-tip', 'Arbitrum tip', 'wickRejects']) {
   if (!shellText.includes(needle)) throw new Error(`shell missing ${needle}`);
 }
 if (shellText.includes('whale-tracker')) throw new Error('shell still names whale-tracker');
