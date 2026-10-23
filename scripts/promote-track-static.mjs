@@ -11,7 +11,7 @@
 import {createHash} from 'node:crypto';
 import {spawnSync} from 'node:child_process';
 import {mkdirSync, readFileSync, readdirSync, writeFileSync} from 'node:fs';
-import {dirname, join} from 'node:path';
+import {dirname, join, resolve} from 'node:path';
 import * as esbuild from 'esbuild';
 
 const BASE = {
@@ -156,7 +156,7 @@ async function mirror() {
 }
 
 function sourceDir() {
-  if (process.env.SOURCE_DIR) return process.env.SOURCE_DIR;
+  if (process.env.SOURCE_DIR) return resolve(process.env.SOURCE_DIR);
   const sha = process.env.SOURCE_SHA || '';
   if (!/^[0-9a-f]{40}$/.test(sha)) throw new Error('SOURCE_SHA must be 40 hex characters');
   const dest = 'source-repo';
@@ -168,7 +168,7 @@ function sourceDir() {
   if (extracted.status !== 0) throw new Error('source archive extract failed');
   const top = readdirSync(dest).find(name => name.startsWith('ticking-'));
   if (!top) throw new Error('source archive layout missing');
-  return join(dest, top);
+  return resolve(dest, top);
 }
 
 function writeEntry(dir) {
