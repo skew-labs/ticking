@@ -3,7 +3,7 @@ import {readFileSync} from 'node:fs';
 import {spawnSync} from 'node:child_process';
 import {dirname,resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
-import {parseTrackPaint,layoutTrack,replayFrames,panesForWallet,seriesFromPaint,columnForBridge,museLine,TRACK_SCHEMA} from '../src/track-paint.js';
+import {parseTrackPaint,layoutTrack,replayFrames,panesForWallet,seriesFromPaint,columnForBridge,museLine,isSharp,sampleTrackPaint,TRACK_SCHEMA} from '../src/track-paint.js';
 import {loadTrackPaint,parseWorkspaceHash,trackerRedirect,shouldOpenWallet,trackRouteFromResolve,acceptTrackHandoff} from '../src/track-workspace.js';
 import {classifyTrackIntent,guardedResolveBody,trackResolveBody,TRACK_GUARD_TEXT} from '../src/track-intent.js';
 
@@ -50,6 +50,20 @@ assert.ok(laid.bands.length>=1);
 assert.ok(laid.tags.some(t=>t.kind==='buy'));
 assert.ok(laid.chips.some(c=>c.kind==='hop'&&c.wallet.startsWith('0x51c7')));
 assert.equal(laid.chips.find(c=>c.kind==='cex').solid,true);
+assert.equal(laid.tags.find(t=>t.kind==='buy').clock,'+0m');
+assert.equal(laid.tags.find(t=>t.kind==='buy').sharp,false);
+const near=layoutTrack(parseTrackPaint({chartMarkers:[
+ {kind:'buy',time:1_700_000_000_000,label:'buy'},
+ {kind:'sell',time:1_700_000_030_000,label:'sell'},
+]}),{plotWidth:800,indexAt:t=>(t-1_700_000_000_000)/1000,x:i=>i});
+assert.equal(near.tags.length,2);
+assert.notEqual(near.tags[0].lane,near.tags[1].lane);
+const far=layoutTrack(parseTrackPaint({chartMarkers:[
+ {kind:'buy',time:1_700_000_000_000,label:'buy'},
+ {kind:'sell',time:1_700_000_200_000,label:'sell'},
+]}),{plotWidth:800,indexAt:t=>(t-1_700_000_000_000)/1000,x:i=>i});
+assert.equal(far.tags[0].lane,far.tags[1].lane);
+assert.equal(far.tags[1].clock,'+3m');
 
 const frames=replayFrames(paint);
 assert.ok(frames.length>=2&&frames.length<=12);
@@ -81,7 +95,17 @@ const dump=parseTrackPaint({mode:'dump',chartMarkers:[
  {kind:'dump',time:1_700_000_120_000,label:'dump'},
 ]});
 assert.equal(dump.chartMarkers.length,2);
-assert.ok(dump.chartMarkers.every(m=>m.kind==='dump'&&m.chip===false));
+assert.ok(dump.chartMarkers.every(m=>m.kind==='dump'&&m.chip===false&&isSharp(m)));
+const whale=parseTrackPaint({chartMarkers:[{kind:'tag',time:1_700_000_000_000,label:'whale',wallet:hop}]});
+assert.equal(whale.chartMarkers[0].chip,false);
+assert.equal(isSharp(whale.chartMarkers[0]),true);
+const sample=sampleTrackPaint();
+assert.equal(sample.chartMarkers.find(m=>m.kind==='dump').chip,false);
+assert.equal(isSharp(sample.chartMarkers.find(m=>m.label==='whale')),true);
+assert.equal(sample.chartMarkers.find(m=>m.label==='whale').chip,false);
+assert.ok(sample.chartMarkers.some(m=>m.kind==='hop'&&m.chip));
+assert.ok(sample.chartMarkers.some(m=>m.kind==='bridge'&&m.chip));
+assert.equal(sample.listAddresses,false);
 assert.equal(parseTrackPaint({chartMarkers:[{kind:'suspect',time:1_700_000_000_000,label:'suspect'}]}).chartMarkers[0].kind,'dump');
 const bridgeCol=columnForBridge(paint,{dst:'eth'});
 assert.equal(bridgeCol.chain,'ethereum');
@@ -158,8 +182,26 @@ const told=await loadTrackPaint({wallet:'0x1111111111111111111111111111111111111
 assert.match(told.paint.muse.summary,/Opening workspace chart/);
 assert.ok(seriesFromPaint(paint).every(b=>b.synthetic&&b.volume===0));
 assert.equal(seriesFromPaint(parseTrackPaint({chartMarkers:[],bands:[],sideColumns:[]})).length,0);
+const buyT=1_700_000_060_000,dumpT=1_700_000_180_000;
+const sil=seriesFromPaint(parseTrackPaint({chartMarkers:[{kind:'buy',time:buyT,label:'buy'},{kind:'dump',time:dumpT,label:'dump'}]}));
+const bucket=t=>Math.floor(t/60_000)*60_000;
+const buyBar=sil.find(b=>b.time===bucket(buyT));
+const dumpBar=sil.find(b=>b.time===bucket(dumpT));
+assert.ok(buyBar&&dumpBar&&dumpBar.close<buyBar.close);
+assert.ok(sil.every(b=>b.synthetic===true&&b.volume===0&&b.close>=0.2));
 
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'../..');
+const paintSrc=readFileSync(resolve(root,'terminal/src/track-paint.js'),'utf8');
+assert.match(paintSrc,/data-track-focus=/);
+assert.match(paintSrc,/data-track-focus-wallet/);
+const workspaceSrc=readFileSync(resolve(root,'terminal/src/track-workspace.js'),'utf8');
+assert.match(workspaceSrc,/Replay trail/);
+assert.match(workspaceSrc,/Same case · wallet chart/);
+assert.match(workspaceSrc,/Same case · chain chart/);
+assert.match(workspaceSrc,/data-track-caption/);
+assert.match(workspaceSrc,/Beside this chart/);
+assert.doesNotMatch(workspaceSrc,/address-list/);
+
 const built=spawnSync(process.execPath,[resolve(root,'scripts/hash-track-build.mjs')],{cwd:root,encoding:'utf8'});
 assert.equal(built.status,0,built.stderr);
 const manifest=JSON.parse(readFileSync(resolve(root,'terminal/track-build.json'),'utf8'));

@@ -14,12 +14,13 @@ import {existsSync, mkdirSync, readFileSync, readdirSync, unlinkSync, writeFileS
 import {dirname, join, resolve} from 'node:path';
 import {pathToFileURL} from 'node:url';
 
+// chart trail silhouette — baseline is the live workspace chart deploy.
 const BASE = {
-  shell: 'track-shell-22O5KOMT.js',
-  agent: 'console-agent-PZHHX2LX.js',
-  console: 'console-AJNL4FX2.js',
-  workspace: 'workspace-CCWEPJ6L.js',
-  app: 'app-HBFQX26G.js',
+  shell: 'track-shell-LPE3ULGM.js',
+  agent: 'console-agent-VYVSH3Q3.js',
+  console: 'console-XGD2I6YX.js',
+  workspace: 'workspace-GQIMGUXH.js',
+  app: 'app-RTEAHYSG.js',
 };
 const ell = '\\u2026';
 const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
@@ -337,7 +338,7 @@ LiveTickChart.prototype.setTrackPaint=function(paint,hooks){
   if(!this.trackLayer)this.trackLayer=new TrackPaintLayer(this);
   if(hooks)this.trackLayer.setHooks(hooks);
   const n=this.series?.length||this.options?.series?.length||0;
-  if(n>8){this.count=Math.min(480,n+2);this.offset=0;}
+  if(n>8){this.count=Math.min(480,n+8);this.offset=0;}
   this.trackLayer.setPaint(parseTrackPaint(paint));
 };
 const draw=LiveTickChart.prototype.draw;
@@ -520,7 +521,11 @@ const syntaxErr = `${syntax.stderr || ''}\n${syntax.stdout || ''}`;
 if (syntaxErr.includes('SyntaxError') || syntaxErr.includes('Missing catch')) throw new Error(`agent syntax\n${syntaxErr.slice(0, 600)}`);
 const agentName = writeHashed('_app/chunks', 'console-agent', Buffer.from(agent));
 let consoleJs = readFileSync(join(out, '_app/chunks', BASE.console), 'utf8');
-consoleJs = replaceOnce(consoleJs, '["tracker","Whale Tracker","feed"]', '["tracker","Workspace chart","chart"]', 'console tracker label');
+if (consoleJs.includes('["tracker","Whale Tracker","feed"]')) {
+  consoleJs = replaceOnce(consoleJs, '["tracker","Whale Tracker","feed"]', '["tracker","Workspace chart","chart"]', 'console tracker label');
+} else if (!consoleJs.includes('["tracker","Workspace chart","chart"]')) {
+  throw new Error('console tracker label missing');
+}
 consoleJs = replaceOnce(consoleJs, BASE.agent, agentName, 'console agent ref');
 const consoleName = writeHashed('_app/chunks', 'console', Buffer.from(consoleJs));
 let workspace = readFileSync(join(out, '_app/chunks', BASE.workspace), 'utf8');
@@ -534,7 +539,7 @@ let app = readFileSync(join(out, '_app', BASE.app), 'utf8');
 app = replaceOnce(app, BASE.workspace, workspaceName, 'app workspace ref');
 const appName = writeHashed('_app', 'app', Buffer.from(app));
 const shellText = shellBytes.toString('utf8');
-for (const needle of ['setTrackPaint', 'mountTrackWorkspace', 'classifyTrackIntent', 'data-track-form', 'dumpTagsOnly', 'columnForBridge', 'Math.min(480', 'Fast Feed is latency paint only']) {
+for (const needle of ['setTrackPaint', 'mountTrackWorkspace', 'classifyTrackIntent', 'data-track-form', 'dumpTagsOnly', 'columnForBridge', 'Math.min(480', 'Fast Feed is latency paint only', 'data-track-focus', 'Replay trail']) {
   if (!shellText.includes(needle)) throw new Error(`shell missing ${needle}`);
 }
 if (shellText.includes('whale-tracker')) throw new Error('shell still names whale-tracker');

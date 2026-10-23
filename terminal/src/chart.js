@@ -84,7 +84,7 @@ export class TickChart {
  pan(direction){this.offset=this.clampOffset(this.offset+direction*12);this.requestDraw();}
  reset(){this.count=this.options.compact?55:88;this.offset=0;this.manualScale=null;this.autoScale=null;this.requestDraw();}
  goToLatest(){this.offset=0;this.manualScale=null;this.autoScale=null;this.pointer=null;this.requestDraw();this.container.dispatchEvent(new CustomEvent('latestrequest'));}
- setTrackPaint(paint,hooks){if(!this.trackLayer)this.trackLayer=new TrackPaintLayer(this);if(hooks)this.trackLayer.setHooks(hooks);const n=this.series?.length||this.options.series?.length||0;if(n>8){this.count=Math.min(480,n+2);this.offset=0;}this.trackLayer.setPaint(parseTrackPaint(paint));}
+ setTrackPaint(paint,hooks){if(!this.trackLayer)this.trackLayer=new TrackPaintLayer(this);if(hooks)this.trackLayer.setHooks(hooks);const n=this.series?.length||this.options.series?.length||0;if(n>8){this.count=Math.min(480,n+8);this.offset=0;}this.trackLayer.setPaint(parseTrackPaint(paint));}
  addLevel(){this.drawingLayer?.setTool('horizontal');}
  yToPrice(y){return this.max-(y-this.priceTop)/this.priceHeight*(this.max-this.min);}
  touchGesture(e){

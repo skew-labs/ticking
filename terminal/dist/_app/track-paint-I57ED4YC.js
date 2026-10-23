@@ -148,14 +148,29 @@ export function paintTimes(paint){
  for(const c of paint?.sideColumns||[])for(const m of c.markers)times.push(m.time);
  return times.filter(t=>Number.isFinite(t));
 }
+const NUDGE={buy:.04,sell:-.05,dump:-.12,swap:.02,hop:.01,transfer:-.01,bridge:-.03,cex:-.02,frozen:0,tag:0};
 export function seriesFromPaint(paint){
  const times=paintTimes(paint);
  if(!times.length)return [];
  const step=60_000,min=Math.min(...times),max=Math.max(...times);
  const start=Math.floor(min/step)*step;
  const end=Math.max(start+step*8,Math.ceil(max/step)*step);
+ const marks=new Map();
+ const absorb=m=>{
+  if(!m||!Number.isFinite(m.time))return;
+  const bucket=Math.floor(m.time/step)*step;
+  marks.set(bucket,(marks.get(bucket)||0)+(NUDGE[m.kind]||0));
+ };
+ for(const m of paint?.chartMarkers||[])absorb(m);
+ for(const c of paint?.sideColumns||[])for(const m of c.markers||[])absorb(m);
+ let price=1;
  const series=[];
- for(let t=start;t<=end&&series.length<480;t+=step)series.push({time:t,open:1,high:1,low:1,close:1,volume:0,synthetic:true});
+ for(let t=start;t<=end&&series.length<480;t+=step){
+  const open=price;
+  price=Math.max(.2,price+(marks.get(t)||0));
+  const close=price;
+  series.push({time:t,open,high:Math.max(open,close),low:Math.min(open,close),close,volume:0,synthetic:true});
+ }
  return series;
 }
 export function replayFrames(paint){
@@ -210,9 +225,44 @@ export function shortWallet(address){
 
 const TAG_COLOR={buy:'#239a82',sell:'#d36a79',dump:'#f97316',transfer:'#7564c3',bridge:'#60a5fa',swap:'#f5b041',hop:'#36c6bc',frozen:'#111827',cex:'#111827',tag:'#7b8496'};
 export function tagColor(kind){return TAG_COLOR[kind]||TAG_COLOR.tag;}
+export function isSharp(marker){
+ if(!marker||marker.chip)return false;
+ if(marker.kind==='dump')return true;
+ return /whale|sharp/i.test(marker.label||'');
+}
+export function clockLabel(time,origin){
+ if(!Number.isFinite(time)||!Number.isFinite(origin))return '';
+ const mins=Math.round((time-origin)/60_000);
+ return `${mins>=0?'+':''}${mins}m`;
+}
+export function assignLanes(points,gap=72){
+ const ends=[];
+ const order=points.map((p,i)=>({p,i})).sort((a,b)=>a.p.x-b.p.x||a.i-b.i);
+ for(const {p} of order){
+  let lane=0;
+  while(lane<ends.length&&ends[lane]>p.x-gap)lane++;
+  ends[lane]=p.x;
+  p.lane=lane;
+ }
+ return points;
+}
+function spanLabel(t0,t1){
+ const mins=Math.max(0,Math.round(((t1??t0)-t0)/60_000));
+ return `${mins}m`;
+}
+function nearestMarker(paint,time){
+ let best=null,dist=Infinity;
+ for(const m of paint?.chartMarkers||[]){
+  const d=Math.abs(m.time-time);
+  if(d<dist){dist=d;best=m;}
+ }
+ return best;
+}
 
 export function layoutTrack(paint,view,chart){
  const markers=paint?.chartMarkers||[];
+ const originMs=markers.reduce((min,m)=>Number.isFinite(m.time)?Math.min(min,m.time):min,Infinity);
+ const origin=Number.isFinite(originMs)?originMs:null;
  const xAt=time=>{
   if(!view?.indexAt||!view?.x)return null;
   const x=view.x(view.indexAt(time));
@@ -224,92 +274,167 @@ export function layoutTrack(paint,view,chart){
   const x0=xAt(b.t0),x1=xAt(b.t1);
   if(x0==null&&x1==null)return null;
   const left=Math.min(x0??x1,x1??x0),right=Math.max(x0??x1,x1??x0);
-  return {...b,x:left,width:Math.max(2,right-left)};
+  return {...b,x:left,width:Math.max(2,right-left),span:spanLabel(b.t0,b.t1)};
  }).filter(Boolean);
  const tags=[],chips=[];
- markers.forEach((m,i)=>{
+ for(const m of markers){
   const x=xAt(m.time);
-  if(x==null)return;
-  if(m.chip)chips.push({...m,x,lane:chips.length%3});
-  else tags.push({...m,x,lane:i%3});
- });
- return {bands,tags:tags.slice(0,80),chips:chips.slice(0,80)};
+  if(x==null)continue;
+  const item={...m,x,clock:clockLabel(m.time,origin),sharp:isSharp(m)};
+  if(m.chip)chips.push(item);else tags.push(item);
+ }
+ return {bands,tags:assignLanes(tags).slice(0,80),chips:assignLanes(chips).slice(0,80),origin};
 }
 
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 
 export class TrackPaintLayer{
- constructor(chart){this.chart=chart;this.paint=emptyPaint();this.hooks={};this.cursor=null;this.timer=0;this.canvas=document.createElement('canvas');this.canvas.className='track-paint-canvas';this.canvas.setAttribute('aria-hidden','true');this.ui=document.createElement('div');this.ui.className='track-paint-ui';this.onClick=e=>this.click(e);this.ui.addEventListener('click',this.onClick);this.chart.container.append(this.canvas,this.ui);}
+ constructor(chart){
+  this.chart=chart;this.paint=emptyPaint();this.hooks={};this.cursor=null;this.timer=0;this.uiSig='';this.hotId=null;this.stepIndex=-1;
+  this.canvas=document.createElement('canvas');this.canvas.className='track-paint-canvas';this.canvas.setAttribute('aria-hidden','true');
+  this.ui=document.createElement('div');this.ui.className='track-paint-ui';
+  this.readout=document.createElement('div');this.readout.className='track-readout';this.readout.hidden=true;
+  this.onClick=e=>this.click(e);this.onOver=e=>this.hover(e);this.onOut=e=>this.leave(e);
+  this.ui.addEventListener('click',this.onClick);this.ui.addEventListener('pointerover',this.onOver);this.ui.addEventListener('pointerout',this.onOut);
+  this.chart.container.append(this.canvas,this.ui,this.readout);
+ }
  setHooks(hooks){this.hooks=hooks||{};}
- setPaint(paint){this.paint=paint?.schema?paint:parseTrackPaint(paint);this.cursor=null;this.stop();this.chart.requestDraw?.();}
+ setPaint(paint){this.paint=paint?.schema?paint:parseTrackPaint(paint);this.cursor=null;this.uiSig='';this.hotId=null;this.stepIndex=-1;this.readout.hidden=true;this.stop();this.chart.requestDraw?.();}
+ replayClass(time){
+  if(this.cursor==null||!Number.isFinite(time))return '';
+  if(time<this.cursor)return ' is-past';
+  if(time>this.cursor)return ' is-ahead';
+  return ' is-now';
+ }
  sync(){
   const chart=this.chart,width=chart.container.clientWidth,height=chart.container.clientHeight;
   if(!width||!height)return;
   const dpr=chart.dpr||Math.min(devicePixelRatio||1,2);
   this.canvas.width=Math.round(width*dpr);this.canvas.height=Math.round(height*dpr);this.canvas.style.width=width+'px';this.canvas.style.height=height+'px';
   const ctx=this.canvas.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,width,height);
-  const view=chart.view;if(!view){this.ui.replaceChildren();return;}
+  const view=chart.view;if(!view){this.ui.replaceChildren();this.uiSig='';return;}
   const laid=layoutTrack(this.paint,view,chart);
   const top=chart.priceTop||18,bottom=(chart.priceTop||18)+(chart.priceHeight||height*.6);
   for(const b of laid.bands){
-   ctx.save();ctx.fillStyle=b.dotted?'rgba(96,165,250,.13)':'rgba(54,198,188,.14)';ctx.fillRect(b.x,top,b.width,Math.max(8,bottom-top));
-   ctx.strokeStyle=b.dotted?'#60a5fa':'#36c6bc';ctx.lineWidth=1.25;ctx.setLineDash(b.dotted?[3,4]:[]);ctx.strokeRect(b.x,top,b.width,Math.max(8,bottom-top));ctx.restore();
+   ctx.save();
+   ctx.fillStyle=b.dotted?'rgba(96,165,250,.10)':'rgba(54,198,188,.10)';
+   ctx.fillRect(b.x,top,b.width,Math.max(8,bottom-top));
+   ctx.fillStyle=b.dotted?'rgba(96,165,250,.32)':'rgba(54,198,188,.34)';
+   ctx.fillRect(b.x,top,b.width,22);
+   ctx.strokeStyle=b.dotted?'#60a5fa':'#36c6bc';ctx.lineWidth=1.25;ctx.setLineDash(b.dotted?[3,4]:[]);
+   ctx.strokeRect(b.x,top,b.width,Math.max(8,bottom-top));
+   if(!(b.src&&b.dst)){
+    ctx.setLineDash([]);ctx.beginPath();ctx.rect(b.x+4,top,Math.max(0,b.width-8),22);ctx.clip();
+    ctx.fillStyle=b.dotted?'#1d4ed8':'#0f766e';ctx.font='600 10px "DM Sans",sans-serif';ctx.textBaseline='middle';
+    ctx.fillText(`${b.label||'Hop'} · ${b.span||''}`,b.x+6,top+11);
+   }
+   ctx.restore();
   }
   for(const t of [...laid.tags,...laid.chips]){
-   ctx.save();ctx.strokeStyle=tagColor(t.kind);ctx.globalAlpha=t.chip?0.55:0.85;ctx.setLineDash(t.kind==='bridge'||t.dashed?[2,3]:[]);ctx.beginPath();ctx.moveTo(t.x,top);ctx.lineTo(t.x,bottom);ctx.stroke();ctx.restore();
+   const hot=this.hotId===t.id,sharp=t.sharp;
+   ctx.save();ctx.strokeStyle=sharp?'#f97316':tagColor(t.kind);ctx.lineWidth=hot?3.25:(sharp?2.5:1.15);ctx.globalAlpha=hot?1:(sharp?0.95:(t.chip?0.72:0.88));
+   ctx.setLineDash(t.kind==='bridge'||t.dashed?[2,3]:[]);ctx.beginPath();ctx.moveTo(t.x,top);ctx.lineTo(t.x,bottom);ctx.stroke();ctx.restore();
   }
   if(this.cursor!=null){
    const x=view.x(view.indexAt(this.cursor));
-   if(Number.isFinite(x)){ctx.save();ctx.strokeStyle='#111827';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(x,top);ctx.lineTo(x,bottom);ctx.stroke();ctx.restore();}
+   if(Number.isFinite(x)){ctx.save();ctx.strokeStyle='#111827';ctx.lineWidth=1.75;ctx.beginPath();ctx.moveTo(x,top);ctx.lineTo(x,bottom);ctx.stroke();ctx.restore();}
   }
   this.renderUi(laid,top);
  }
  renderUi(laid,top){
+  const sig=[laid.tags,laid.chips].map(list=>list.map(t=>`${t.id}:${Math.round(t.x)}:${t.lane}:${this.replayClass(t.time)}`).join('|')).join('#')+`#${laid.bands.map(b=>`${b.id}:${Math.round(b.x)}`).join('|')}#${this.cursor??''}#${this.paint.muse?.beside?.wallet||''}`;
+  if(sig===this.uiSig)return;
+  this.uiSig=sig;
   const bits=[];
-  laid.tags.forEach(t=>{
-   const y=top+8+t.lane*18;
-   bits.push(`<span class="track-tag kind-${esc(t.kind)}" style="left:${t.x}px;top:${y}px">${esc(t.label)}</span>`);
-  });
-  laid.chips.forEach(c=>{
+  for(const t of laid.tags){
+   const y=top+8+t.lane*20;
+   const face=`track-tag kind-${esc(t.kind)}${t.sharp?' sharp':''}${this.replayClass(t.time)}`;
+   const clock=t.clock?` · ${t.clock}`:'';
+   const attrs=`data-track-id="${esc(t.id)}" data-track-kind="${esc(t.kind)}" data-track-label="${esc(t.label)}" data-track-clock="${esc(t.clock||'')}"`;
+   if(t.sharp){
+    const aria=`Open ${t.label}${t.clock?` ${t.clock}`:''}`;
+    bits.push(`<button type="button" class="${face}" style="left:${t.x}px;top:${y}px" ${attrs} data-track-focus="${t.time}" data-track-focus-wallet="${esc(t.wallet||'')}" aria-label="${esc(aria)}">${esc(t.label)}${esc(clock)}</button>`);
+   }else bits.push(`<span class="${face}" style="left:${t.x}px;top:${y}px" ${attrs}>${esc(t.label)}${esc(clock)}</span>`);
+  }
+  for(const c of laid.chips){
    const y=(this.chart.priceTop||18)+(this.chart.priceHeight||120)-28-c.lane*22;
    const face=c.kind==='bridge'?'bridge':c.solid?'solid':c.dashed?'dashed':'chip';
    const bridge=c.kind==='bridge'?` data-track-bridge="${esc(c.id)}" data-track-src="${esc(c.src||'')}" data-track-dst="${esc(c.dst||c.chain||'')}"`:'';
    const label=c.kind==='bridge'?`Open ${c.dst||c.chain||'chain'} chart`:c.label||shortWallet(c.wallet);
-   const hint=c.kind==='bridge'?'Open the chain chart in this incident':'Open this wallet chart';
-   bits.push(`<button type="button" class="track-chip ${face} kind-${esc(c.kind)}" style="left:${c.x}px;top:${y}px" title="${esc(hint)}" aria-label="${esc(hint)}" data-track-kind="${esc(c.kind)}" data-track-wallet="${esc(c.wallet||'')}" data-track-chain="${esc(c.chain||'')}" data-track-symbol="${esc(c.symbol||'')}"${bridge}>${esc(label)}</button>`);
-  });
+   const hint=c.kind==='bridge'?'Open the chain chart beside':'Adds this wallet in this case';
+   const clock=c.clock?` data-track-clock="${esc(c.clock)}"`:'';
+   bits.push(`<button type="button" class="track-chip ${face} kind-${esc(c.kind)}${this.replayClass(c.time)}" style="left:${c.x}px;top:${y}px" title="${esc(hint)}" aria-label="${esc(hint)}" data-track-id="${esc(c.id)}" data-track-kind="${esc(c.kind)}" data-track-label="${esc(label)}" data-track-wallet="${esc(c.wallet||'')}" data-track-chain="${esc(c.chain||'')}" data-track-symbol="${esc(c.symbol||'')}"${clock}${bridge}>${esc(label)}</button>`);
+  }
   for(const b of laid.bands){
    if(!(b.src&&b.dst))continue;
-   bits.push(`<button type="button" class="track-chip bridge" style="left:${b.x+8}px;top:${top+6}px" title="Open the ${esc(b.dst)} chart" aria-label="Open the ${esc(b.dst)} chart" data-track-bridge="${esc(b.id)}" data-track-src="${esc(b.src)}" data-track-dst="${esc(b.dst)}">Open ${esc(b.dst)} chart</button>`);
+   bits.push(`<button type="button" class="track-chip bridge" style="left:${b.x+8}px;top:${top+4}px" title="Open the chain chart beside" aria-label="Open the ${esc(b.dst)} chart beside" data-track-id="${esc(b.id)}" data-track-bridge="${esc(b.id)}" data-track-src="${esc(b.src)}" data-track-dst="${esc(b.dst)}" data-track-label="${esc(b.label||b.dst)}">Open ${esc(b.dst)} chart</button>`);
   }
   const beside=this.paint.muse?.beside;
-  if(beside?.wallet)bits.push(`<button type="button" class="track-beside" data-track-wallet="${esc(beside.wallet)}">${esc(beside.cta||'Follow next hop')}</button>`);
+  if(beside?.wallet)bits.push(`<button type="button" class="track-beside" data-track-id="beside" data-track-wallet="${esc(beside.wallet)}" data-track-label="${esc(beside.cta||'Follow next hop')}">${esc(beside.cta||'Follow next hop')}</button>`);
   this.ui.innerHTML=bits.join('');
+ }
+ hover(event){
+  const el=event.target.closest?.('[data-track-id]');
+  const id=el?.dataset.trackId||null;
+  if(id===this.hotId&&this.readout.hidden===!el)return;
+  this.hotId=id;
+  if(!el){this.readout.hidden=true;}
+  else{
+   const hint=el.dataset.trackBridge?'Open the chain chart beside':el.dataset.trackFocus?'Open this move on the chart':el.dataset.trackWallet?'Adds this wallet in this case':'';
+   const clock=el.dataset.trackClock||'';
+   this.readout.hidden=false;
+   this.readout.textContent=[el.dataset.trackLabel||el.textContent,clock,hint].filter(Boolean).join(' · ');
+  }
+  this.chart.requestDraw?.();
+ }
+ leave(event){
+  if(event.relatedTarget&&this.ui.contains(event.relatedTarget))return;
+  if(!this.hotId&&this.readout.hidden)return;
+  this.hotId=null;this.readout.hidden=true;this.chart.requestDraw?.();
  }
  click(event){
   const bridge=event.target.closest('[data-track-bridge]');
   if(bridge){this.hooks.onBridge?.({id:bridge.dataset.trackBridge,src:bridge.dataset.trackSrc,dst:bridge.dataset.trackDst});return;}
+  const focus=event.target.closest('[data-track-focus]');
+  if(focus){
+   const time=Number(focus.dataset.trackFocus);
+   this.hooks.onFocus?.({time:Number.isFinite(time)?time:null,kind:focus.dataset.trackKind||null,wallet:focus.dataset.trackFocusWallet||null,label:focus.dataset.trackLabel||''});
+   return;
+  }
   const chip=event.target.closest('[data-track-wallet]');
   if(!chip?.dataset.trackWallet)return;
   this.hooks.onWallet?.({address:chip.dataset.trackWallet,chain:chip.dataset.trackChain||null,symbol:chip.dataset.trackSymbol||null,kind:chip.dataset.trackKind||null,paint:this.paint});
+ }
+ emitStep(frame,index){
+  this.cursor=frame.time;
+  if(index===this.stepIndex)return;
+  this.stepIndex=index;
+  const marker=nearestMarker(this.paint,frame.time);
+  const raw=marker?.label||'';
+  const label=walletAddress(raw)?shortWallet(raw):raw;
+  this.hooks.onStep?.({index,total:replayFrames(this.paint).length,time:frame.time,label});
+  this.chart.requestDraw?.();
  }
  play(){
   this.stop();
   const frames=replayFrames(this.paint);
   if(!frames.length)return;
-  if(matchMedia('(prefers-reduced-motion: reduce)').matches){this.cursor=frames.at(-1).time;this.chart.requestDraw();return;}
+  this.stepIndex=-1;
+  const reduced=typeof matchMedia==='function'&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduced){this.emitStep(frames.at(-1),frames.length-1);return;}
   const t0=performance.now();
   const step=now=>{
    const elapsed=now-t0;
-   const frame=frames.reduce((a,f)=>elapsed>=f.at?f:a,frames[0]);
-   this.cursor=frame.time;this.chart.requestDraw();
+   let index=0;
+   for(let i=0;i<frames.length;i++)if(elapsed>=frames[i].at)index=i;
+   this.emitStep(frames[index],index);
    if(elapsed<frames.at(-1).at)this.timer=requestAnimationFrame(step);
-   else this.timer=0;
+   else {this.timer=0;this.cursor=frames.at(-1).time;}
   };
   this.timer=requestAnimationFrame(step);
  }
  stop(){if(this.timer)cancelAnimationFrame(this.timer);this.timer=0;}
- destroy(){this.stop();this.ui.removeEventListener('click',this.onClick);this.canvas.remove();this.ui.remove();}
+ destroy(){this.stop();this.ui.removeEventListener('click',this.onClick);this.ui.removeEventListener('pointerover',this.onOver);this.ui.removeEventListener('pointerout',this.onOut);this.canvas.remove();this.ui.remove();this.readout.remove();}
 }
 
 /** Preview fixture. Live routes use handoff or the track API. */
@@ -324,6 +449,8 @@ export function sampleTrackPaint(seed='0x278d858f05b94576c1e6f73285886876ff6ef8d
    {id:'buy',kind:'buy',time:t,wallet,label:'buy',symbol:'WETH',chain:'arbitrum'},
    {id:'hop',kind:'hop',time:t+4*60_000,wallet:hop,label:shortWallet(hop),chain:'arbitrum'},
    {id:'sell',kind:'sell',time:t+8*60_000,wallet:hop,label:'sell',symbol:'WETH',chain:'arbitrum'},
+   {id:'dump',kind:'dump',time:t+9*60_000,wallet,label:'dump',symbol:'WETH',chain:'arbitrum'},
+   {id:'whale',kind:'tag',time:t+10*60_000,wallet:hop,label:'whale',symbol:'WETH',chain:'arbitrum'},
    {id:'bridge',kind:'bridge',time:t+12*60_000,wallet,label:'bridge',chain:'arbitrum',src:'arb',dst:'eth'},
    {id:'cex',kind:'cex',time:t+14*60_000,wallet,label:'CEX',solid:true,chain:'ethereum'},
    {id:'frozen',kind:'frozen',time:t+16*60_000,label:'unlabeled',unknown:true,dashed:true,chain:'ethereum'},

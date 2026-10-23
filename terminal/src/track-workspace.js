@@ -158,8 +158,9 @@ export function mountTrackWorkspace(root,{incident,wallet,chain,sample}={}){
  let disposed=false;
  const charts=[];
  const opened=new Set();
- root.innerHTML=`<section class="track-workspace" data-incident="${esc(incident||wallet||'workspace')}"><header class="track-workspace-bar"><div><p class="track-kicker">Workspace track</p><h1 data-track-title>${esc(shortWallet(wallet)||incident||'Workspace')}</h1></div><p data-track-summary role="status">Reading the track paint…</p><button type="button" data-track-replay hidden>Replay</button></header><div class="track-layout"><div class="track-charts" data-track-charts></div><aside class="track-side" data-track-side hidden><h2>Bridge columns</h2><div data-track-columns></div></aside></div></section>`;
+ root.innerHTML=`<section class="track-workspace" data-incident="${esc(incident||wallet||'workspace')}"><header class="track-workspace-bar"><div><p class="track-kicker">Workspace track</p><h1 data-track-title>${esc(shortWallet(wallet)||incident||'Workspace')}</h1><p data-track-caption class="track-caption"></p></div><p data-track-summary role="status">Reading the track paint…</p><button type="button" data-track-replay hidden>Replay trail</button></header><div class="track-layout"><div class="track-charts" data-track-charts></div><aside class="track-side" data-track-side hidden><h2>Beside this chart</h2><div data-track-columns></div></aside></div></section>`;
  const summary=root.querySelector('[data-track-summary]');
+ const caption=root.querySelector('[data-track-caption]');
  const chartsEl=root.querySelector('[data-track-charts]');
  const side=root.querySelector('[data-track-side]');
  const columnsEl=root.querySelector('[data-track-columns]');
@@ -169,7 +170,7 @@ export function mountTrackWorkspace(root,{incident,wallet,chain,sample}={}){
   if(opened.has(key))return;
   opened.add(key);
   const card=document.createElement('article');
-  card.className='track-pane';
+  card.className='track-pane track-pane-enter';
   card.dataset.trackPane=role;
   card.innerHTML=`<header><b>${esc(title)}</b><small>${esc(subtitle||'')}</small></header><div class="track-chart-host"></div>`;
   chartsEl.append(card);
@@ -177,7 +178,7 @@ export function mountTrackWorkspace(root,{incident,wallet,chain,sample}={}){
   const host=card.querySelector('.track-chart-host');
   const series=seriesFromPaint(paint);
   const chart=new TickChart(host,{symbol:title,market:incident||title},{interval:'1m',editable:false,volume:false,series,emptyMessage:'No track markers in this window.',storageScope:'track'});
-  chart.setTrackPaint(paint,{onWallet:openWallet,onBridge:openBridge});
+  chart.setTrackPaint(paint,{onWallet:openWallet,onBridge:openBridge,onFocus:focusMove,onStep:noteStep});
   charts.push(chart);
   if(charts.length>1)chartsEl.classList.add('is-multi');
   return chart;
@@ -188,7 +189,26 @@ export function mountTrackWorkspace(root,{incident,wallet,chain,sample}={}){
   if(!address||!paint||disposed||!shouldOpenWallet(wallet,chip))return;
   const panes=panesForWallet(paint,address,chip.symbol);
   const specs=panes.length?panes:[{title:shortWallet(address),markers:[]}];
-  for(const spec of specs)addPane({role:'wallet',wallet:address,title:spec.title,subtitle:'Same incident · wallet chart',paint:{...paint,chartMarkers:spec.markers,bands:[],sideColumns:[],muse:{summary:museLine(paint.muse?.summary),beside:null,replay:false,replayMs:900}}});
+  for(const spec of specs)addPane({role:'wallet',wallet:address,title:spec.title,subtitle:'Same case · wallet chart',paint:{...paint,chartMarkers:spec.markers,bands:[],sideColumns:[],muse:{summary:museLine(paint.muse?.summary),beside:null,replay:false,replayMs:900}}});
+ }
+ function noteStep(step){
+  const raw=String(step?.label||'');
+  const safe=walletAddress(raw)?shortWallet(raw):museLine(raw);
+  const n=(Number(step?.index)||0)+1;
+  const total=Number(step?.total)||n;
+  caption.textContent=`Trail ${n} of ${total}${safe?` · ${safe}`:''}`;
+ }
+ function focusMove(focus){
+  const layer=charts[0]?.trackLayer;
+  if(!layer||disposed)return;
+  const time=Number(focus?.time);
+  if(Number.isFinite(time)){layer.cursor=time;charts[0].requestDraw?.();}
+  const raw=String(focus?.label||'');
+  const safe=walletAddress(raw)?shortWallet(raw):museLine(raw);
+  if(safe)caption.textContent=safe;
+  const address=walletAddress(focus?.wallet);
+  if(!address||address===walletAddress(wallet))return;
+  openWallet({address,kind:focus?.kind||'tag',symbol:null,paint:layer.paint});
  }
  function openBridge(bridge){
   const paint=charts[0]?.trackLayer?.paint;
@@ -197,13 +217,13 @@ export function mountTrackWorkspace(root,{incident,wallet,chain,sample}={}){
  }
  function openColumn(column){
   if(!column?.chain||disposed)return;
-  addPane({role:'chain',title:`${column.label||column.chain} chart`,subtitle:'Same incident · chain chart',paint:{schema:paintSchema(),track:true,listAddresses:false,chartMarkers:column.markers||[],bands:[],sideColumns:[],muse:{summary:'',beside:null,replay:false,replayMs:900}}});
+  addPane({role:'chain',title:`${column.label||column.chain} chart`,subtitle:'Same case · chain chart',paint:{schema:paintSchema(),track:true,listAddresses:false,chartMarkers:column.markers||[],bands:[],sideColumns:[],muse:{summary:'',beside:null,replay:false,replayMs:900}}});
  }
  function paintSchema(){return 'ticking.chartMarkers.track.v1';}
  function showSide(paint){
   const cols=paint.sideColumns||[];
   side.hidden=!cols.length;
-  columnsEl.innerHTML=cols.map(c=>`<button type="button" data-track-column="${esc(c.id)}">Open ${esc(c.label||c.chain)} chart<small>Same incident</small></button>`).join('');
+  columnsEl.innerHTML=cols.map(c=>`<button type="button" data-track-column="${esc(c.id)}">Open ${esc(c.label||c.chain)} beside<small>Same case</small></button>`).join('');
  }
  replayBtn.addEventListener('click',()=>charts[0]?.trackLayer?.play(),{signal:abort.signal});
  columnsEl.addEventListener('click',e=>{const b=e.target.closest('[data-track-column]');if(!b)return;const paint=charts[0]?.trackLayer?.paint;openColumn((paint?.sideColumns||[]).find(c=>c.id===b.dataset.trackColumn));},{signal:abort.signal});
@@ -217,7 +237,7 @@ export function mountTrackWorkspace(root,{incident,wallet,chain,sample}={}){
    summary.textContent=sample?'Sample paint on this workspace chart.':error&&!n?error:muse||(n?`${n} hops on this chart.`:'No hops in this window.');
    if(source)summary.dataset.trackSource=source;
    replayBtn.hidden=!paint.muse?.replay;
-   addPane({role:'primary',wallet,title:shortWallet(wallet)||'Track',subtitle:sample?'Preview fixture · time axis':'Track markers · time axis',paint});
+   addPane({role:'primary',wallet,title:shortWallet(wallet)||'Track',subtitle:sample?'Preview fixture · trail silhouette, not a market print':'Trail silhouette · not a market print',paint});
    showSide(paint);
    const probe=sample&&new URLSearchParams(location.hash.split('?')[1]||'').get('probe')==='1';
    if(probe){
