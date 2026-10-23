@@ -1,4 +1,5 @@
 /** Paint schema `ticking.chartMarkers.track.v1` on a TickChart time axis. */
+import {Lru} from './speed-pass.js';
 
 export const TRACK_SCHEMA='ticking.chartMarkers.track.v1';
 const ADDR=/0x[a-fA-F0-9]{40}/;
@@ -432,7 +433,7 @@ function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&l
 
 export class TrackPaintLayer{
  constructor(chart){
-  this.chart=chart;this.paint=emptyPaint();this.hooks={};this.cursor=null;this.timer=0;this.uiSig='';this.hotId=null;this.stepIndex=-1;
+  this.chart=chart;this.paint=emptyPaint();this.hooks={};this.cursor=null;this.timer=0;this.uiSig='';this.hotId=null;this.stepIndex=-1;this.layoutCache=new Lru(24);this.geoSig='';
   this.canvas=document.createElement('canvas');this.canvas.className='track-paint-canvas';this.canvas.setAttribute('aria-hidden','true');
   this.ui=document.createElement('div');this.ui.className='track-paint-ui';
   this.readout=document.createElement('div');this.readout.className='track-readout';this.readout.hidden=true;
@@ -441,7 +442,7 @@ export class TrackPaintLayer{
   this.chart.container.append(this.canvas,this.ui,this.readout);
  }
  setHooks(hooks){this.hooks=hooks||{};}
- setPaint(paint){this.paint=paint?.schema?paint:parseTrackPaint(paint);this.cursor=null;this.uiSig='';this.hotId=null;this.stepIndex=-1;this.readout.hidden=true;this.stop();this.chart.requestDraw?.();}
+ setPaint(paint){this.paint=paint?.schema?paint:parseTrackPaint(paint);this.cursor=null;this.uiSig='';this.geoSig='';this.hotId=null;this.stepIndex=-1;this.layoutCache=new Lru(24);this.readout.hidden=true;this.stop();this.chart.requestDraw?.();}
  replayClass(time){
   if(this.cursor==null||!Number.isFinite(time))return '';
   if(time<this.cursor)return ' is-past';
@@ -452,30 +453,58 @@ export class TrackPaintLayer{
   const chart=this.chart,width=chart.container.clientWidth,height=chart.container.clientHeight;
   if(!width||!height)return;
   const dpr=chart.dpr||Math.min(devicePixelRatio||1,2);
-  this.canvas.width=Math.round(width*dpr);this.canvas.height=Math.round(height*dpr);this.canvas.style.width=width+'px';this.canvas.style.height=height+'px';
-  const ctx=this.canvas.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,width,height);
-  const view=chart.view;if(!view){this.ui.replaceChildren();this.uiSig='';return;}
-  const laid=layoutTrack(this.paint,view,chart);
+  const bitmapW=Math.round(width*dpr),bitmapH=Math.round(height*dpr);
+  if(this.canvas.width!==bitmapW||this.canvas.height!==bitmapH){this.canvas.width=bitmapW;this.canvas.height=bitmapH;this.canvas.style.width=width+'px';this.canvas.style.height=height+'px';this.geoSig='';}
+  const view=chart.view;if(!view){this.ui.replaceChildren();this.uiSig='';this.geoSig='';return;}
+  const series=view.series||[];
+  const layoutKey=`${(this.paint.chartMarkers||[]).map(m=>m.id+':'+m.time).join(',')}|${(this.paint.bands||[]).map(b=>b.id+':'+b.t0).join(',')}|${view.width}|${view.step}|${view.left}|${series.length}|${series[0]?.time??''}|${series.at?.(-1)?.time??''}`;
+  let laid=this.layoutCache.get(layoutKey);
+  if(!laid){laid=layoutTrack(this.paint,view,chart);this.layoutCache.set(layoutKey,laid);}
   const top=chart.priceTop||18,bottom=(chart.priceTop||18)+(chart.priceHeight||height*.6);
+  const geo=`${layoutKey}|${top}|${bottom}|${this.hotId||''}|${this.cursor??''}|${bitmapW}`;
+  if(geo===this.geoSig){this.renderUi(laid,top);return;}
+  this.geoSig=geo;
+  const ctx=this._ctx||(this._ctx=this.canvas.getContext('2d',{desynchronized:true}));ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,width,height);
+  const wash=new Map(),ribbon=new Map(),stroke=new Map();
   for(const b of laid.bands){
-   ctx.save();
-   ctx.fillStyle=b.dotted?'rgba(96,165,250,.10)':'rgba(54,198,188,.10)';
-   ctx.fillRect(b.x,top,b.width,Math.max(8,bottom-top));
-   ctx.fillStyle=b.dotted?'rgba(96,165,250,.32)':'rgba(54,198,188,.34)';
-   ctx.fillRect(b.x,top,b.width,22);
-   ctx.strokeStyle=b.dotted?'#60a5fa':'#36c6bc';ctx.lineWidth=1.25;ctx.setLineDash(b.dotted?[3,4]:[]);
-   ctx.strokeRect(b.x,top,b.width,Math.max(8,bottom-top));
-   if(!(b.src&&b.dst)){
-    ctx.setLineDash([]);ctx.beginPath();ctx.rect(b.x+4,top,Math.max(0,b.width-8),22);ctx.clip();
-    ctx.fillStyle=b.dotted?'#1d4ed8':'#0f766e';ctx.font='600 10px "DM Sans",sans-serif';ctx.textBaseline='middle';
-    ctx.fillText(`${b.label||'Hop'} · ${b.span||''}`,b.x+6,top+11);
-   }
-   ctx.restore();
+   const washColor=b.dotted?'rgba(96,165,250,.10)':'rgba(54,198,188,.10)';
+   const ribbonColor=b.dotted?'rgba(96,165,250,.32)':'rgba(54,198,188,.34)';
+   const line=b.dotted?'#60a5fa':'#36c6bc';
+   if(!wash.has(washColor))wash.set(washColor,[]);
+   if(!ribbon.has(ribbonColor))ribbon.set(ribbonColor,[]);
+   if(!stroke.has(line))stroke.set(line,[]);
+   wash.get(washColor).push(b);ribbon.get(ribbonColor).push(b);stroke.get(line).push(b);
   }
+  for(const [color,list] of wash){ctx.fillStyle=color;ctx.beginPath();for(const b of list)ctx.rect(b.x,top,b.width,Math.max(8,bottom-top));ctx.fill();}
+  for(const [color,list] of ribbon){ctx.fillStyle=color;ctx.beginPath();for(const b of list)ctx.rect(b.x,top,b.width,22);ctx.fill();}
+  for(const [color,list] of stroke){
+   const dotted=color==='#60a5fa';
+   ctx.strokeStyle=color;ctx.lineWidth=1.25;ctx.setLineDash(dotted?[3,4]:[]);ctx.beginPath();
+   for(const b of list)ctx.rect(b.x,top,b.width,Math.max(8,bottom-top));
+   ctx.stroke();
+  }
+  ctx.setLineDash([]);ctx.font='600 10px "DM Sans",sans-serif';ctx.textBaseline='middle';
+  for(const b of laid.bands){
+   if(b.src&&b.dst)continue;
+   ctx.save();ctx.beginPath();ctx.rect(b.x+4,top,Math.max(0,b.width-8),22);ctx.clip();
+   ctx.fillStyle=b.dotted?'#1d4ed8':'#0f766e';
+   ctx.fillText(`${b.label||'Hop'} · ${b.span||''}`,b.x+6,top+11);ctx.restore();
+  }
+  const stems=new Map();
   for(const t of [...laid.tags,...laid.chips]){
-   const hot=this.hotId===t.id,sharp=t.sharp;
-   ctx.save();ctx.strokeStyle=sharp?'#f97316':tagColor(t.kind);ctx.lineWidth=hot?3.25:(sharp?2.5:1.15);ctx.globalAlpha=hot?1:(sharp?0.95:(t.chip?0.72:0.88));
-   ctx.setLineDash(t.kind==='bridge'||t.dashed?[2,3]:[]);ctx.beginPath();ctx.moveTo(t.x,top);ctx.lineTo(t.x,bottom);ctx.stroke();ctx.restore();
+   const sharp=t.sharp,hot=this.hotId===t.id;
+   const color=sharp?'#f97316':tagColor(t.kind);
+   const width=hot?3.25:(sharp?2.5:1.15);
+   const dash=t.kind==='bridge'||t.dashed?'dash':'solid';
+   const key=`${color}|${width}|${dash}|${hot?1:sharp?0.95:(t.chip?0.72:0.88)}`;
+   if(!stems.has(key))stems.set(key,[]);
+   stems.get(key).push(t);
+  }
+  for(const [key,list] of stems){
+   const [color,width,dash,alpha]=key.split('|');
+   ctx.save();ctx.strokeStyle=color;ctx.lineWidth=Number(width);ctx.globalAlpha=Number(alpha);ctx.setLineDash(dash==='dash'?[2,3]:[]);ctx.beginPath();
+   for(const t of list){ctx.moveTo(t.x,top);ctx.lineTo(t.x,bottom);}
+   ctx.stroke();ctx.restore();
   }
   if(this.cursor!=null){
    const x=view.x(view.indexAt(this.cursor));

@@ -29,6 +29,7 @@ writeFileSync(resolve(out,paintName),paintSrc);
 writeFileSync(resolve(out,intentName),intentSrc);
 writeFileSync(resolve(out,workspaceName),workspaceSrc);
 writeFileSync(resolve(out,'track-style.js'),readFileSync(resolve(root,'terminal/src/track-style.js')));
+writeFileSync(resolve(out,'speed-pass.js'),readFileSync(resolve(root,'terminal/src/speed-pass.js')));
 let previous={};
 try{previous=JSON.parse(readFileSync(resolve(root,'terminal/track-build.json'),'utf8'));}catch{}
 const manifest={

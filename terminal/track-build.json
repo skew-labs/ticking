@@ -1,12 +1,12 @@
 {
   "schema": "ticking.track-build.v1",
-  "paint": "/terminal/dist/_app/track-paint-L343VVQM.js",
-  "intent": "/terminal/dist/_app/track-intent-I5Z2SHJA.js",
-  "workspace": "/terminal/dist/_app/track-workspace-ANCTEKJ2.js",
+  "paint": "/terminal/dist/_app/track-paint-TLDU4CLQ.js",
+  "intent": "/terminal/dist/_app/track-intent-VXMKGBGD.js",
+  "workspace": "/terminal/dist/_app/track-workspace-FA3BO4LE.js",
   "sha256": {
-    "paint": "5ef9bad60ce430e12768bfc417e2214a815072e04e8f350d4fd98625d2cdb774",
-    "intent": "4773a91d205d89e0f39363237f64a5e33df9385f284ff0edc79a1d07591e2ac7",
-    "workspace": "034532293a2db511d44bff431c0939002c52ec47bf165a9a3b8ddfde7dabc3f7"
+    "paint": "9ac74e09703b9a6cdd768b4b4a970ff805e4478d065e3b2974faa5a1107ac51c",
+    "intent": "add8a304c3c9d283b609d0dc54aaea7ee69c2b85c780dbe17d9ed0b7d369875b",
+    "workspace": "2836177164a7b20c48e6219746756b57d53dc79910c2ac57b1bbf3624f83b813"
   },
   "production": {
     "deployment": "dpl_68mtTVqtdT5EWEPksr1R9JL6MY7S",

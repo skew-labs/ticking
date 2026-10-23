@@ -430,6 +430,7 @@ function writeEntry(dir) {
   const src = join(dir, 'terminal/src');
   const entry = `import {TickChart as LiveTickChart} from '/_app/chunks/chart-QO7JAFT4.js';
 import {TrackPaintLayer, parseTrackPaint} from '${src}/track-paint.js';
+import {applyTip, isTipChain, prewarmBuckets, pullFastFeed, shouldPaintTip} from '${src}/speed-pass.js';
 export {mountTrackWorkspace, mountMintWorkspace, mountTrackerPage, parseWorkspaceHash, acceptTrackHandoff, resolveTrackQuery} from '${src}/track-workspace.js';
 export {classifyTrackIntent} from '${src}/track-intent.js';
 
@@ -454,6 +455,59 @@ if(!draw.__trackPaint){
     this.trackLayer=null;
     return destroy.apply(this,arguments);
   };
+}
+const tipTimers=new WeakMap();
+function hashTip(){
+  if(location.hash.includes('sample=1'))return '';
+  const raw=location.hash;
+  if(/wallet:|wallet%3A/i.test(raw))return '';
+  const params=new URLSearchParams(raw.split('?')[1]||'');
+  const named=params.get('chain')||'';
+  return isTipChain(named)?named:'';
+}
+function hashSymbol(){
+  const path=location.hash.replace(/^#/,'').split('?')[0];
+  const match=/\\/console\\/workspace\\/([^/]+)$/.exec(path);
+  if(!match)return '';
+  let ident='';
+  try{ident=decodeURIComponent(match[1]);}catch{return '';}
+  if(ident.startsWith('wallet:')||ident.startsWith('mint:')||ident==='launch')return '';
+  return /^[A-Za-z][A-Za-z0-9]{0,12}$/.test(ident)?ident.toUpperCase():'';
+}
+function armProductsTip(chart){
+  if(tipTimers.has(chart)||!hashTip())return;
+  const state={timer:0,stopped:false};
+  tipTimers.set(chart,state);
+  const previous=chart.destroy;
+  chart.destroy=function(){state.stopped=true;clearTimeout(state.timer);return previous.apply(this,arguments);};
+  const tick=async()=>{
+    if(state.stopped)return;
+    const chain=hashTip();
+    if(!chain||(typeof document!=='undefined'&&document.hidden)){state.timer=setTimeout(tick,1000);return;}
+    try{
+      const pulled=await pullFastFeed({chain,symbol:hashSymbol()});
+      const current=chart.series||chart.options?.series||[];
+      if(pulled?.ok&&shouldPaintTip(current)&&!state.stopped){
+        const merged=applyTip(current,pulled.bars||[]);
+        if(merged.series.length){
+          chart.tipBuckets=prewarmBuckets(merged.series);
+          const first=!current.some(bar=>bar&&bar.latencyPaintOnly);
+          chart.setSeries(merged.series,{preserve:!first});
+        }
+      }
+    }catch(error){if(error?.name==='AbortError')return;}
+    if(!state.stopped)state.timer=setTimeout(tick,Math.max(50,1000-(Date.now()%1000)));
+  };
+  state.timer=setTimeout(tick,Math.max(50,1000-(Date.now()%1000)));
+}
+const setSeries=LiveTickChart.prototype.setSeries;
+if(setSeries&&!setSeries.__tip){
+  LiveTickChart.prototype.setSeries=function(){
+    const out=setSeries.apply(this,arguments);
+    armProductsTip(this);
+    return out;
+  };
+  LiveTickChart.prototype.setSeries.__tip=true;
 }
 `;
   writeFileSync('track-shell-entry.js', entry);
@@ -642,7 +696,7 @@ let app = readFileSync(join(out, '_app', BASE.app), 'utf8');
 app = replaceOnce(app, BASE.workspace, workspaceName, 'app workspace ref');
 const appName = writeHashed('_app', 'app', Buffer.from(app));
 const shellText = shellBytes.toString('utf8');
-for (const needle of ['setTrackPaint', 'mountTrackWorkspace', 'mountMintWorkspace', 'classifyTrackIntent', 'data-track-form', 'data-track-ask', 'dumpTagsOnly', 'columnForBridge', 'Math.min(480', 'Fast Feed is latency paint only', 'Map the hop loop onto that chart', 'data-track-focus', 'Replay trail', 'Waiting for the first prints on this mint.', 'This question stays on this chart.', 'Hop loop on this chart.']) {
+for (const needle of ['setTrackPaint', 'mountTrackWorkspace', 'mountMintWorkspace', 'classifyTrackIntent', 'data-track-form', 'data-track-ask', 'dumpTagsOnly', 'columnForBridge', 'Math.min(480', 'Fast Feed is latency paint only', 'Map the hop loop onto that chart', 'data-track-focus', 'Replay trail', 'Waiting for the first prints on this mint.', 'This question stays on this chart.', 'Hop loop on this chart.', 'latencyPaintOnly', 'binance_1s', '/api/public/engine/fast-feed', 'solana-not-tip', 'Arbitrum tip']) {
   if (!shellText.includes(needle)) throw new Error(`shell missing ${needle}`);
 }
 if (shellText.includes('whale-tracker')) throw new Error('shell still names whale-tracker');

@@ -118,18 +118,22 @@ export class TickChart {
   const width=this.container.clientWidth,height=this.container.clientHeight;if(!width||!height)return;this.renderStats.baseFrames++;
   this.height=height;const dpr=Math.min(devicePixelRatio||1,3,Math.sqrt(8000000/(width*height)));this.dpr=dpr;
   for(const canvas of [this.canvas,this.overlay]){const w=Math.round(width*dpr),h=Math.round(height*dpr);if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;canvas.style.width=width+'px';canvas.style.height=height+'px';}}
-  const ctx=this.canvas.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);
+  const ctx=this._ctx||(this._ctx=this.canvas.getContext('2d',{alpha:false,desynchronized:true}));ctx.setTransform(dpr,0,0,dpr,0,0);
   const dark=this.options.theme==='dark',bg=dark?'#1a1e2d':'#fff',grid=dark?'#2b3040':'#eef0f5',text=dark?'#a0a9bd':'#798395',up='#239a82',down='#d36a79',accent='#7564c3';this.colors={dark,bg,grid,text,up,down};
-  ctx.fillStyle=bg;ctx.fillRect(0,0,width,height);this.series=this.options.series??[];this.offset=this.clampOffset(this.offset);
+  this.series=this.options.series??[];this.offset=this.clampOffset(this.offset);
   const compact=this.options.compact,gap=compact?3:6,logicalStart=this.series.length-this.offset-this.count+gap,end=Math.min(this.series.length,Math.max(1,Math.ceil(this.series.length-this.offset)+1)),begin=Math.max(0,Math.floor(logicalStart)-1);
   this.visible=this.series.slice(begin,end);
-  if(!this.visible.length){this.view=null;this.legend.hidden=true;this.navigation.style.display='none';this.tooltip.style.display='none';this.overlay.getContext('2d').clearRect(0,0,this.overlay.width,this.overlay.height);ctx.fillStyle=text;ctx.font='14px "DM Sans",sans-serif';ctx.textAlign='center';ctx.fillText(this.options.emptyMessage||'No chart data available.',width/2,height/2);this.trackLayer?.sync();return;}
-  const period=parseInterval(this.engineData?.interval||this.options.interval).milliseconds,configs=this.options.indicators,key=JSON.stringify(configs)+':'+period;
+  if(!this.visible.length){this._frameSig='';this.view=null;this.legend.hidden=true;this.navigation.style.display='none';this.tooltip.style.display='none';this.overlay.getContext('2d').clearRect(0,0,this.overlay.width,this.overlay.height);ctx.fillStyle=bg;ctx.fillRect(0,0,width,height);ctx.fillStyle=text;ctx.font='14px "DM Sans",sans-serif';ctx.textAlign='center';ctx.fillText(this.options.emptyMessage||'No chart data available.',width/2,height/2);this.trackLayer?.sync();return;}
+  const intervalLabel=this.engineData?.interval||this.options.interval;
+  if(this._parsedLabel!==intervalLabel){this._parsed=parseInterval(intervalLabel);this._parsedLabel=intervalLabel;}
+  const period=this._parsed.milliseconds,configs=this.options.indicators;
+  if(this._configs!==configs){this._configKey=JSON.stringify(configs);this._configs=configs;}
+  const key=this._configKey+':'+period;
   if(this.studyCacheKey!==key||configs.length&&this.studySeries!==this.series&&!sameIndicatorInput(this.studySeries,this.series)){this.studies=computeIndicators(this.series,configs,period);this.studyCacheKey=key;}
   this.studySeries=this.series;
   const paneHeight=Math.max(68,Math.min(110,height*.19)),oscillators=compact?[]:this.studies.filter(s=>s.definition.pane);oscillators.forEach(s=>s.paneHeight=paneHeight);
-  const data=this.visible;let min=Infinity,max=-Infinity,maxVol=Number.MIN_VALUE;
-  for(const bar of data){min=Math.min(min,bar.low);max=Math.max(max,bar.high);maxVol=Math.max(maxVol,bar.volume);}
+  const data=this.visible;let min=Infinity,max=-Infinity,maxVol=Number.MIN_VALUE,stamp=data.length;
+  for(const bar of data){min=Math.min(min,bar.low);max=Math.max(max,bar.high);maxVol=Math.max(maxVol,bar.volume);stamp=(Math.imul(stamp|0,31)+((bar.time/1000)|0)+((bar.close*1e4)|0)+((bar.high*1e4)|0)+((bar.low*1e4)|0)+((bar.volume*100)|0))|0;}
   for(const study of this.studies){if(study.definition.pane)continue;for(const line of Object.values(study.lines))for(let i=begin;i<Math.min(end,line.length);i++){const value=line[i];if(value!==null){min=Math.min(min,value);max=Math.max(max,value);}}}
   const reference=Math.abs(data.at(-1).close),range=Math.max(max-min,reference*1e-6,Number.MIN_VALUE);
   const scaleKey=[data[0].time,data.at(-1).time,this.offset,this.count,height,key,this.options.volume].join(':');
@@ -142,7 +146,9 @@ export class TickChart {
   const priceDigits=Math.max(digits,reference>=1?2:Math.min(12,Math.max(2,5-Math.floor(Math.log10(reference||1)))));
   this.formatPrice=p=>formatPrice(p,priceDigits);const axisPrice=p=>formatPrice(p,digits);
   const fontSize=compact?10:width<450?11:12;ctx.font=`500 ${fontSize}px "DM Sans",sans-serif`;ctx.textBaseline='middle';
-  const measured=Math.max(ctx.measureText(this.formatPrice(this.min)).width,ctx.measureText(this.formatPrice(this.max)).width)+18;
+  const measureKey=`${digits}:${fontSize}:${this.formatPrice(this.min)}:${this.formatPrice(this.max)}`;
+  if(this._measureKey!==measureKey){this._measured=Math.max(ctx.measureText(this.formatPrice(this.min)).width,ctx.measureText(this.formatPrice(this.max)).width)+18;this._measureKey=measureKey;}
+  const measured=this._measured;
   this.axisWidth=Math.max(this.axisWidth||0,Math.ceil(measured/12)*12,84);const right=compact?58:Math.min(this.axisWidth,Math.max(76,Math.min(144,width*.34))),bottom=30,plotWidth=Math.max(40,width-right),plotHeight=height-bottom;
   const mainHeight=plotHeight-oscillators.length*paneHeight;
   this.plotWidth=plotWidth;this.priceTop=compact?18:44;this.priceHeight=Math.max(30,mainHeight*(this.options.volume?(compact?.83:.76):1)-this.priceTop-(!this.options.volume?8:0));const priceBottom=this.priceTop+this.priceHeight,volumeTop=priceBottom+18;
@@ -154,19 +160,31 @@ export class TickChart {
   const timeAt=index=>{if(index<0)return data[0].time+index*period;const i=Math.min(data.length-1,Math.floor(index)),next=data[i+1];return data[i].time+(index-i)*(next?next.time-data[i].time:period);};
   const candleAtX=p=>{const i=Math.floor(p/step-left);return i>=0&&i<data.length?data[i]:null;};
   this.view={width:plotWidth,height:mainHeight,axisTop:plotHeight,step,period,series:this.series,price:this.formatPrice,candleAtX,x,y,indexAt,left,value:p=>this.yToPrice(p),screen:p=>({x:x(indexAt(p.time)),y:y(p.price)}),anchor:p=>({time:timeAt(p.x/step-left-.5),price:this.yToPrice(p.y)})};
+  const lastBar=data.at(-1);
+  const frameSig=`${width}|${height}|${dpr}|${begin}|${end}|${this.offset}|${this.count}|${this.min}|${this.max}|${data[0]?.time}|${lastBar?.time}|${lastBar?.close}|${lastBar?.high}|${lastBar?.low}|${this.options.mode}|${this.options.theme}|${key}|${this.options.volume}|${stamp}`;
+  if(frameSig===this._frameSig){this.trackLayer?.sync();return;}
+  this._frameSig=frameSig;
+  ctx.fillStyle=bg;ctx.fillRect(0,0,width,height);
   ctx.textAlign='left';
   const crisp=p=>(Math.round(p*dpr)+.5)/dpr;
-  for(let val=Math.ceil(this.min/tick)*tick,n=0;val<=this.max+tick*1e-8&&n<12;val+=tick,n++){const gy=crisp(y(val));ctx.strokeStyle=grid;ctx.lineWidth=1/dpr;ctx.beginPath();ctx.moveTo(0,gy);ctx.lineTo(plotWidth,gy);ctx.stroke();ctx.fillStyle=text;ctx.fillText(axisPrice(val),plotWidth+8,gy);}
+  ctx.beginPath();const priceLabels=[];
+  for(let val=Math.ceil(this.min/tick)*tick,n=0;val<=this.max+tick*1e-8&&n<12;val+=tick,n++){const gy=crisp(y(val));ctx.moveTo(0,gy);ctx.lineTo(plotWidth,gy);priceLabels.push([gy,axisPrice(val)]);}
+  ctx.strokeStyle=grid;ctx.lineWidth=1/dpr;ctx.stroke();ctx.fillStyle=text;for(const [gy,label] of priceLabels)ctx.fillText(label,plotWidth+8,gy);
   ctx.strokeStyle=grid;ctx.beginPath();ctx.moveTo(plotWidth,0);ctx.lineTo(plotWidth,plotHeight);ctx.moveTo(0,plotHeight);ctx.lineTo(width,plotHeight);ctx.stroke();
   const ticks=Math.max(2,Math.min(10,Math.floor(plotWidth/100))),stride=Math.max(1,Math.ceil(this.count/ticks)),rawStride=stride*period,timeStride=[1000,3000,5000,15000,30000,45000,60000,180000,300000,900000,1800000,3600000,10800000,21600000,43200000,86400000,259200000,604800000,2592000000,7776000000,31536000000].find(s=>s>=rawStride)||Math.ceil(rawStride/31536000000)*31536000000;let lastLabelRight=-100,lastTickDay=null,lastBucket=null;this.timeAxisTicks=[];
+  if(this._labelFont!==fontSize){this._labelWidth=new Map();this._labelFont=fontSize;}
+  const isoOf=t=>{let s=this._iso?.get(t);if(s)return s;s=new Date(t).toISOString();(this._iso||=new Map());if(this._iso.size>96)this._iso.clear();this._iso.set(t,s);return s;};
   // Axis labels belong to observed bar coordinates. Empty space to the left of
   // sparse history must not imply months/years of retained candles.
-  for(let index=0;index<data.length;index++){const time=data[index].time,bucket=Math.floor(time/timeStride);if(bucket===lastBucket)continue;lastBucket=bucket;const gx=x(index),date=new Date(time),span=data.at(-1).time-data[0].time;
+  for(let index=0;index<data.length;index++){const time=data[index].time,bucket=Math.floor(time/timeStride);if(bucket===lastBucket)continue;lastBucket=bucket;const gx=x(index),span=data.at(-1).time-data[0].time;
    if(index===0&&time%timeStride>=period)continue;
-   const iso=date.toISOString(),day=iso.slice(0,10),label=period>=604800000||span>31536000000?iso.slice(0,7):period>=86400000?iso.slice(5,10):span>86400000&&day!==lastTickDay?iso.slice(5,10):period<60000&&span<86400000?iso.slice(11,19):iso.slice(11,16),tw=ctx.measureText(label).width;
+   const iso=isoOf(time),day=iso.slice(0,10),label=period>=604800000||span>31536000000?iso.slice(0,7):period>=86400000?iso.slice(5,10):span>86400000&&day!==lastTickDay?iso.slice(5,10):period<60000&&span<86400000?iso.slice(11,19):iso.slice(11,16);let tw=this._labelWidth.get(label);if(tw==null){tw=ctx.measureText(label).width;if(this._labelWidth.size>96)this._labelWidth.clear();this._labelWidth.set(label,tw);}
    if(gx-tw/2<lastLabelRight+16||gx-tw/2<0||gx+tw/2>plotWidth)continue;lastLabelRight=gx+tw/2;lastTickDay=day;this.timeAxisTicks.push({time,label,x:gx});
-   ctx.strokeStyle=grid;ctx.lineWidth=1/dpr;ctx.beginPath();ctx.moveTo(crisp(gx),this.priceTop);ctx.lineTo(crisp(gx),plotHeight);ctx.stroke();ctx.fillStyle=text;ctx.textAlign='center';ctx.fillText(label,gx,height-13);
   }
+  ctx.strokeStyle=grid;ctx.lineWidth=1/dpr;ctx.beginPath();
+  for(const tick of this.timeAxisTicks){const gx=crisp(tick.x);ctx.moveTo(gx,this.priceTop);ctx.lineTo(gx,plotHeight);}
+  ctx.stroke();ctx.fillStyle=text;ctx.textAlign='center';
+  for(const tick of this.timeAxisTicks)ctx.fillText(tick.label,tick.x,height-13);
   ctx.textAlign='left';
   const wickPixels=Math.max(1,Math.min(Math.floor(dpr),Math.floor(step*dpr)));let bodyPixels=Math.max(wickPixels,Math.min(Math.floor(28*dpr),Math.floor(step*.68*dpr)));if(bodyPixels>=2&&bodyPixels%2!==wickPixels%2)bodyPixels--;const body=bodyPixels/dpr;this.renderGeometry={wickPixels,bodyPixels,dpr};
   ctx.save();ctx.beginPath();ctx.rect(0,volumeTop,plotWidth,Math.max(0,mainHeight-volumeTop));ctx.clip();

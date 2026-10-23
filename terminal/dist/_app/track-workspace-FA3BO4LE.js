@@ -1,6 +1,7 @@
 import {TickChart} from '/terminal/src/chart.js';
-import {parseTrackPaint,seriesFromPaint,panesForWallet,shortWallet,walletAddress,sampleTrackPaint,sampleMintPaint,columnForBridge,museLine} from './track-paint-L343VVQM.js';
-import {chartAskBody,classifyTrackIntent,guardedResolveBody,mintAddress,trackResolveBody} from './track-intent-I5Z2SHJA.js';
+import {parseTrackPaint,seriesFromPaint,panesForWallet,shortWallet,walletAddress,sampleTrackPaint,sampleMintPaint,columnForBridge,museLine} from './track-paint-TLDU4CLQ.js';
+import {chartAskBody,classifyTrackIntent,guardedResolveBody,mintAddress,trackResolveBody} from './track-intent-VXMKGBGD.js';
+import {applyTip,chainKey,isTipChain,prewarmBuckets,pullFastFeed} from './speed-pass.js';
 import trackCss from './track-style.js';
 
 export const HANDOFF_KEY='ticking.track.handoff.v1';
@@ -395,6 +396,16 @@ function shortMint(value){
  if(text.length<=12)return text;
  return `${text.slice(0,4)}…${text.slice(-4)}`;
 }
+function chainKeyLabel(chain){
+ return chainKey(chain)==='robinhood'?'Robinhood tip · latency paint':'Arbitrum tip · latency paint';
+}
+function tipAgeLabel(chain,series,now=Date.now()){
+ let hot=null;
+ for(let i=series.length-1;i>=0;i--)if(series[i].latencyPaintOnly){hot=series[i];break;}
+ if(!hot)return chainKeyLabel(chain);
+ const age=Math.max(0,Math.round((now-hot.time)/1000));
+ return `${chainKeyLabel(chain)} · ${age}s`;
+}
 function fitMint(chart){
  const n=chart?.series?.length||chart?.options?.series?.length||0;
  if(n>8){chart.count=Math.min(480,n+8);chart.offset=0;}
@@ -520,8 +531,41 @@ export function mountMintWorkspace(root,{ident,mint,chain,query,sample,symbol}={
    replayBtn.hidden=!paint.muse?.replay;
    showSide(paint);
    if(paint.muse?.replay)charts[0]?.trackLayer?.play();
+   if(!sample&&isTipChain(chain))scheduleTip();
   }catch(e){if(!disposed&&e?.name!=='AbortError')summary.textContent=e.message||'Mint chart unavailable.';}
  })();
- return ()=>{disposed=true;abort.abort();for(const c of charts)c.destroy();};
+ let tipTimer=0;
+ const stopTip=()=>{if(tipTimer)clearTimeout(tipTimer);tipTimer=0;};
+ const scheduleTip=()=>{
+  if(disposed||sample||!isTipChain(chain))return;
+  if(typeof document!=='undefined'&&document.hidden){tipTimer=setTimeout(scheduleTip,1000);return;}
+  tipTimer=setTimeout(tickTip,Math.max(50,1000-(Date.now()%1000)));
+ };
+ const tickTip=async()=>{
+  if(disposed)return;
+  let pulled;
+  try{pulled=await pullFastFeed({chain,symbol,mint,signal:abort.signal});}
+  catch(e){if(e?.name==='AbortError')return;scheduleTip();return;}
+  if(disposed)return;
+  if(pulled?.ok){
+   const current=chart?.series||[];
+   const merged=applyTip(current,pulled.bars||[]);
+   if(merged.series.length&&chart){
+    const first=!current.some(bar=>bar.latencyPaintOnly);
+    chart.tipBuckets=prewarmBuckets(merged.series);
+    if(first){
+     if(chart.options?.interval!=='1s')chart.set({interval:'1s'});
+     chart.setSeries(merged.series,{preserve:false});
+     fitMint(chart);
+    }else chart.setSeries(merged.series,{preserve:true});
+    priceLocked=true;
+    const sub=chart.container?.closest?.('[data-track-pane]')?.querySelector('small');
+    if(sub)sub.textContent=tipAgeLabel(chain,merged.series);
+    if(/Waiting for the first prints|Mint price|Trail shape/.test(summary.textContent))summary.textContent='Tip price on this chart.';
+   }
+  }
+  scheduleTip();
+ };
+ return ()=>{disposed=true;stopTip();abort.abort();for(const c of charts)c.destroy();};
 }
 mountMintWorkspace.seq=0;

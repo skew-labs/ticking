@@ -18,9 +18,9 @@ Preview fixture only: `#/console/workspace/wallet:0x…?sample=1`.
 
 Current build, also recorded in `terminal/track-build.json`:
 
-- `/terminal/dist/_app/track-paint-L343VVQM.js`
-- `/terminal/dist/_app/track-intent-I5Z2SHJA.js`
-- `/terminal/dist/_app/track-workspace-ANCTEKJ2.js`
+- `/terminal/dist/_app/track-paint-TLDU4CLQ.js`
+- `/terminal/dist/_app/track-intent-VXMKGBGD.js`
+- `/terminal/dist/_app/track-workspace-FA3BO4LE.js`
 
 ## Feel and guard
 
@@ -29,6 +29,8 @@ The workspace chart is a trail silhouette on the time axis: buys lift it, sells 
 `terminal/src/track-intent.js` classifies the query before resolve. Wallet activity, a transaction trail, and a market chart are one incident: track and dump call resolve and paint on the workspace chart; `SOL`, `ARB`, and `PUMP` open that workspace chart directly. Dump and suspect stay dump tags. Fast Feed with no wallet stays off the track resolve. A bare `map` or `flow` opens `#/console/workspace/auto`, not a map page and not investigate. Solana, Arbitrum, and Robinhood Chain are the chain hints on a wallet route. An empty live resolve does not replace a handoff that already has markers. Search responses with `searchGuard` `+track` and `route` `#/console/workspace/wallet:…` are stored and opened as that workspace.
 
 A hop graph is the same workspace chart. When resolve returns `graph` (nodes, edges, or a loop) and no `chartMarkers`, the browser maps that loop onto `ticking.chartMarkers.track.v1`: hop chips, a loop band, bridge chips, and a side column. Replay walks the mapped trail. Markers that already arrived stay as they are. An empty graph adds nothing. The chart asks from inside the incident (`data-track-ask`). The question resolves with `stay: true` and `graph: "loop"`, then paints the answer on that same chart. A zero-marker answer leaves the paint in place and reads “This question stays on this chart.” A mint question asked there stays on the mint chart.
+
+Fast Feed is latency paint for Arbitrum and Robinhood. After 2026-10-24 01:00 Asia/Singapore the mint chart polls `GET /api/public/engine/fast-feed` (`interval=1s`, `coverage=tip_hot`) and safe-merges `bars_1s` into the series. A tip wick is clamped to 5% of the body. A `binance_1s` bar on that second is kept, and a later Binance bar replaces a tip. A missed or non-OK pull leaves the series in place. Solana does not call the tip URL. `?sample=1` does not poll. The first accepted tip switches that mint chart to the 1s timeframe. A market route that names Arbitrum or Robinhood keeps `?chain=arbitrum` or `?chain=robinhood` so a short-timeframe products chart can take the same merge. A 1m candle series is left intact.
 
 A mint is the same workspace chart. `minted PEPE`, `new token on robinhood`, `robinhood launchpad`, and a bare Solana mint classify as `mint` and resolve with `track: true`. The route is `#/console/workspace/mint:…` when the query has a mint address, `#/console/workspace/SYMBOL?launch=1` when it names a ticker, and `#/console/workspace/launch?q=…` for the phrase. A Solana mint loads price from `GET /api/public/engine/candles`. Dump and whale tags, hop chips, and side charts paint only when resolve returns markers. A zero-marker resolve does not invent tags, and an Arbitrum or Robinhood mint does not invent candles. `?sample=1` on a mint route paints the mint fixture (`Sample mint on this workspace chart.`). The developers mint form opens that chart instead of waiting on a text preview. Bare `SOL` stays a market route. Bare `RH` stays unclassified. A bare `0x` wallet stays a wallet trail.
 

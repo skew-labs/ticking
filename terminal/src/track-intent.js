@@ -16,7 +16,7 @@ function marketSymbol(text){
  if(/^(?:pump)(?:\s+chart)?$/i.test(text))return 'PUMP';
  if(/^(?:sol|solana)(?:\s+chart)?$/i.test(text))return 'SOL';
  if(/^(?:arb|arbitrum)(?:\s+chart)?$/i.test(text))return 'ARB';
- const named=/^(?:chart|price|market)\s+(?:of\s+)?([A-Za-z][A-Za-z0-9]{1,12})$/i.exec(text);
+ const named=/^(?:chart|price|market)\s+(?:of\s+)?([A-Za-z][A-Za-z0-9]{1,12})(?:\s+on\s+(?:robinhood|arbitrum|rh|arb))?$/i.exec(text);
  return named?named[1].toUpperCase():null;
 }
 
@@ -63,7 +63,10 @@ export function researchRoute({mode,wallet,chain,symbol,query,direct,mint}={}){
   const qs=params.toString();
   return `#/console/workspace/launch${qs?`?${qs}`:''}`;
  }
- if(mode==='market'&&symbol)return `#/console/workspace/${encodeURIComponent(symbol)}`;
+ if(mode==='market'&&symbol){
+  const tip=chain==='arbitrum'||chain==='robinhood'?`?chain=${chain}`:'';
+  return `#/console/workspace/${encodeURIComponent(symbol)}${tip}`;
+ }
  if(wallet){
   const id=encodeURIComponent('wallet:'+wallet);
   return `#/console/workspace/${id}${chain?`?chain=${encodeURIComponent(chain)}`:''}`;
@@ -87,7 +90,8 @@ export function classifyTrackIntent(query){
  const bare=!isMint&&!dump&&!fastOnly&&!wallet&&!symbol&&BARE_RE.test(text);
  const track=!isMint&&!dump&&!fastOnly&&!symbol&&(TRACK_RE.test(text)||Boolean(wallet)||bare);
  const mode=isMint?'mint':dump?'dump':symbol?'market':track?'track':'other';
- const chain=mode==='mint'?mintChain(text,mint):mode==='track'&&wallet?chainHint(text):null;
+ const hinted=chainHint(text);
+ const chain=mode==='mint'?mintChain(text,mint):mode==='track'&&wallet?hinted:(mode==='market'&&(hinted==='arbitrum'||hinted==='robinhood')?hinted:null);
  const intent={
   schema:TRACK_INTENT_SCHEMA,
   text:TRACK_GUARD_TEXT,
