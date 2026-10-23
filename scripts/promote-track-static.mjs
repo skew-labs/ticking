@@ -15,11 +15,11 @@ import {dirname, join, resolve} from 'node:path';
 import {pathToFileURL} from 'node:url';
 
 const BASE = {
-  shell: 'track-shell-SPIWJDUZ.js',
-  agent: 'console-agent-XFNF7DZA.js',
-  console: 'console-N7KR7DWQ.js',
-  workspace: 'workspace-KPIZJF5T.js',
-  app: 'app-UVYRWMGQ.js',
+  shell: 'track-shell-22O5KOMT.js',
+  agent: 'console-agent-PZHHX2LX.js',
+  console: 'console-AJNL4FX2.js',
+  workspace: 'workspace-CCWEPJ6L.js',
+  app: 'app-HBFQX26G.js',
 };
 const ell = '\\u2026';
 const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
@@ -198,28 +198,29 @@ function patchResearchCopy(source) {
 }
 
 export function patchHomeChunk(source) {
-  let next = patchResearchCopy(source);
+  let next = source.includes('<h1 id="flow-title">Onchain research</h1>') ? source : patchResearchCopy(source);
   const helpFrom = 'Multichain search \\xB7 Token history \\xB7 Ask Ticking';
   const helpTo = 'Wallet, trail, or market \\xB7 one workspace chart';
-  if (!next.includes(helpFrom)) throw new Error('home search help missing');
-  next = next.replaceAll(helpFrom, helpTo);
+  if (next.includes(helpFrom)) next = next.replaceAll(helpFrom, helpTo);
+  else if (!next.includes(helpTo)) throw new Error('home search help missing');
   const statusFrom = 'Finding matching wallets, tokens and protocols\\u2026';
   const statusTo = 'Opening one workspace\\u2026';
-  if (!next.includes(statusFrom)) throw new Error('home search status missing');
-  next = next.replaceAll(statusFrom, statusTo);
+  if (next.includes(statusFrom)) next = next.replaceAll(statusFrom, statusTo);
+  else if (!next.includes(statusTo)) throw new Error('home search status missing');
   const observerFrom = 'let i=new IntersectionObserver(d=>{d.some(h=>h.isIntersecting)&&e()},{rootMargin:"150px"});i.observe(t.querySelector(".flow-market-section"));let l=new URLSearchParams(location.hash.split("?")[1]||"");return l.get("view")==="map"&&/^0x[a-fA-F0-9]{40}$/.test(l.get("address")||"")&&(location.hash="#/investigate/"+l.get("address"))';
   const observerTo = 'const arm=()=>{let i=new IntersectionObserver(d=>{d.some(h=>h.isIntersecting)&&e()},{rootMargin:"0px"});const section=t.querySelector(".flow-market-section");section&&i.observe(section)};window.requestIdleCallback?requestIdleCallback(arm,{timeout:1500}):setTimeout(arm,800);let l=new URLSearchParams(location.hash.split("?")[1]||"");return l.get("view")==="map"&&/^0x[a-fA-F0-9]{40}$/.test(l.get("address")||"")&&(location.hash="#/console/workspace/"+encodeURIComponent("wallet:"+String(l.get("address")).toLowerCase()))';
-  if (!next.includes(observerFrom)) throw new Error('home market observer missing');
-  next = next.replaceAll(observerFrom, observerTo);
+  if (next.includes(observerFrom)) next = next.replaceAll(observerFrom, observerTo);
+  else if (!next.includes('requestIdleCallback') || next.includes('location.hash="#/investigate/"+l.get("address")')) throw new Error('home market observer missing');
   return next;
 }
 
 export function patchHomeHtml(source) {
-  let next = patchResearchCopy(source);
+  let next = source.includes('<h1 id="flow-title">Onchain research</h1>') ? source : patchResearchCopy(source);
   const helpFrom = 'Multichain search · Token history · Ask Ticking';
   const helpTo = 'Wallet, trail, or market · one workspace chart';
-  if (!next.includes(helpFrom)) throw new Error('home html search help missing');
-  return next.replaceAll(helpFrom, helpTo);
+  if (next.includes(helpFrom)) next = next.replaceAll(helpFrom, helpTo);
+  else if (!next.includes(helpTo)) throw new Error('home html search help missing');
+  return next;
 }
 
 export function patchRouteChunk(source) {
@@ -435,18 +436,32 @@ function patchResearchEntry() {
   const chunk = name => join(out, '_app/chunks', name);
   const searches = readdirSync(join(out, '_app/chunks')).filter(name => name.startsWith('explorer-search-') && name.endsWith('.js'));
   const dirty = [];
+  let searchReady = 0;
   for (const name of searches) {
     const path = chunk(name);
     const source = readFileSync(path, 'utf8');
-    if (!source.includes('#/investigate/') && !source.includes('Open this address on every mapped chain')) continue;
+    if (!source.includes('#/investigate/') && !source.includes('Open this address on every mapped chain')) {
+      if (source.includes('Paint this wallet on the workspace chart')) searchReady += 1;
+      continue;
+    }
     writeFileSync(path, patchExplorerSearch(source));
     dirty.push(path);
+    searchReady += 1;
   }
-  if (!dirty.length) throw new Error('no search chunk patched');
-  for (const name of ['chunk-HTODKWZW.js', 'chunk-YYIE6Q3F.js']) {
+  if (!searchReady) throw new Error('no search chunk patched');
+  const chunkNames = readdirSync(join(out, '_app/chunks')).filter(name => name.endsWith('.js'));
+  const homeName = chunkNames.filter(name => {
+    const text = readFileSync(chunk(name), 'utf8');
+    return text.includes('id="flow-title"') && (text.includes('Onchain Explorer') || text.includes('Onchain research'));
+  });
+  const routeName = chunkNames.filter(name => {
+    const text = readFileSync(chunk(name), 'utf8');
+    return text.includes('function k(o)') && (text.includes('#/investigate/"+l') || text.includes('wallet:"+l.toLowerCase()'));
+  });
+  if (homeName.length !== 1 || routeName.length !== 1) throw new Error(`home/route chunks ${homeName.length}/${routeName.length}`);
+  for (const [name, patch] of [[homeName[0], patchHomeChunk], [routeName[0], patchRouteChunk]]) {
     const path = chunk(name);
-    const source = readFileSync(path, 'utf8');
-    writeFileSync(path, name.startsWith('chunk-HTOD') ? patchHomeChunk(source) : patchRouteChunk(source));
+    writeFileSync(path, patch(readFileSync(path, 'utf8')));
     dirty.push(path);
   }
   const indexPath = join(out, 'index.html');
@@ -505,6 +520,7 @@ const syntaxErr = `${syntax.stderr || ''}\n${syntax.stdout || ''}`;
 if (syntaxErr.includes('SyntaxError') || syntaxErr.includes('Missing catch')) throw new Error(`agent syntax\n${syntaxErr.slice(0, 600)}`);
 const agentName = writeHashed('_app/chunks', 'console-agent', Buffer.from(agent));
 let consoleJs = readFileSync(join(out, '_app/chunks', BASE.console), 'utf8');
+consoleJs = replaceOnce(consoleJs, '["tracker","Whale Tracker","feed"]', '["tracker","Workspace chart","chart"]', 'console tracker label');
 consoleJs = replaceOnce(consoleJs, BASE.agent, agentName, 'console agent ref');
 const consoleName = writeHashed('_app/chunks', 'console', Buffer.from(consoleJs));
 let workspace = readFileSync(join(out, '_app/chunks', BASE.workspace), 'utf8');
