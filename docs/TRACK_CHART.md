@@ -40,13 +40,14 @@ Production aliases `ticking.dev`, `skew.deals`, and `www.skew.deals` point at th
 
 | | |
 | --- | --- |
-| Deployment | `dpl_9h2rRE79J9YJJa8sf7KiSyURHHpk` |
-| App entry | `/_app/app-6SXSQPWV.js` |
-| Track shell | `/_app/chunks/track-shell-LI33TFB4.js` (`setTrackPaint`, `mountTrackWorkspace`, `mountTrackerPage`, `classifyTrackIntent`, sharp dump/whale tags, trail replay) |
-| Wallet mount | `/_app/chunks/console-agent-EKD36Y3A.js` |
-| Workspace router | `/_app/chunks/workspace-FTE7RKJ7.js` |
-| Console | `/_app/chunks/console-LQ3AIWC2.js` |
-| Home | `/_app/chunks/chunk-DHNHFGB4.js` |
+| Deployment | `dpl_CxGb7iij23HfMzYKYJrZxUt2sFFV` |
+| App entry | `/_app/app-TOMNXDUH.js` |
+| Track shell | `/_app/chunks/track-shell-733NEGSU.js` (`setTrackPaint`, `mountTrackWorkspace`, `mountMintWorkspace`, `mountTrackerPage`, `classifyTrackIntent`) |
+| Wallet mount | `/_app/chunks/console-agent-67GTD2KQ.js` |
+| Workspace router | `/_app/chunks/workspace-SCTOOQHM.js` |
+| Console | `/_app/chunks/console-S36XXMPC.js` |
+| Home | `/_app/chunks/chunk-JGQFL2MX.js` |
+| Route | `/_app/chunks/chunk-OJVUMUFG.js` |
 | Rollback | `dpl_8kWWQ53PMJXzv6aA4m2T5UabAKaZ` (`/_app/app-L5AHZFB4.js`) |
 
-Checked on `ticking.dev` after the alias: the homepage title is “Onchain research”; a wallet search opens `#/console/workspace/wallet:…`; `SOL` opens `#/console/workspace/SOL`; `fast feed` stays on search. A wallet workspace with `?sample=1` paints the trail silhouette, clocks, and sharp `dump · +9m` / `whale · +10m` tags. Replay captions the hop walk (`Trail 1 of 8 · buy` through `Trail 8 of 8 · unlabeled`). A dump click focuses that move on the same chart. A whale tag opens `WETH · 0x51c7…2a7f` as “Same case · wallet chart”. A bridge chip labeled `Open eth chart` opens the ETH chart as “Same case · chain chart”. The side column reads “Open ETH beside”. `#/tracker` is the wallet form (`data-track-form`) and does not mount Flow. The console nav says “Workspace chart”. Roll back by aliasing `dpl_8kWWQ53PMJXzv6aA4m2T5UabAKaZ`. The alias this deploy replaced was `dpl_2wEmx1aRwb9jyFF5Jf3HZAJAjYcQ`.
+Checked on `ticking.dev` after the alias: the homepage title is “Onchain research”. A homepage search for `robinhood launchpad` opens `#/console/workspace/launch?q=robinhood+launchpad&chain=robinhood` and paints the mint chart. `minted PEPE` from the workspace question opens `#/console/workspace/PEPE?launch=1` on that same chart. A Solana mint loads public engine candles (wrapped SOL printed near 104) and does not invent dump tags when resolve returns none. `#/console/workspace/mint:…?sample=1` paints “Sample mint on this workspace chart.” A dump click stays on the one chart. A hop chip opens `PEPE · 0x51c7…2a7f` as “Same case · wallet chart”. `#/tracker` stays the wallet form. Roll back by aliasing `dpl_8kWWQ53PMJXzv6aA4m2T5UabAKaZ`. The alias this deploy replaced was `dpl_9h2rRE79J9YJJa8sf7KiSyURHHpk`.
