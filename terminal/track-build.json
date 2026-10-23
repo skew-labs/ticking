@@ -9,10 +9,10 @@
     "workspace": "b6f40e3a4de47905aba759fd84777ba6525a9c9d6fa23f55b712e2c83b8b5cec"
   },
   "production": {
-    "deployment": "dpl_3ReWzi9d84dBa2Hrmx4s8Be7M1X2",
+    "deployment": "dpl_AYi1Zr7i4JdA4veARfA1JLtMf2Ss",
     "rollback": "dpl_8kWWQ53PMJXzv6aA4m2T5UabAKaZ",
-    "app": "/_app/app-TYCMKHBN.js",
-    "shell": "/_app/chunks/track-shell-XQ7HHZ26.js",
-    "agent": "/_app/chunks/console-agent-4BQUAKQK.js"
+    "app": "/_app/app-UVYRWMGQ.js",
+    "shell": "/_app/chunks/track-shell-SPIWJDUZ.js",
+    "agent": "/_app/chunks/console-agent-XFNF7DZA.js"
   }
 }

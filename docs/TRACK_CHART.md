@@ -4,7 +4,7 @@ Schema: `ticking.chartMarkers.track.v1`.
 
 The browser paints `chartMarkers`, `bands`, and `sideColumns` on the workspace TickChart. Search hands that payload over as `handoff.next.request` with `track: true` and `listAddresses: false`. The same fields come back from `POST /api/public/intelligence/resolve`. Loopback `POST /v1/track` on `:19480` already builds this payload; this tree does not reimplement it.
 
-`#/console/workspace/wallet:0x…` is one incident. A chip click adds that wallet's charts in the same workspace. A dotted bridge chip or side column adds that chain's chart beside it. `muse.replay` / `replayMs` (default 1500) plays a short timeline. `#/tracker` is not a Flow page and not a map: a wallet query redirects onto the workspace route, and an empty visit asks for a wallet.
+`#/console/workspace/wallet:0x…` is one incident. A chip click adds that wallet's charts in the same workspace. A dotted bridge chip or side column adds that chain's chart beside it. `muse.replay` / `replayMs` (default 900, at most 8 steps) plays a short timeline. `#/tracker` is a wallet form, not a Flow page and not a map: a wallet query opens the workspace chart, and an empty visit asks for a wallet.
 
 Preview fixture only: `#/console/workspace/wallet:0x…?sample=1`.
 
@@ -38,10 +38,11 @@ Production aliases `ticking.dev`, `skew.deals`, and `www.skew.deals` point at th
 
 | | |
 | --- | --- |
-| Deployment | `dpl_3ReWzi9d84dBa2Hrmx4s8Be7M1X2` |
-| App entry | `/_app/app-TYCMKHBN.js` |
-| Track shell | `/_app/chunks/track-shell-XQ7HHZ26.js` (`setTrackPaint`, `mountTrackWorkspace`, `mountTrackerPage`) |
-| Wallet mount | `/_app/chunks/console-agent-4BQUAKQK.js` |
+| Deployment | `dpl_AYi1Zr7i4JdA4veARfA1JLtMf2Ss` |
+| App entry | `/_app/app-UVYRWMGQ.js` |
+| Track shell | `/_app/chunks/track-shell-SPIWJDUZ.js` (`setTrackPaint`, `mountTrackWorkspace`, `mountTrackerPage`, `classifyTrackIntent`) |
+| Wallet mount | `/_app/chunks/console-agent-XFNF7DZA.js` |
+| Workspace router | `/_app/chunks/workspace-KPIZJF5T.js` |
 | Rollback | `dpl_8kWWQ53PMJXzv6aA4m2T5UabAKaZ` (`/_app/app-L5AHZFB4.js`) |
 
-Checked on production after the alias: a wallet workspace with `?sample=1` shows buy, sell, bridge, hop, CEX, and unlabeled markers; a hop chip opens a second chart in the same incident; `#/tracker` renders the retired workspace prompt and does not mount Flow chrome. A live resolve for that public wallet returned zero markers, so the sample query is the visual proof. Roll back by aliasing `dpl_8kWWQ53PMJXzv6aA4m2T5UabAKaZ`.
+Checked on `ticking.dev` after the alias: a wallet workspace with `?sample=1` paints the sample markers; a hop chip opens a second chart in that same incident; a bridge chip labeled `Open eth chart` opens the ETH chain chart beside it; `#/tracker` is the wallet form (`data-track-form`) and does not mount Flow. A stored handoff plus `POST /api/public/intelligence/resolve` kept the handoff summary when the live body had no markers. Roll back by aliasing `dpl_8kWWQ53PMJXzv6aA4m2T5UabAKaZ`. The alias this deploy replaced was `dpl_3ReWzi9d84dBa2Hrmx4s8Be7M1X2`.
