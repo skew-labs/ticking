@@ -714,12 +714,14 @@ if (!appText.includes(workspaceName)) throw new Error('app wiring missing');
 let index = readFileSync(join(out, 'index.html'), 'utf8');
 index = replaceOnce(index, `/_app/${BASE.app}`, `/_app/${appName}`, 'index app hash');
 writeFileSync(join(out, 'index.html'), index);
+const fresh = new Set([shellName, agentName, consoleName, workspaceName]);
 for (const stale of [BASE.shell, BASE.agent, BASE.console, BASE.workspace]) {
+  if (fresh.has(stale)) continue;
   const stalePath = join(out, '_app/chunks', stale);
   if (existsSync(stalePath)) unlinkSync(stalePath);
 }
 const staleApp = join(out, '_app', BASE.app);
-if (existsSync(staleApp)) unlinkSync(staleApp);
+if (appName !== BASE.app && existsSync(staleApp)) unlinkSync(staleApp);
 const research = patchResearchEntry();
 const chunkText = name => readFileSync(join(out, '_app/chunks', name), 'utf8');
 const liveAppText = readFileSync(join(out, '_app', research.app), 'utf8');

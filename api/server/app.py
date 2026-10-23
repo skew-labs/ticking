@@ -89,6 +89,8 @@ async def boundaries(request,call_next):
     result=await call_next(request)
     if result.headers.get('content-type','').startswith('text/event-stream'):
         result.headers['Cache-Control']='no-store, no-transform'
+    elif request.method=='GET' and result.status_code==200 and request.url.path=='/api/public/engine/fast-feed':
+        result.headers['Cache-Control']='no-store'
     elif request.method=='GET' and result.status_code==200 and request.url.path in {'/api/public/engine/candles','/api/public/engine/trades'}:
         result.headers['Cache-Control']='public, max-age=0, s-maxage=1, must-revalidate'
     elif request.method=='GET' and result.status_code==200 and (request.url.path.startswith('/api/public/engine/') or request.url.path=='/api/public/markets' or request.url.path.startswith('/api/public/markets/')):

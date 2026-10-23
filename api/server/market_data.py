@@ -10,6 +10,7 @@ from pathlib import Path
 
 import httpx
 from fastapi import HTTPException,Response
+from fastapi.responses import JSONResponse
 from .store import DB_PATH
 from .market_cache import ProviderCache
 from . import token_icons
@@ -480,6 +481,12 @@ def install(app):
             raise HTTPException(404,'Choose a listed Solana mint. Arbitrary verified addresses are available through the authenticated API.')
         if pool:engine_data.pinned(pool,mint)
         return mint
+
+    @app.get('/api/public/engine/fast-feed')
+    def engine_fast_feed(chain:str='', symbol:str|None=None, mint:str|None=None, interval:str='1s', coverage:str='tip_hot', limit:int=120):
+        from .fast_feed import load
+        payload, status = load(chain=chain, symbol=symbol, mint=mint, interval=interval, coverage=coverage, limit=limit)
+        return JSONResponse(payload, status_code=status, headers={'Access-Control-Allow-Origin':'*','Cache-Control':'no-store'})
 
     @app.get('/api/public/engine/candles')
     def engine_candles(response:Response,mint:str|None=None,pool:str|None=None,market:str|None=None,interval:str='1m',limit:int=300,before:int|None=None,gap_policy:str='recorded',aggregation:str='pool',history:str='executions'):
