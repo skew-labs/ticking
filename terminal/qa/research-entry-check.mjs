@@ -65,6 +65,8 @@ assert.equal(agent.includes('intent.mode==="market"'), true);
 assert.equal(agent.includes('intent.mode!=="other"'), false);
 assert.equal(agent.includes('<h1>One workspace chart</h1>'), true);
 assert.equal(agent.includes('A wallet, its trail, and the market stay on one workspace chart.'), true);
+assert.equal(agent.includes('The hop loop paints on that chart.'), true);
+assert.equal(agent.includes('A question there updates the same incident.'), true);
 assert.equal(agent.includes('intent.mode==="mint"'), true);
 assert.equal(agent.includes('mountMintWorkspace'), true);
 assert.equal(agent.includes('Opening the mint chart'), true);

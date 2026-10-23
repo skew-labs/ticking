@@ -4,8 +4,8 @@ import {spawnSync} from 'node:child_process';
 import {dirname,resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {parseTrackPaint,layoutTrack,replayFrames,panesForWallet,seriesFromPaint,columnForBridge,museLine,isSharp,sampleTrackPaint,sampleMintPaint,TRACK_SCHEMA} from '../src/track-paint.js';
-import {loadTrackPaint,parseWorkspaceHash,trackerRedirect,shouldOpenWallet,trackRouteFromResolve,acceptTrackHandoff,candlesFromEngine} from '../src/track-workspace.js';
-import {classifyTrackIntent,guardedResolveBody,trackResolveBody,TRACK_GUARD_TEXT} from '../src/track-intent.js';
+import {loadTrackPaint,parseWorkspaceHash,trackerRedirect,shouldOpenWallet,trackRouteFromResolve,acceptTrackHandoff,candlesFromEngine,applyChartAnswer,askChart} from '../src/track-workspace.js';
+import {classifyTrackIntent,guardedResolveBody,trackResolveBody,chartAskBody,TRACK_GUARD_TEXT} from '../src/track-intent.js';
 
 const handoff={
  state:'ready',route:'#/console/workspace/wallet:0x278d858f05b94576c1e6f73285886876ff6ef8d2',
@@ -198,6 +198,87 @@ assert.equal(evmMint.route.includes('chain=arbitrum'),true);
 assert.equal(classifyTrackIntent('dumped the new token PEPE').mode,'mint');
 assert.equal(classifyTrackIntent('dumped the new token PEPE').dumpTagsOnly,false);
 assert.equal(classifyTrackIntent('0xd8da6bf26964af9d7eed9e03e53415d37aa96045').mode,'track');
+assert.equal(trackIntent.graph,'loop');
+assert.equal(trackIntent.plan,'map the hop loop onto the workspace chart');
+assert.match(TRACK_GUARD_TEXT,/Map the hop loop onto that chart/);
+assert.match(TRACK_GUARD_TEXT,/A question on the chart updates this incident/);
+assert.equal(classifyTrackIntent('graph loop 0xd8da6bf26964af9d7eed9e03e53415d37aa96045').mode,'track');
+assert.equal(classifyTrackIntent('그래프 루프').mode,'track');
+assert.equal(classifyTrackIntent('그래프 루프').route,null);
+assert.equal(classifyTrackIntent('SOL').graph,null);
+const loopWallet='0x278d858f05b94576c1e6f73285886876ff6ef8d2';
+const loopHop='0x51c72848c68a965f66fa7a88855f9f7784502a7f';
+const loop=parseTrackPaint({addresses:[loopWallet,loopHop],graph:{nodes:[
+ {id:'a',wallet:loopWallet,kind:'buy',time:1_700_000_000_000,label:'buy',symbol:'WETH',chain:'arbitrum'},
+ {id:'b',wallet:loopHop,kind:'hop'},
+ {id:'c',wallet:loopWallet,kind:'dump',label:'dump',time:1_700_000_000_000+9*60_000},
+],edges:[
+ {from:'a',to:'b',kind:'hop',label:'A→B'},
+ {from:'b',to:'c',kind:'hop'},
+ {from:'c',to:'a',kind:'hop'},
+ {from:'a',kind:'bridge',src:'arb',dst:'eth',t0:1_700_000_000_000+12*60_000,t1:1_700_000_000_000+16*60_000},
+]}});
+assert.equal(loop.schema,TRACK_SCHEMA);
+assert.equal(loop.listAddresses,false);
+assert.equal(loop.suppressedAddressList,true);
+assert.equal(JSON.stringify(loop).includes('addresses'),false);
+assert.equal(loop.chartMarkers.length,4);
+assert.equal(loop.chartMarkers.find(m=>m.kind==='hop').time,1_700_000_060_000);
+assert.equal(loop.chartMarkers.find(m=>m.kind==='hop').chip,true);
+assert.equal(loop.chartMarkers.find(m=>m.kind==='dump').chip,false);
+assert.equal(isSharp(loop.chartMarkers.find(m=>m.kind==='dump')),true);
+assert.ok(loop.bands.some(b=>b.label==='Loop'));
+assert.ok(loop.bands.some(b=>b.label==='A→B'));
+assert.equal(loop.sideColumns[0].chain,'ethereum');
+assert.equal(loop.muse.replay,true);
+assert.equal(loop.muse.beside.wallet,loopHop);
+assert.equal(replayFrames(loop).at(-1).at,900);
+assert.equal(parseTrackPaint({chartMarkers:[],graph:{nodes:[],edges:[]}}).chartMarkers.length,0);
+assert.equal(parseTrackPaint({chartMarkers:[{kind:'buy',time:1_700_000_000_000,label:'buy',wallet:loopWallet}],graph:{nodes:[{id:'a',wallet:loopHop,kind:'hop',time:1_700_000_000_000},{id:'b',wallet:loopWallet,kind:'hop',time:1_700_000_060_000}],edges:[{from:'a',to:'b'}]}}).chartMarkers.length,1);
+const stayed=applyChartAnswer(sample,parseTrackPaint({chartMarkers:[]}),'Chart ask failed (403).');
+assert.equal(stayed.replaced,false);
+assert.equal(stayed.stayed,true);
+assert.equal(stayed.paint.chartMarkers.length,sample.chartMarkers.length);
+assert.equal(stayed.summary,'This question stays on this chart.');
+const painted=applyChartAnswer(sample,loop,'');
+assert.equal(painted.replaced,true);
+assert.equal(painted.summary,'Hop loop on this chart.');
+const askBody=chartAskBody({query:'where did this hop go',wallet:loopWallet,chain:'arbitrum',incident:`wallet:${loopWallet}`});
+assert.equal(askBody.stay,true);
+assert.equal(askBody.graph,'loop');
+assert.equal(askBody.track,true);
+assert.equal(askBody.listAddresses,false);
+assert.equal(askBody.route,null);
+assert.equal(askBody.guard.ask,'chart');
+assert.equal(askBody.guard.act,'chartMarkers');
+assert.equal(askBody.guard.plan,'map the hop loop onto this chart');
+assert.equal(String(askBody.guard.route||'').includes('investigate'),false);
+const marketAsk=chartAskBody({query:'SOL',wallet:loopWallet,incident:`wallet:${loopWallet}`});
+assert.equal(marketAsk.mode,'track');
+assert.equal(marketAsk.stay,true);
+assert.equal(marketAsk.query,'SOL');
+assert.equal(marketAsk.route,null);
+const mintAsk=chartAskBody({query:'did the mint dump',mint:solMint,incident:`mint:${solMint}`});
+assert.equal(mintAsk.mode,'mint');
+assert.equal(mintAsk.stay,true);
+assert.equal(mintAsk.guard.dumpTagsOnly,false);
+assert.equal(mintAsk.guard.act,'chartMarkers');
+const asked=await askChart({query:'map the loop',wallet:loopWallet,incident:`wallet:${loopWallet}`,fetchImpl:async(url,init)=>{
+ const body=JSON.parse(init.body);
+ assert.equal(url,'/api/public/intelligence/resolve');
+ assert.equal(body.stay,true);
+ assert.equal(body.graph,'loop');
+ assert.equal(body.listAddresses,false);
+ return {ok:true,json:async()=>({graph:loop.chartMarkers?{nodes:[
+  {id:'a',wallet:loopWallet,kind:'buy',time:1_700_000_000_000,label:'buy'},
+  {id:'b',wallet:loopHop,kind:'hop',time:1_700_000_060_000,label:'hop'},
+ ],edges:[{from:'a',to:'b',kind:'hop'}]}:null})};
+}});
+assert.equal(asked.stayed,true);
+assert.ok(asked.paint.chartMarkers.length>=2);
+const quiet=await askChart({query:'map the loop',wallet:loopWallet,incident:`wallet:${loopWallet}`,fetchImpl:async()=>({ok:true,json:async()=>({chartMarkers:[]})})});
+assert.equal(applyChartAnswer(asked.paint,quiet.paint,'').replaced,false);
+assert.equal(applyChartAnswer(asked.paint,quiet.paint,'').paint.chartMarkers.length,asked.paint.chartMarkers.length);
 const mintHash=parseWorkspaceHash('#/console/workspace/mint%3A'+solMint+'?chain=solana&sample=1');
 assert.equal(mintHash.mint,solMint);
 assert.equal(mintHash.chain,'solana');
@@ -262,6 +343,8 @@ assert.match(workspaceSrc,/Same case · chain chart/);
 assert.match(workspaceSrc,/data-track-caption/);
 assert.match(workspaceSrc,/Beside this chart/);
 assert.match(workspaceSrc,/mountMintWorkspace/);
+assert.match(workspaceSrc,/data-track-ask/);
+assert.match(workspaceSrc,/This question stays on this chart/);
 assert.match(workspaceSrc,/Waiting for the first prints on this mint/);
 assert.doesNotMatch(workspaceSrc,/address-list/);
 

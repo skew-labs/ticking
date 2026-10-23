@@ -1,6 +1,6 @@
 import {TickChart} from './chart.js';
 import {parseTrackPaint,seriesFromPaint,panesForWallet,shortWallet,walletAddress,sampleTrackPaint,sampleMintPaint,columnForBridge,museLine} from './track-paint.js';
-import {classifyTrackIntent,guardedResolveBody,mintAddress,trackResolveBody} from './track-intent.js';
+import {chartAskBody,classifyTrackIntent,guardedResolveBody,mintAddress,trackResolveBody} from './track-intent.js';
 import trackCss from './track-style.js';
 
 export const HANDOFF_KEY='ticking.track.handoff.v1';
@@ -151,16 +151,69 @@ export async function resolveTrackQuery(query,{signal,fetchImpl=fetch}={}){
  }
  return body;
 }
+export function applyChartAnswer(current,incoming,error=''){
+ const next=incoming?.chartMarkers?.length?incoming:null;
+ const note=museLine(incoming?.muse?.summary);
+ const summary=next?(museLine(next.muse?.summary)||`${next.chartMarkers.length} hops on this chart.`):(note||'This question stays on this chart.');
+ return {paint:next||current||parseTrackPaint(null),summary,stayed:true,replaced:Boolean(next),error:error&&!next?error:''};
+}
+export async function askChart({query,wallet,mint,chain,symbol,incident,fetchImpl=fetch,signal}={}){
+ const spoken=String(query||'').trim();
+ if(!spoken)return {paint:null,error:'',stayed:true};
+ const body=chartAskBody({query:spoken,wallet,mint,chain,symbol,incident});
+ try{
+  const r=await fetchImpl('/api/public/intelligence/resolve',{method:'POST',headers:{'content-type':'application/json',accept:'application/json'},body:JSON.stringify(body),signal});
+  if(!r.ok)throw Error('Chart ask failed ('+r.status+').');
+  const json=await r.json();
+  const paint=parseTrackPaint(json);
+  if((paint.chartMarkers?.length||0)>0)storeHandoff(json);
+  return {paint,error:'',stayed:true};
+ }catch(e){
+  if(e?.name==='AbortError')throw e;
+  return {paint:null,error:e.message||'Chart ask unavailable.',stayed:true};
+ }
+}
+function bindChartAsk(form,{signal,context,onAnswer}){
+ if(!form)return;
+ form.addEventListener('submit',async e=>{
+  e.preventDefault();
+  const q=String(form.q?.value||'').trim();
+  const summary=form.closest('.track-workspace')?.querySelector('[data-track-summary]');
+  if(!q){if(summary)summary.textContent='Ask about this chart.';return;}
+  const hash=typeof location==='undefined'?'':location.hash;
+  if(summary)summary.textContent='Reading this chart…';
+  const button=form.querySelector('button');
+  if(button)button.disabled=true;
+  const askAbort=new AbortController();
+  const stop=()=>askAbort.abort();
+  signal?.addEventListener('abort',stop,{once:true});
+  try{
+   const {paint,error}=await askChart({...context(),query:q,signal:askAbort.signal});
+   if(typeof location!=='undefined'&&location.hash!==hash)location.hash=hash;
+   onAnswer(paint,error||'');
+  }catch(err){
+   if(err?.name==='AbortError')return;
+   if(typeof location!=='undefined'&&hash&&location.hash!==hash)location.hash=hash;
+   onAnswer(null,err?.message||'');
+  }finally{
+   signal?.removeEventListener('abort',stop);
+   if(button)button.disabled=false;
+  }
+ },{signal});
+}
+const ASK_FORM='<form class="track-ask" data-track-ask><label>Ask this chart<input name="q" autocomplete="off" spellcheck="false" placeholder="Ask about this hop"></label><button type="submit">Paint answer</button></form>';
 export function installTrackGuard(){
  if(typeof window==='undefined'||window.__tickingTrackGuard)return;
  window.__tickingTrackGuard=true;
  const orig=window.fetch.bind(window);
  window.fetch=async(input,init={})=>{
   let nextInit=init;
+  let stay=false;
   const url=typeof input==='string'?input:input instanceof Request?input.url:'';
   if(url.includes('/api/public/intelligence/resolve')&&typeof init?.body==='string'){
    try{
     const parsed=JSON.parse(init.body);
+    stay=parsed?.stay===true||parsed?.guard?.stay===true;
     const guarded=guardedResolveBody(parsed);
     if(guarded)nextInit={...init,body:JSON.stringify(guarded)};
    }catch{}
@@ -171,7 +224,7 @@ export function installTrackGuard(){
     const body=await response.clone().json();
     const route=acceptTrackHandoff(body);
     const hash=location.hash||'';
-    if(route&&(hash.includes('/auto')||hash.startsWith('#/tracker')||hash.includes('/search'))&&location.hash!==route)location.hash=route;
+    if(!stay&&route&&(hash.includes('/auto')||hash.startsWith('#/tracker')||hash.includes('/search'))&&location.hash!==route)location.hash=route;
    }catch{}
   }
   return response;
@@ -223,7 +276,7 @@ export function mountTrackWorkspace(root,{incident,wallet,chain,sample}={}){
  let disposed=false;
  const charts=[];
  const opened=new Set();
- root.innerHTML=`<section class="track-workspace" data-incident="${esc(incident||wallet||'workspace')}"><header class="track-workspace-bar"><div><p class="track-kicker">Workspace track</p><h1 data-track-title>${esc(shortWallet(wallet)||incident||'Workspace')}</h1><p data-track-caption class="track-caption"></p></div><p data-track-summary role="status">Reading the track paint…</p><button type="button" data-track-replay hidden>Replay trail</button></header><div class="track-layout"><div class="track-charts" data-track-charts></div><aside class="track-side" data-track-side hidden><h2>Beside this chart</h2><div data-track-columns></div></aside></div></section>`;
+ root.innerHTML=`<section class="track-workspace" data-incident="${esc(incident||wallet||'workspace')}"><header class="track-workspace-bar"><div><p class="track-kicker">Workspace track</p><h1 data-track-title>${esc(shortWallet(wallet)||incident||'Workspace')}</h1><p data-track-caption class="track-caption"></p></div><p data-track-summary role="status">Reading the track paint…</p><button type="button" data-track-replay hidden>Replay trail</button></header>${ASK_FORM}<div class="track-layout"><div class="track-charts" data-track-charts></div><aside class="track-side" data-track-side hidden><h2>Beside this chart</h2><div data-track-columns></div></aside></div></section>`;
  const summary=root.querySelector('[data-track-summary]');
  const caption=root.querySelector('[data-track-caption]');
  const chartsEl=root.querySelector('[data-track-charts]');
@@ -290,8 +343,24 @@ export function mountTrackWorkspace(root,{incident,wallet,chain,sample}={}){
   side.hidden=!cols.length;
   columnsEl.innerHTML=cols.map(c=>`<button type="button" data-track-column="${esc(c.id)}">Open ${esc(c.label||c.chain)} beside<small>Same case</small></button>`).join('');
  }
+ const hooks={onWallet:openWallet,onBridge:openBridge,onFocus:focusMove,onStep:noteStep};
  replayBtn.addEventListener('click',()=>charts[0]?.trackLayer?.play(),{signal:abort.signal});
  columnsEl.addEventListener('click',e=>{const b=e.target.closest('[data-track-column]');if(!b)return;const paint=charts[0]?.trackLayer?.paint;openColumn((paint?.sideColumns||[]).find(c=>c.id===b.dataset.trackColumn));},{signal:abort.signal});
+ bindChartAsk(root.querySelector('[data-track-ask]'),{signal:abort.signal,context:()=>({wallet,chain,incident:incident||(wallet?`wallet:${wallet}`:null)}),onAnswer:(incoming,error)=>{
+  const answer=applyChartAnswer(charts[0]?.trackLayer?.paint,incoming,error);
+  if(answer.replaced&&charts[0]){
+   const series=seriesFromPaint(answer.paint);
+   if(series.length)charts[0].setSeries(series,{preserve:false});
+   charts[0].setTrackPaint(answer.paint,hooks);
+   showSide(answer.paint);
+   replayBtn.hidden=!answer.paint.muse?.replay;
+   if(answer.paint.muse?.replay)charts[0].trackLayer?.play();
+   const beside=answer.paint.muse?.beside?.wallet;
+   if(beside)openWallet({address:beside,kind:'hop',paint:answer.paint});
+  }
+  summary.textContent=answer.summary;
+  summary.dataset.trackAsk='chart';
+ }});
  const run=++mountTrackWorkspace.seq;
  (async()=>{
   try{
@@ -339,7 +408,7 @@ export function mountMintWorkspace(root,{ident,mint,chain,query,sample,symbol}={
  let primaryWallet=null;
  const subject=mint||symbol||ident||'Mint';
  const incident=mint?`mint:${mint}`:symbol?`mint:${symbol}`:'mint:launch';
- root.innerHTML=`<section class="track-workspace" data-mint-chart data-incident="${esc(incident)}"><header class="track-workspace-bar"><div><p class="track-kicker">Mint chart</p><h1 data-track-title>${esc(shortMint(subject)||'Mint')}</h1><p data-track-caption class="track-caption"></p></div><p data-track-summary role="status">Opening the mint chart…</p><button type="button" data-track-replay hidden>Replay trail</button></header><div class="track-layout"><div class="track-charts" data-track-charts></div><aside class="track-side" data-track-side hidden><h2>Beside this chart</h2><div data-track-columns></div></aside></div></section>`;
+ root.innerHTML=`<section class="track-workspace" data-mint-chart data-incident="${esc(incident)}"><header class="track-workspace-bar"><div><p class="track-kicker">Mint chart</p><h1 data-track-title>${esc(shortMint(subject)||'Mint')}</h1><p data-track-caption class="track-caption"></p></div><p data-track-summary role="status">Opening the mint chart…</p><button type="button" data-track-replay hidden>Replay trail</button></header>${ASK_FORM}<div class="track-layout"><div class="track-charts" data-track-charts></div><aside class="track-side" data-track-side hidden><h2>Beside this chart</h2><div data-track-columns></div></aside></div></section>`;
  const summary=root.querySelector('[data-track-summary]');
  const caption=root.querySelector('[data-track-caption]');
  const chartsEl=root.querySelector('[data-track-charts]');
@@ -359,7 +428,7 @@ export function mountMintWorkspace(root,{ident,mint,chain,query,sample,symbol}={
   const host=card.querySelector('.track-chart-host');
   const chart=new TickChart(host,{symbol:title,market:incident},{interval:'1m',editable:false,volume:false,series:series||[],emptyMessage:emptyMessage||'Waiting for the first prints on this mint.',storageScope:'mint'});
   chart.__mintKey=key;
-  chart.setTrackPaint(paint||{chartMarkers:[],bands:[],sideColumns:[]},{onWallet:openWallet,onBridge:openBridge,onFocus:focusMove,onStep:noteStep});
+  chart.setTrackPaint(paint||{chartMarkers:[],bands:[],sideColumns:[]},hooks);
   charts.push(chart);
   if(charts.length>1)chartsEl.classList.add('is-multi');
   return chart;
@@ -405,9 +474,29 @@ export function mountMintWorkspace(root,{ident,mint,chain,query,sample,symbol}={
   side.hidden=!cols.length;
   columnsEl.innerHTML=cols.map(c=>`<button type="button" data-track-column="${esc(c.id)}">Open ${esc(c.label||c.chain)} beside<small>Same case</small></button>`).join('');
  }
+ const hooks={onWallet:openWallet,onBridge:openBridge,onFocus:focusMove,onStep:noteStep};
+ let priceLocked=false;
  const chart=addPane({role:'primary',title:shortMint(symbol||mint)||'Mint',subtitle:sample?'Sample mint · trail shape, not a market print':'Mint price',emptyMessage:'Waiting for the first prints on this mint.'});
  replayBtn.addEventListener('click',()=>charts[0]?.trackLayer?.play(),{signal:abort.signal});
  columnsEl.addEventListener('click',e=>{const b=e.target.closest('[data-track-column]');if(!b)return;const paint=charts[0]?.trackLayer?.paint;openColumn((paint?.sideColumns||[]).find(c=>c.id===b.dataset.trackColumn));},{signal:abort.signal});
+ bindChartAsk(root.querySelector('[data-track-ask]'),{signal:abort.signal,context:()=>({mint,chain,symbol,incident,query}),onAnswer:(incoming,error)=>{
+  const answer=applyChartAnswer(charts[0]?.trackLayer?.paint,incoming,error);
+  if(answer.replaced&&chart){
+   if(!priceLocked){
+    const series=seriesFromPaint(answer.paint);
+    if(series.length){chart.setSeries(series,{preserve:false});fitMint(chart);}
+   }
+   chart.setTrackPaint(answer.paint,hooks);
+   primaryWallet=walletAddress(answer.paint.chartMarkers?.find(m=>m.wallet)?.wallet)||primaryWallet;
+   showSide(answer.paint);
+   replayBtn.hidden=!answer.paint.muse?.replay;
+   if(answer.paint.muse?.replay)chart.trackLayer?.play();
+   const beside=answer.paint.muse?.beside?.wallet;
+   if(beside)openWallet({address:beside,kind:'hop',paint:answer.paint});
+  }
+  summary.textContent=answer.summary;
+  summary.dataset.trackAsk='chart';
+ }});
  const run=++mountMintWorkspace.seq;
  (async()=>{
   try{
@@ -418,8 +507,9 @@ export function mountMintWorkspace(root,{ident,mint,chain,query,sample,symbol}={
    if(disposed||run!==mountMintWorkspace.seq||!chart)return;
    const markers=paint.chartMarkers?.length||0;
    const price=candles.length?candles:(markers?seriesFromPaint(paint):[]);
+   priceLocked=candles.length>0;
    if(price.length)chart.setSeries(price,{preserve:false});
-   chart.setTrackPaint(paint,{onWallet:openWallet,onBridge:openBridge,onFocus:focusMove,onStep:noteStep});
+   chart.setTrackPaint(paint,hooks);
    fitMint(chart);
    primaryWallet=walletAddress(paint.chartMarkers?.find(m=>m.wallet)?.wallet);
    const muse=museLine(paint.muse?.summary);

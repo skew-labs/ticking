@@ -36,7 +36,8 @@ function unwrap(input){
  const request=input.handoff?.next?.request||input.next?.request;
  if(request&&typeof request==='object'){
   const dumpTagsOnly=request.dumpTagsOnly===true||request.mode==='dump'||input.mode==='dump'||input.guard?.dumpTagsOnly===true;
-  return {...request,museSummary:request.museSummary||request.muse?.summary||input.message||'',mode:request.mode||input.mode,dumpTagsOnly};
+  const graph=request.graph||request.hopGraph||request.loop||input.graph||input.hopGraph||input.loop||input.trace?.graph;
+  return {...request,graph,museSummary:request.museSummary||request.muse?.summary||input.message||'',mode:request.mode||input.mode,dumpTagsOnly};
  }
  if(input.request&&typeof input.request==='object'&&(input.request.chartMarkers||input.request.markers||input.request.track!=null))return unwrap({...input.request,message:input.request.museSummary||input.message});
  if(input.paint&&typeof input.paint==='object')return unwrap(input.paint);
@@ -120,15 +121,156 @@ function museFrom(raw,summary){
  };
 }
 
+const GRAPH_ORIGIN=1_700_000_000_000;
+function graphSource(raw){
+ if(!raw||typeof raw!=='object')return null;
+ const g=raw.graph||raw.hopGraph||raw.flowGraph||raw.loop||raw.trace?.graph;
+ if(!g||typeof g!=='object'||Array.isArray(g))return null;
+ const nodes=Array.isArray(g.nodes)?g.nodes:Array.isArray(g.hops)?g.hops:[];
+ const edges=Array.isArray(g.edges)?g.edges:Array.isArray(g.links)?g.links:[];
+ const loops=Array.isArray(g.loops)?g.loops:[];
+ if(!nodes.length&&!edges.length&&!loops.length)return null;
+ return {nodes:nodes.slice(0,80),edges:edges.slice(0,80),loops:loops.slice(0,12),summary:text(g.summary??raw.museSummary,280)};
+}
+function nodeId(raw,index){return text(raw?.id??raw?.key??index,80)||String(index);}
+function timedNodes(nodes){
+ const rows=nodes.map((n,index)=>({n,index,id:nodeId(n,index),time:timeMs(n?.time??n?.t??n?.ts??n?.timestamp)}));
+ if(!rows.length)return rows;
+ if(rows.every(row=>row.time==null)){
+  rows.forEach((row,index)=>{row.time=GRAPH_ORIGIN+index*60_000;});
+  return rows;
+ }
+ let cursor=null;
+ for(const row of rows){
+  if(row.time==null&&cursor!=null)row.time=cursor+60_000;
+  if(row.time!=null)cursor=row.time;
+ }
+ const first=rows.findIndex(row=>row.time!=null);
+ for(let i=first-1;i>=0;i--)rows[i].time=rows[i+1].time-60_000;
+ return rows;
+}
+function loopBand(edges,rows){
+ const timeOf=new Map(rows.map(row=>[row.id,row.time]));
+ const walletOf=new Map(rows.map(row=>[row.id,walletAddress(row.n?.wallet??row.n?.address)]));
+ const next=new Map();
+ for(const edge of edges){
+  if(edge?.kind==='bridge'||edge?.type==='bridge'||edge?.bridge===true)continue;
+  const from=text(edge?.from??edge?.source??edge?.a,80);
+  const to=text(edge?.to??edge?.target??edge?.b,80);
+  if(from&&to)next.set(from,to);
+ }
+ const seen=new Set();
+ for(const start of next.keys()){
+  if(seen.has(start))continue;
+  const path=[];
+  const index=new Map();
+  let cur=start;
+  while(cur&&!index.has(cur)&&next.has(cur)){
+   index.set(cur,path.length);
+   path.push(cur);
+   seen.add(cur);
+   cur=next.get(cur);
+  }
+  if(!cur||!index.has(cur)||path.length-index.get(cur)<2)continue;
+  const cycle=path.slice(index.get(cur));
+  const wallets=cycle.map(id=>walletOf.get(id)).filter(Boolean);
+  const times=cycle.map(id=>timeOf.get(id)).filter(t=>Number.isFinite(t));
+  if(wallets.length>=2&&times.length)return {id:'loop',t0:Math.min(...times),t1:Math.max(...times),wallets,label:'Loop'};
+ }
+ return null;
+}
+/** Project a hop graph onto chart markers. An empty graph adds nothing. */
+export function paintFromGraph(graph){
+ if(!graph?.nodes?.length&&!graph?.edges?.length)return null;
+ const rows=timedNodes(graph.nodes||[]);
+ const byId=new Map(rows.map(row=>[row.id,row]));
+ const markers=rows.map(row=>markerFrom({
+  ...row.n,
+  id:row.id,
+  time:row.time,
+  kind:row.n?.kind??row.n?.type??row.n?.role??(row.index===0?'buy':'hop'),
+  wallet:row.n?.wallet??row.n?.address,
+  label:row.n?.label??row.n?.kind??(row.index===0?'buy':'hop'),
+ },row.index)).filter(Boolean);
+ const bands=[];
+ const side=[];
+ const seenSide=new Set();
+ for(const [index,edge] of (graph.edges||[]).entries()){
+  const from=byId.get(text(edge?.from??edge?.source??edge?.a,80));
+  const to=byId.get(text(edge?.to??edge?.target??edge?.b,80));
+  const fromW=walletAddress(edge?.fromWallet??edge?.from??from?.n?.wallet??from?.n?.address);
+  const toW=walletAddress(edge?.toWallet??edge?.to??to?.n?.wallet??to?.n?.address);
+  const t0=timeMs(edge?.t0??edge?.time??edge?.timestamp)??from?.time??null;
+  const t1=timeMs(edge?.t1??edge?.timeEnd)??to?.time??t0;
+  const src=text(edge?.src??edge?.sourceChain,24)||null;
+  const dst=text(edge?.dst??edge?.destChain??edge?.chain,24)||null;
+  const bridge=edge?.kind==='bridge'||edge?.type==='bridge'||edge?.bridge===true||Boolean(src&&dst&&src!==dst);
+  if(t0!=null){
+   const band=bandFrom({
+    id:text(edge?.id,80)||`edge:${index}`,
+    t0,t1:t1??t0,from:fromW,to:toW,wallets:[fromW,toW].filter(Boolean),
+    src,dst,kind:bridge?'bridge':'hop',dotted:bridge,
+    label:edge?.label||(bridge&&src&&dst?`${src}→${dst}`:'Hop'),
+   },bands.length,markers);
+   if(band)bands.push(band);
+  }
+  if(!bridge||!dst)continue;
+  const chain=chainId(dst)||dst.toLowerCase();
+  if(seenSide.has(chain))continue;
+  seenSide.add(chain);
+  const column=columnFrom({id:`side:${chain}`,chain,label:text(edge?.label&&!edge.label.includes('→')?edge.label:dst,32)||chain,dotted:true,markers:toW&&t1?[{kind:'transfer',time:t1,wallet:toW,label:'transfer',chain}]:[]},side.length);
+  if(column)side.push(column);
+  if(!markers.some(m=>m.kind==='bridge'&&chainId(m.dst)===chain)&&t0!=null){
+   const chip=markerFrom({kind:'bridge',time:t0,label:src&&dst?`${src}→${dst}`:'bridge',src,dst,wallet:fromW},markers.length);
+   if(chip)markers.push(chip);
+  }
+ }
+ for(const [index,loop] of (graph.loops||[]).entries()){
+  const ids=Array.isArray(loop)?loop:loop?.nodes||loop?.wallets||[];
+  const wallets=ids.map(id=>walletAddress(byId.get(text(id,80))?.n?.wallet??byId.get(text(id,80))?.n?.address??id)).filter(Boolean);
+  const times=ids.map(id=>byId.get(text(id,80))?.time).filter(t=>Number.isFinite(t));
+  if(wallets.length<2||!times.length)continue;
+  const band=bandFrom({id:`loop:${index}`,t0:Math.min(...times),t1:Math.max(...times),wallets,label:text(loop?.label,64)||'Loop'},bands.length,markers);
+  if(band)bands.push(band);
+ }
+ if(!(graph.loops||[]).length){
+  const cycle=loopBand(graph.edges||[],rows);
+  if(cycle){
+   const band=bandFrom(cycle,bands.length,markers);
+   if(band)bands.push(band);
+  }
+ }
+ if(!markers.length)return null;
+ const wallets=[];
+ for(const marker of markers){if(marker.wallet&&!wallets.includes(marker.wallet))wallets.push(marker.wallet);}
+ return {
+  chartMarkers:markers.slice(0,400),
+  bands:bands.slice(0,80),
+  sideColumns:side.slice(0,12),
+  muse:{summary:graph.summary||'Hop loop on this chart.',beside:wallets[1]?{cta:'Follow next hop',wallet:wallets[1]}:null,replay:markers.length>=2,replayMs:900},
+ };
+}
+
 /** Accept a track payload, a resolve body, or `handoff.next.request`. Address lists are dropped. */
 export function parseTrackPaint(input){
  const raw=unwrap(input);
  if(!raw)return emptyPaint();
  const dumpOnly=raw.dumpTagsOnly===true||raw.mode==='dump';
- const markers=(Array.isArray(raw.chartMarkers)?raw.chartMarkers:Array.isArray(raw.markers)?raw.markers:[]).slice(0,400).map(markerFrom).filter(Boolean).filter(m=>!dumpOnly||m.kind==='dump');
- const bands=dumpOnly?[]:(Array.isArray(raw.bands)?raw.bands:[]).slice(0,80).map((b,i)=>bandFrom(b,i,markers)).filter(Boolean);
- const sideColumns=dumpOnly?[]:(Array.isArray(raw.sideColumns)?raw.sideColumns:Array.isArray(raw.side_columns)?raw.side_columns:[]).slice(0,12).map(columnFrom).filter(Boolean);
- const muse=museFrom(raw,raw.museSummary);
+ let markers=(Array.isArray(raw.chartMarkers)?raw.chartMarkers:Array.isArray(raw.markers)?raw.markers:[]).slice(0,400).map(markerFrom).filter(Boolean).filter(m=>!dumpOnly||m.kind==='dump');
+ let bands=dumpOnly?[]:(Array.isArray(raw.bands)?raw.bands:[]).slice(0,80).map((b,i)=>bandFrom(b,i,markers)).filter(Boolean);
+ let sideColumns=dumpOnly?[]:(Array.isArray(raw.sideColumns)?raw.sideColumns:Array.isArray(raw.side_columns)?raw.side_columns:[]).slice(0,12).map(columnFrom).filter(Boolean);
+ const mapped=paintFromGraph(graphSource(raw));
+ let museRaw=raw;
+ if(!markers.length&&mapped){
+  markers=mapped.chartMarkers.filter(m=>!dumpOnly||m.kind==='dump').slice(0,400);
+  bands=dumpOnly?[]:mapped.bands;
+  sideColumns=dumpOnly?[]:mapped.sideColumns;
+  if(raw.muse==null&&raw.replay==null)museRaw={...raw,muse:mapped.muse,museSummary:raw.museSummary||mapped.muse.summary};
+ }else if(markers.length&&mapped&&!dumpOnly){
+  if(!bands.length)bands=mapped.bands;
+  if(!sideColumns.length)sideColumns=mapped.sideColumns;
+ }
+ const muse=museFrom(museRaw,museRaw.museSummary);
  return {
   schema:TRACK_SCHEMA,
   track:raw.track!==false,

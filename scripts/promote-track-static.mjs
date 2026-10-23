@@ -134,6 +134,10 @@ export function patchAgent(source, shellName) {
     'A wallet question paints hops on one workspace chart. Dump and suspect stay dump tags.',
     'A wallet, its trail, and the market stay on one workspace chart. Dump and suspect stay dump tags.',
   );
+  next = next.replaceAll(
+    'A wallet, its trail, and the market stay on one workspace chart. Dump and suspect stay dump tags.',
+    'A wallet, its trail, and the market stay on one workspace chart. The hop loop paints on that chart. A question there updates the same incident. Dump and suspect stay dump tags.',
+  );
   next = next.replaceAll('<h1>Track it on the chart</h1>', '<h1>One workspace chart</h1>');
   const oldPlaceholder = `placeholder="Wallet, or where did the money go from 0x${ell}"`;
   const newPlaceholder = `placeholder="Wallet, SOL, or where did the money go from 0x${ell}"`;
@@ -638,7 +642,7 @@ let app = readFileSync(join(out, '_app', BASE.app), 'utf8');
 app = replaceOnce(app, BASE.workspace, workspaceName, 'app workspace ref');
 const appName = writeHashed('_app', 'app', Buffer.from(app));
 const shellText = shellBytes.toString('utf8');
-for (const needle of ['setTrackPaint', 'mountTrackWorkspace', 'mountMintWorkspace', 'classifyTrackIntent', 'data-track-form', 'dumpTagsOnly', 'columnForBridge', 'Math.min(480', 'Fast Feed is latency paint only', 'data-track-focus', 'Replay trail', 'Waiting for the first prints on this mint.']) {
+for (const needle of ['setTrackPaint', 'mountTrackWorkspace', 'mountMintWorkspace', 'classifyTrackIntent', 'data-track-form', 'data-track-ask', 'dumpTagsOnly', 'columnForBridge', 'Math.min(480', 'Fast Feed is latency paint only', 'Map the hop loop onto that chart', 'data-track-focus', 'Replay trail', 'Waiting for the first prints on this mint.', 'This question stays on this chart.', 'Hop loop on this chart.']) {
   if (!shellText.includes(needle)) throw new Error(`shell missing ${needle}`);
 }
 if (shellText.includes('whale-tracker')) throw new Error('shell still names whale-tracker');

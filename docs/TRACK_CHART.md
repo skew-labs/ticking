@@ -18,15 +18,17 @@ Preview fixture only: `#/console/workspace/wallet:0x…?sample=1`.
 
 Current build, also recorded in `terminal/track-build.json`:
 
-- `/terminal/dist/_app/track-paint-VQJCHSBE.js`
-- `/terminal/dist/_app/track-intent-SB33DB7C.js`
-- `/terminal/dist/_app/track-workspace-UZQHN6PH.js`
+- `/terminal/dist/_app/track-paint-L343VVQM.js`
+- `/terminal/dist/_app/track-intent-I5Z2SHJA.js`
+- `/terminal/dist/_app/track-workspace-ANCTEKJ2.js`
 
 ## Feel and guard
 
 The workspace chart is a trail silhouette on the time axis: buys lift it, sells and dumps pull it down, and every bar stays synthetic with volume 0. It is the shape of the incident, not a market print. Nearby labels take separate lanes and carry a clock from the first marker (`+0m`, `+9m`). Hop bands are a light wash with a ribbon and a duration. Dump and whale tags are larger orange buttons. A dump on this wallet focuses that moment. A whale tag on another wallet adds that wallet's chart in the same case. A wallet chip does the same. A bridge chip or the side column opens the destination chain chart beside it (`eth` resolves to `ethereum`; the column reads “Open ETH beside”). Replay walks at most 8 steps, default 900ms, and the caption names the step (`Trail 4 of 8 · dump`) without printing a full address. Markers already passed stay put, the current one is marked, and later ones fade until the cursor reaches them. `#/tracker` is a one-row wallet form (`data-track-form`) and does not mount Flow.
 
 `terminal/src/track-intent.js` classifies the query before resolve. Wallet activity, a transaction trail, and a market chart are one incident: track and dump call resolve and paint on the workspace chart; `SOL`, `ARB`, and `PUMP` open that workspace chart directly. Dump and suspect stay dump tags. Fast Feed with no wallet stays off the track resolve. A bare `map` or `flow` opens `#/console/workspace/auto`, not a map page and not investigate. Solana, Arbitrum, and Robinhood Chain are the chain hints on a wallet route. An empty live resolve does not replace a handoff that already has markers. Search responses with `searchGuard` `+track` and `route` `#/console/workspace/wallet:…` are stored and opened as that workspace.
+
+A hop graph is the same workspace chart. When resolve returns `graph` (nodes, edges, or a loop) and no `chartMarkers`, the browser maps that loop onto `ticking.chartMarkers.track.v1`: hop chips, a loop band, bridge chips, and a side column. Replay walks the mapped trail. Markers that already arrived stay as they are. An empty graph adds nothing. The chart asks from inside the incident (`data-track-ask`). The question resolves with `stay: true` and `graph: "loop"`, then paints the answer on that same chart. A zero-marker answer leaves the paint in place and reads “This question stays on this chart.” A mint question asked there stays on the mint chart.
 
 A mint is the same workspace chart. `minted PEPE`, `new token on robinhood`, `robinhood launchpad`, and a bare Solana mint classify as `mint` and resolve with `track: true`. The route is `#/console/workspace/mint:…` when the query has a mint address, `#/console/workspace/SYMBOL?launch=1` when it names a ticker, and `#/console/workspace/launch?q=…` for the phrase. A Solana mint loads price from `GET /api/public/engine/candles`. Dump and whale tags, hop chips, and side charts paint only when resolve returns markers. A zero-marker resolve does not invent tags, and an Arbitrum or Robinhood mint does not invent candles. `?sample=1` on a mint route paints the mint fixture (`Sample mint on this workspace chart.`). The developers mint form opens that chart instead of waiting on a text preview. Bare `SOL` stays a market route. Bare `RH` stays unclassified. A bare `0x` wallet stays a wallet trail.
 

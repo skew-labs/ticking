@@ -3,8 +3,11 @@ export default `.track-workspace,.track-retired{max-width:1180px;margin:0 auto;p
 .track-kicker{margin:0 0 4px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#7564c3}
 .track-workspace h1,.track-retired h1{margin:0;font:500 28px/1.1 "Space Grotesk",sans-serif}
 .track-workspace-bar p[role=status]{margin:0;max-width:520px;color:#5c6578;font-size:13px}
+.track-ask{display:flex;gap:8px;align-items:flex-end;flex:1 1 320px;margin:0 0 14px}
+.track-ask label{display:grid;gap:4px;flex:1;font-size:12px;color:#5c6578}
+.track-ask input{border:1px solid #d9deea;border-radius:8px;padding:8px 10px;min-width:0;width:100%;font:inherit;background:#fff}
 .track-caption{margin:6px 0 0;min-height:1.2em;color:#1c2230;font-size:12px;font-weight:600}
-.track-workspace-bar button,.track-retired button,.track-side button{border:1px solid #d9deea;background:#fff;border-radius:8px;padding:8px 12px;cursor:pointer;font:inherit}
+.track-workspace-bar button,.track-retired button,.track-side button,.track-ask button{border:1px solid #d9deea;background:#fff;border-radius:8px;padding:8px 12px;cursor:pointer;font:inherit}
 .track-layout{display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
 .track-layout:has(.track-side:not([hidden])){grid-template-columns:minmax(0,1fr) 200px}
 .track-charts{display:grid;gap:12px}
