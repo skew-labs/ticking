@@ -22,6 +22,8 @@ for (const text of [search, lazy]) {
   assert.equal(text.includes('location.hash="#/investigate/"+e.toLowerCase()'), false);
   assert.equal(text.includes('Paint this wallet on the workspace chart'), true);
   assert.equal(text.includes('#/console/workspace/"+encodeURIComponent("wallet:"+e.toLowerCase())'), true);
+  assert.equal(text.includes('encodeURIComponent("mint:"+'), true);
+  assert.equal(text.includes('#/console/workspace/launch?q='), true);
   assert.equal(text.includes('route:"#/investigate/'), false);
 }
 assert.equal(lazy.includes('#/console/workspace/"+encodeURIComponent(e.id)'), true);
@@ -34,14 +36,16 @@ assert.equal(home.includes('Whale Tracker'), false);
 assert.equal(home.includes('requestIdleCallback'), true);
 assert.equal(home.includes('rootMargin:"150px"'), false);
 assert.equal(home.includes('#/investigate/'), false);
-assert.equal(home.includes('Wallet, trail, or market \\xB7 one workspace chart'), true);
+assert.equal(home.includes('Wallet, trail, or a new mint \\xB7 one workspace chart'), true);
+assert.equal(home.includes('a new mint open on one workspace chart'), true);
 assert.equal(home.includes('Opening one workspace\\u2026'), true);
 
 const html = patchHomeHtml(readFileSync(live.html, 'utf8'));
 assert.equal(html.includes('<h1 id="flow-title">Onchain research</h1>'), true);
 assert.equal(html.includes('Whale Tracker'), false);
-assert.equal(html.includes('Wallet, trail, or market · one workspace chart'), true);
-assert.equal(html.includes('placeholder="Wallet, trail, or market"'), true);
+assert.equal(html.includes('Wallet, trail, or a new mint · one workspace chart'), true);
+assert.equal(html.includes('placeholder="Wallet, new mint, or market"'), true);
+assert.equal(html.includes('a new mint open on one workspace chart'), true);
 
 const route = patchRouteChunk(readFileSync(live.route, 'utf8'));
 assert.equal(route.includes('#/investigate/'), false);
@@ -55,6 +59,9 @@ assert.equal(agent.includes('intent.mode==="market"'), true);
 assert.equal(agent.includes('intent.mode!=="other"'), false);
 assert.equal(agent.includes('<h1>One workspace chart</h1>'), true);
 assert.equal(agent.includes('A wallet, its trail, and the market stay on one workspace chart.'), true);
+assert.equal(agent.includes('intent.mode==="mint"'), true);
+assert.equal(agent.includes('mountMintWorkspace'), true);
+assert.equal(agent.includes('Opening the mint chart'), true);
 writeFileSync('/tmp/research/agent-patched.mjs', agent);
 writeFileSync('/tmp/research/search-patched.mjs', search);
 writeFileSync('/tmp/research/lazy-patched.mjs', lazy);
@@ -72,4 +79,7 @@ assert.equal(promote.includes('market gate'), true);
 assert.equal(promote.includes('track-shell-LI33TFB4.js'), true);
 assert.equal(promote.includes('console tracker label missing'), true);
 assert.equal(promote.includes('chart trail silhouette'), true);
+assert.equal(promote.includes('mountMintWorkspace'), true);
+assert.equal(promote.includes('Opening the mint chart'), true);
+assert.equal(promote.includes('patchMintStudio'), true);
 console.log(JSON.stringify({passed: true, root: root.pathname}));

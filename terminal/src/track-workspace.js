@@ -1,6 +1,6 @@
 import {TickChart} from './chart.js';
-import {parseTrackPaint,seriesFromPaint,panesForWallet,shortWallet,walletAddress,sampleTrackPaint,columnForBridge,museLine} from './track-paint.js';
-import {classifyTrackIntent,guardedResolveBody,trackResolveBody} from './track-intent.js';
+import {parseTrackPaint,seriesFromPaint,panesForWallet,shortWallet,walletAddress,sampleTrackPaint,sampleMintPaint,columnForBridge,museLine} from './track-paint.js';
+import {classifyTrackIntent,guardedResolveBody,mintAddress,trackResolveBody} from './track-intent.js';
 import trackCss from './track-style.js';
 
 export const HANDOFF_KEY='ticking.track.handoff.v1';
@@ -16,7 +16,11 @@ export function parseWorkspaceHash(hash=typeof location==='undefined'?'':locatio
  const params=new URLSearchParams(query);
  const wallet=ident.startsWith('wallet:')?walletAddress(ident.slice(7)):walletAddress(params.get('wallet'));
  const chain=CHAIN.test(params.get('chain')||'')?params.get('chain'):null;
- return {ident,wallet,chain,sample:params.get('sample')==='1',incident:wallet?`wallet:${wallet}`:ident};
+ const mint=mintAddress(ident.startsWith('mint:')?ident.slice(5):params.get('mint'));
+ const launch=ident==='launch'||params.get('launch')==='1';
+ const symbol=launch&&!mint&&ident!=='launch'&&/^[A-Za-z][A-Za-z0-9]{1,12}$/.test(ident)?ident.toUpperCase():null;
+ const incident=wallet?`wallet:${wallet}`:mint?`mint:${mint}`:symbol?`mint:${symbol}`:ident;
+ return {ident,wallet,chain,mint,launch,symbol,query:params.get('q')||'',sample:params.get('sample')==='1',incident};
 }
 export function trackerRedirect(hash){
  const raw=String(hash||'').replace(/^#/,'');
@@ -58,11 +62,63 @@ export async function loadTrackPaint({wallet,chain,handoff,sample,fetchImpl=fetc
  const paint=richer(live,stored?.track?stored:null)||parseTrackPaint(null);
  return {paint,source:live?.chartMarkers?.length?'resolve':stored?.chartMarkers?.length?'handoff':'resolve',error};
 }
+export function candlesFromEngine(body){
+ const rows=Array.isArray(body?.candles)?body.candles:[];
+ const series=[];
+ for(const row of rows){
+  let time=Number(row?.time);
+  const open=Number(row?.open),high=Number(row?.high),low=Number(row?.low),close=Number(row?.close);
+  if(!Number.isFinite(time)||!Number.isFinite(open)||!Number.isFinite(high)||!Number.isFinite(low)||!Number.isFinite(close))continue;
+  if(!(open>0&&high>0&&low>0&&close>0))continue;
+  if(time>0&&time<1e12)time*=1000;
+  const volume=Number(row?.volume);
+  series.push({time,open,high,low,close,volume:Number.isFinite(volume)?volume:0});
+ }
+ return series;
+}
+export function mintCandleUrl(mint){
+ return `/api/public/engine/candles?aggregation=token&mint=${encodeURIComponent(mint)}&interval=1m&history=full&gap_policy=carry&limit=240`;
+}
+function mentionsMint(paint,needle){
+ if(!needle||!paint)return false;
+ return JSON.stringify(paint).toLowerCase().includes(String(needle).toLowerCase());
+}
+export async function loadMintCandles(mint,{fetchImpl=fetch,signal}={}){
+ if(!mint||!/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(mint))return [];
+ try{
+  const r=await fetchImpl(mintCandleUrl(mint),{headers:{accept:'application/json'},signal});
+  if(!r.ok)return [];
+  return candlesFromEngine(await r.json());
+ }catch(e){if(e?.name==='AbortError')throw e;return [];}
+}
+export async function loadMintPaint({mint,chain,symbol,query,sample,handoff,fetchImpl=fetch,signal}={}){
+ if(sample)return {paint:sampleMintPaint(mint),source:'sample'};
+ const spoken=String(query||(mint?`minted ${mint}${chain?` on ${chain}`:''}`:symbol?`minted ${symbol}${chain?` on ${chain}`:''}`:'new token')).trim();
+ let live=null,error='';
+ try{
+  const r=await fetchImpl('/api/public/intelligence/resolve',{method:'POST',headers:{'content-type':'application/json',accept:'application/json'},body:JSON.stringify(trackResolveBody({query:spoken})),signal});
+  if(!r.ok)throw Error('Mint resolve failed ('+r.status+').');
+  const body=await r.json();
+  live=parseTrackPaint(body);
+  if((live?.chartMarkers?.length||0)>0)storeHandoff(body);
+ }catch(e){if(e?.name==='AbortError')throw e;error=e.message||'Mint resolve unavailable.';}
+ const stored=parseTrackPaint(handoff??null);
+ const needle=mint||symbol||'';
+ const relevant=mentionsMint(stored,needle)?stored:null;
+ const paint=richer(live,relevant?.track?relevant:null)||parseTrackPaint(null);
+ return {paint,source:paint.chartMarkers?.length?(live?.chartMarkers?.length?'resolve':'handoff'):'resolve',error};
+}
 export function trackRouteFromResolve(body){
  if(!body||typeof body!=='object')return null;
  const route=typeof body.route==='string'?body.route:'';
  const request=body.handoff?.next?.request;
- const guard=typeof body.searchGuard==='string'?body.searchGuard:body.guard?.mode;
+ const guardMode=body.guard?.mode;
+ if(body.mode==='mint'||guardMode==='mint'){
+  const mintRoute=route.includes('/console/workspace/')&&(route.includes('mint%3A')||route.includes('mint:')||route.includes('/launch')||route.includes('launch=1'));
+  if(!mintRoute)return null;
+  return route.startsWith('#')?route:`#${route}`;
+ }
+ const guard=typeof body.searchGuard==='string'?body.searchGuard:guardMode;
  const track=request?.track===true||body.mode==='track'||body.mode==='dump'||(typeof guard==='string'&&(guard.includes('track')||guard==='dump'));
  if(!track&&!route.includes('/console/workspace/wallet:'))return null;
  if(route.includes('/console/workspace/wallet:'))return route.startsWith('#')?route:`#${route}`;
@@ -79,11 +135,20 @@ export function acceptTrackHandoff(body){
 }
 export async function resolveTrackQuery(query,{signal,fetchImpl=fetch}={}){
  const intent=classifyTrackIntent(query);
- if(intent.mode!=='track'&&intent.mode!=='dump')return null;
+ if(intent.mode!=='track'&&intent.mode!=='dump'&&intent.mode!=='mint')return null;
  const r=await fetchImpl('/api/public/intelligence/resolve',{method:'POST',headers:{'content-type':'application/json',accept:'application/json'},body:JSON.stringify(trackResolveBody({query})),signal});
  if(!r.ok)throw Error('Track resolve failed ('+r.status+').');
  const body=await r.json();
- acceptTrackHandoff(body);
+ const route=acceptTrackHandoff(body);
+ if(!route&&intent.mode==='mint'){
+  const paint=parseTrackPaint(body);
+  if((paint.chartMarkers?.length||0)>0){
+   const prior=parseTrackPaint(readStoredHandoff());
+   const needle=intent.mint||intent.symbol||'';
+   const priorOk=!needle||mentionsMint(prior,needle);
+   if(paint.chartMarkers.length>=(priorOk?(prior?.chartMarkers?.length||0):0))storeHandoff(body);
+  }
+ }
  return body;
 }
 export function installTrackGuard(){
@@ -254,3 +319,119 @@ export function mountTrackWorkspace(root,{incident,wallet,chain,sample}={}){
  return ()=>{disposed=true;abort.abort();for(const c of charts)c.destroy();};
 }
 mountTrackWorkspace.seq=0;
+
+function shortMint(value){
+ const text=String(value||'');
+ if(!text)return '';
+ if(text.length<=12)return text;
+ return `${text.slice(0,4)}…${text.slice(-4)}`;
+}
+function fitMint(chart){
+ const n=chart?.series?.length||chart?.options?.series?.length||0;
+ if(n>8){chart.count=Math.min(480,n+8);chart.offset=0;}
+}
+export function mountMintWorkspace(root,{ident,mint,chain,query,sample,symbol}={}){
+ ensureTrackStyle();
+ const abort=new AbortController();
+ let disposed=false;
+ const charts=[];
+ const opened=new Set();
+ let primaryWallet=null;
+ const subject=mint||symbol||ident||'Mint';
+ const incident=mint?`mint:${mint}`:symbol?`mint:${symbol}`:'mint:launch';
+ root.innerHTML=`<section class="track-workspace" data-mint-chart data-incident="${esc(incident)}"><header class="track-workspace-bar"><div><p class="track-kicker">Mint chart</p><h1 data-track-title>${esc(shortMint(subject)||'Mint')}</h1><p data-track-caption class="track-caption"></p></div><p data-track-summary role="status">Opening the mint chart…</p><button type="button" data-track-replay hidden>Replay trail</button></header><div class="track-layout"><div class="track-charts" data-track-charts></div><aside class="track-side" data-track-side hidden><h2>Beside this chart</h2><div data-track-columns></div></aside></div></section>`;
+ const summary=root.querySelector('[data-track-summary]');
+ const caption=root.querySelector('[data-track-caption]');
+ const chartsEl=root.querySelector('[data-track-charts]');
+ const side=root.querySelector('[data-track-side]');
+ const columnsEl=root.querySelector('[data-track-columns]');
+ const replayBtn=root.querySelector('[data-track-replay]');
+ function addPane({title,subtitle,paint,series,wallet:paneWallet,role,emptyMessage}){
+  const key=`${role}:${paneWallet||''}:${title}`;
+  if(opened.has(key))return charts.find(c=>c.__mintKey===key)||null;
+  opened.add(key);
+  const card=document.createElement('article');
+  card.className='track-pane track-pane-enter';
+  card.dataset.trackPane=role;
+  card.innerHTML=`<header><b>${esc(title)}</b><small>${esc(subtitle||'')}</small></header><div class="track-chart-host"></div>`;
+  chartsEl.append(card);
+  if(role!=='primary')card.scrollIntoView({block:'nearest',inline:'nearest'});
+  const host=card.querySelector('.track-chart-host');
+  const chart=new TickChart(host,{symbol:title,market:incident},{interval:'1m',editable:false,volume:false,series:series||[],emptyMessage:emptyMessage||'Waiting for the first prints on this mint.',storageScope:'mint'});
+  chart.__mintKey=key;
+  chart.setTrackPaint(paint||{chartMarkers:[],bands:[],sideColumns:[]},{onWallet:openWallet,onBridge:openBridge,onFocus:focusMove,onStep:noteStep});
+  charts.push(chart);
+  if(charts.length>1)chartsEl.classList.add('is-multi');
+  return chart;
+ }
+ function openWallet(chip){
+  const address=walletAddress(chip?.address);
+  const paint=chip?.paint||charts[0]?.trackLayer?.paint;
+  if(!address||!paint||disposed||!shouldOpenWallet(primaryWallet,chip))return;
+  const panes=panesForWallet(paint,address,chip.symbol);
+  const specs=panes.length?panes:[{title:shortWallet(address),markers:[]}];
+  for(const spec of specs)addPane({role:'wallet',wallet:address,title:spec.title,subtitle:'Same case · wallet chart',series:seriesFromPaint({...paint,chartMarkers:spec.markers}),paint:{...paint,chartMarkers:spec.markers,bands:[],sideColumns:[],muse:{summary:museLine(paint.muse?.summary),beside:null,replay:false,replayMs:900}}});
+ }
+ function noteStep(step){
+  const raw=String(step?.label||'');
+  const safe=walletAddress(raw)?shortWallet(raw):museLine(raw);
+  const n=(Number(step?.index)||0)+1;
+  const total=Number(step?.total)||n;
+  caption.textContent=`Trail ${n} of ${total}${safe?` · ${safe}`:''}`;
+ }
+ function focusMove(focus){
+  const layer=charts[0]?.trackLayer;
+  if(!layer||disposed)return;
+  const time=Number(focus?.time);
+  if(Number.isFinite(time)){layer.cursor=time;charts[0].requestDraw?.();}
+  const raw=String(focus?.label||'');
+  const safe=walletAddress(raw)?shortWallet(raw):museLine(raw);
+  if(safe)caption.textContent=safe;
+  const address=walletAddress(focus?.wallet);
+  if(!address||address===walletAddress(primaryWallet))return;
+  openWallet({address,kind:focus?.kind||'tag',symbol:null,paint:layer.paint});
+ }
+ function openBridge(bridge){
+  const paint=charts[0]?.trackLayer?.paint;
+  const column=columnForBridge(paint,bridge);
+  if(column)openColumn(column);
+ }
+ function openColumn(column){
+  if(!column?.chain||disposed)return;
+  addPane({role:'chain',title:`${column.label||column.chain} chart`,subtitle:'Same case · chain chart',paint:{schema:'ticking.chartMarkers.track.v1',track:true,listAddresses:false,chartMarkers:column.markers||[],bands:[],sideColumns:[],muse:{summary:'',beside:null,replay:false,replayMs:900}}});
+ }
+ function showSide(paint){
+  const cols=paint.sideColumns||[];
+  side.hidden=!cols.length;
+  columnsEl.innerHTML=cols.map(c=>`<button type="button" data-track-column="${esc(c.id)}">Open ${esc(c.label||c.chain)} beside<small>Same case</small></button>`).join('');
+ }
+ const chart=addPane({role:'primary',title:shortMint(symbol||mint)||'Mint',subtitle:sample?'Sample mint · trail shape, not a market print':'Mint price',emptyMessage:'Waiting for the first prints on this mint.'});
+ replayBtn.addEventListener('click',()=>charts[0]?.trackLayer?.play(),{signal:abort.signal});
+ columnsEl.addEventListener('click',e=>{const b=e.target.closest('[data-track-column]');if(!b)return;const paint=charts[0]?.trackLayer?.paint;openColumn((paint?.sideColumns||[]).find(c=>c.id===b.dataset.trackColumn));},{signal:abort.signal});
+ const run=++mountMintWorkspace.seq;
+ (async()=>{
+  try{
+   const [{paint,error},candles]=await Promise.all([
+    loadMintPaint({mint,chain,symbol,query,sample,signal:abort.signal}),
+    sample?Promise.resolve([]):loadMintCandles(mint,{signal:abort.signal}),
+   ]);
+   if(disposed||run!==mountMintWorkspace.seq||!chart)return;
+   const markers=paint.chartMarkers?.length||0;
+   const price=candles.length?candles:(markers?seriesFromPaint(paint):[]);
+   if(price.length)chart.setSeries(price,{preserve:false});
+   chart.setTrackPaint(paint,{onWallet:openWallet,onBridge:openBridge,onFocus:focusMove,onStep:noteStep});
+   fitMint(chart);
+   primaryWallet=walletAddress(paint.chartMarkers?.find(m=>m.wallet)?.wallet);
+   const muse=museLine(paint.muse?.summary);
+   summary.textContent=sample?'Sample mint on this workspace chart.':error&&!markers&&!candles.length?error:muse||(markers?`${markers} marks on this mint chart.`:(candles.length?'Mint price on this chart.':'Waiting for the first prints on this mint.'));
+   const card=chart.container?.closest?.('[data-track-pane]')||root.querySelector('[data-track-pane]');
+   const sub=card?.querySelector('small');
+   if(sub)sub.textContent=sample?'Sample mint · trail shape, not a market print':candles.length?'Mint price':markers?'Trail shape on this mint chart.':'Mint price';
+   replayBtn.hidden=!paint.muse?.replay;
+   showSide(paint);
+   if(paint.muse?.replay)charts[0]?.trackLayer?.play();
+  }catch(e){if(!disposed&&e?.name!=='AbortError')summary.textContent=e.message||'Mint chart unavailable.';}
+ })();
+ return ()=>{disposed=true;abort.abort();for(const c of charts)c.destroy();};
+}
+mountMintWorkspace.seq=0;

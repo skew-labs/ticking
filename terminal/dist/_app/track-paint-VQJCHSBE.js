@@ -460,3 +460,23 @@ export function sampleTrackPaint(seed='0x278d858f05b94576c1e6f73285886876ff6ef8d
   muse:{summary:'Sample paint for the workspace chart.',beside:{cta:'Follow next hop',wallet:hop},replay:true,replayMs:900},
  });
 }
+
+/** Preview fixture for a freshly minted token. Live mints use engine candles plus resolve markers. */
+export function sampleMintPaint(seed='0x278d858f05b94576c1e6f73285886876ff6ef8d2'){
+ const wallet=walletAddress(seed)||'0x278d858f05b94576c1e6f73285886876ff6ef8d2';
+ const hop='0x51c72848c68a965f66fa7a88855f9f7784502a7f';
+ const t=Math.floor(Date.now()/60_000)*60_000-12*60_000;
+ return parseTrackPaint({
+  schema:TRACK_SCHEMA,track:true,listAddresses:false,
+  museSummary:'Sample mint on this workspace chart.',
+  chartMarkers:[
+   {id:'buy',kind:'buy',time:t,wallet,label:'buy',symbol:'PEPE',chain:'solana'},
+   {id:'hop',kind:'hop',time:t+4*60_000,wallet:hop,label:shortWallet(hop),chain:'solana'},
+   {id:'dump',kind:'dump',time:t+8*60_000,wallet,label:'dump',symbol:'PEPE',chain:'solana'},
+   {id:'whale',kind:'tag',time:t+10*60_000,wallet:hop,label:'whale',symbol:'PEPE',chain:'solana'},
+  ],
+  bands:[{id:'hop-band',t0:t,t1:t+8*60_000,wallets:[wallet,hop],label:'A→B'}],
+  sideColumns:[],
+  muse:{summary:'Sample mint on this workspace chart.',beside:{cta:'Follow next hop',wallet:hop},replay:true,replayMs:900},
+ });
+}

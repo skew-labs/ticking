@@ -41,6 +41,26 @@ function replaceOnce(source, from, to, label) {
   return source.replace(from, to);
 }
 
+function mintSearchGo() {
+  return 'if(/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(String(e).trim())){const box=document.querySelector("[data-tkx-ta]");if(box)box.hidden=true;location.hash="#/console/workspace/"+encodeURIComponent("mint:"+String(e).trim())+"?chain=solana";return}'
+    + 'if(/minted|minting|\\bmints?\\b|new\\s+(?:token|mint|coin|pair)|\\blaunchpad\\b|\\blaunch(?:ed|ing)?\\b|just\\s+listed|민트|신규\\s*(?:토큰|민트)|런치(?:패드)?/i.test(e)){const box=document.querySelector("[data-tkx-ta]");if(box)box.hidden=true;const raw=String(e);const evm=(raw.match(/0x[a-fA-F0-9]{40}/)||[])[0];const sol=evm?"":((raw.match(/[1-9A-HJ-NP-Za-km-z]{32,44}/)||[])[0]||"");const chain=/robinhood|\\brh\\b/i.test(raw)?"robinhood":/arbitrum|\\barb\\b/i.test(raw)?"arbitrum":(/solana|\\bsol\\b/i.test(raw)||sol)?"solana":"";const addr=sol||(evm?evm.toLowerCase():"");if(addr){location.hash="#/console/workspace/"+encodeURIComponent("mint:"+addr)+(chain?"?chain="+encodeURIComponent(chain):"");return}const sym=(raw.match(/\\b(?:mint(?:ed|ing)?|new|launch(?:ed|ing)?|launchpad|listed)\\s+(?:token\\s+|a\\s+|the\\s+)?([A-Za-z][A-Za-z0-9]{1,12})\\b/i)||[])[1];if(sym&&!/^(?:on|the|a|an|token|mint|coin|pair|pad|robinhood|solana|arbitrum|chain|chart)$/i.test(sym)){location.hash="#/console/workspace/"+encodeURIComponent(sym.toUpperCase())+"?launch=1"+(chain?"&chain="+encodeURIComponent(chain):"");return}location.hash="#/console/workspace/launch?q="+encodeURIComponent(raw.trim())+(chain?"&chain="+encodeURIComponent(chain):"");return}';
+}
+
+function injectMintSearch(source) {
+  if (source.includes('encodeURIComponent("mint:"+')) return source;
+  let next = source;
+  let applied = 0;
+  for (const fn of ['m', 'h']) {
+    const from = `if(${fn}(e)){const box=document.querySelector("[data-tkx-ta]")`;
+    if (!next.includes(from)) continue;
+    next = next.replaceAll(from, mintSearchGo() + from);
+    applied += 1;
+  }
+  if (!applied) throw new Error('search mint injection point missing');
+  if (!next.includes('encodeURIComponent("mint:"+')) throw new Error('search mint route missing');
+  return next;
+}
+
 function researchGo(fn) {
   return `if(${fn}(e)){const box=document.querySelector("[data-tkx-ta]");if(box)box.hidden=true;location.hash="#/console/workspace/"+encodeURIComponent("wallet:"+e.toLowerCase());return}`
     + `if(/^[a-z][a-z0-9]{1,15}:0x[0-9a-f]{40}$/i.test(e)){const box=document.querySelector("[data-tkx-ta]");if(box)box.hidden=true;location.hash="#/console/workspace/"+encodeURIComponent(e);return}`
@@ -121,11 +141,31 @@ export function patchAgent(source, shellName) {
   if (!next.includes('<h1>One workspace chart</h1>')) throw new Error('agent heading missing');
   if (!next.includes('intent.mode==="market"')) throw new Error('market gate missing');
   if (next.includes('intent.mode!=="other"')) throw new Error('agent kept the broad mode gate');
+  if (!next.includes('mountMintWorkspace')) {
+    if (!next.includes('import{mountTrackWorkspace,')) throw new Error('agent track import missing');
+    next = next.replace('import{mountTrackWorkspace,', 'import{mountTrackWorkspace,mountMintWorkspace,');
+  }
+  if (!next.includes('mountMintWorkspace(r,')) {
+    const walletIf = 'if(e?.(),n=t,String(t.ident).startsWith("wallet:")';
+    if (!next.includes(walletIf)) throw new Error('agent wallet branch missing');
+    const mintIf = 'if(e?.(),n=t,String(t.ident).startsWith("mint:")||t.ident==="launch"||new URLSearchParams(String(c).split("?")[1]||"").get("launch")==="1"){const params=new URLSearchParams(String(c).split("?")[1]||"");const mint=String(t.ident).startsWith("mint:")?t.ident.slice(5):params.get("mint")||"";e=mountMintWorkspace(r,{ident:t.ident,mint,chain:t.chain,query:params.get("q")||"",sample:params.get("sample")==="1",symbol:String(t.ident).startsWith("mint:")||t.ident==="launch"?"":t.ident});document.title=(mint?mint.slice(0,4)+"…":t.ident)+" · Mint chart — ticking";return}if(String(t.ident).startsWith("wallet:")';
+    next = next.replace(walletIf, mintIf);
+  }
+  if (!next.includes('intent.mode==="mint"')) {
+    const marketGate = 'if(intent.mode==="market"&&intent.route){location.hash=intent.route;return}';
+    if (!next.includes(marketGate)) throw new Error('agent market gate missing for mint');
+    const mintSubmit = `if(intent.mode==="mint"){c.textContent="Opening the mint chart${ell}";const y=await resolveTrackQuery(l.value,{signal:e.signal});if(e.signal.aborted)return;const route=acceptTrackHandoff(y)||intent.route;if(route)location.hash=route;return}${marketGate}`;
+    next = next.replace(marketGate, mintSubmit);
+  }
+  if (!next.includes('mountMintWorkspace') || !next.includes('intent.mode==="mint"') || !next.includes('Opening the mint chart')) {
+    throw new Error('agent mint chart missing');
+  }
   return next;
 }
 
 export function patchExplorerSearch(source) {
-  if (source.includes('Paint this wallet on the workspace chart') && source.includes('"#/console/workspace/"+encodeURIComponent("wallet:"+e.toLowerCase())')) return source;
+  const walletReady = source.includes('Paint this wallet on the workspace chart') && source.includes('"#/console/workspace/"+encodeURIComponent("wallet:"+e.toLowerCase())');
+  if (walletReady) return injectMintSearch(source);
   let next = source;
   const pairs = [
     [
@@ -170,6 +210,25 @@ export function patchExplorerSearch(source) {
   if (next.includes('location.hash="#/investigate/"+e.toLowerCase()')) throw new Error('search still opens investigate for a wallet');
   if (next.includes('Open this address on every mapped chain')) throw new Error('search subtitle still says mapped chain');
   if (!next.includes('Paint this wallet on the workspace chart')) throw new Error('search wallet route missing');
+  return injectMintSearch(next);
+}
+
+export function patchMintStudio(source) {
+  let next = source;
+  const submitFrom = 'a.addEventListener("submit",async l=>{l.preventDefault();let w=d.value.trim();if(d.value=w,!/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(w)){R("Enter the exact Solana token mint address."),d.focus();return}';
+  const submitTo = 'a.addEventListener("submit",async l=>{l.preventDefault();let w=d.value.trim();d.value=w;const evm=/^0x[a-fA-F0-9]{40}$/.test(w),sol=/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(w);if(!evm&&!sol){R("Enter a Solana mint or a 0x token address."),d.focus();return}location.hash="#/console/workspace/"+encodeURIComponent("mint:"+(evm?w.toLowerCase():w))+(sol?"?chain=solana":"");return;';
+  if (!next.includes('encodeURIComponent("mint:"+(evm?w.toLowerCase():w))')) {
+    if (!next.includes(submitFrom)) throw new Error('mint studio submit missing');
+    next = next.replace(submitFrom, submitTo);
+  }
+  next = next.replaceAll('<h3>From mint to market.</h3>', '<h3>The mint opens on the chart.</h3>');
+  next = next.replaceAll(
+    '<p>Paste a Solana token address. See the actual retained data, then bring the same chart into your product.</p>',
+    '<p>A new mint opens on the workspace chart. Solana, Arbitrum, and Robinhood Chain come first.</p>',
+  );
+  if (!next.includes('The mint opens on the chart.')) throw new Error('mint studio heading missing');
+  if (!next.includes('encodeURIComponent("mint:"+(evm?w.toLowerCase():w))')) throw new Error('mint studio route missing');
+  if (!next.includes('Make this chart yours')) throw new Error('mint studio collection link missing');
   return next;
 }
 
@@ -177,7 +236,11 @@ function patchResearchCopy(source) {
   const pairs = [
     [
       '<h1 id="flow-title">Onchain Explorer</h1><p>Map wallets across chains. Track token ownership, protocols, and transactions over time.</p>',
+      '<h1 id="flow-title">Onchain research</h1><p>Wallet activity, transaction trails, and a new mint open on one workspace chart.</p>',
+    ],
+    [
       '<h1 id="flow-title">Onchain research</h1><p>Wallet activity, transaction trails, and market charts in one workspace.</p>',
+      '<h1 id="flow-title">Onchain research</h1><p>Wallet activity, transaction trails, and a new mint open on one workspace chart.</p>',
     ],
     ['Nine-chain Whale Tracker', 'Workspace chart'],
     ['<b>Whale Tracker</b>', '<b>Workspace chart</b>'],
@@ -185,7 +248,8 @@ function patchResearchCopy(source) {
     ['>Whale Tracker<', '>Workspace chart<'],
     ['Follow large purchases and transfers', 'Paint a wallet trail on one chart'],
     ['placeholder="Search by wallet address, token, protocol, or transaction"', 'placeholder="Wallet, trail, or market"'],
-    ['placeholder="Search wallet, token, protocol or tx"', 'placeholder="Wallet, trail, or market"'],
+    ['placeholder="Search wallet, token, protocol or tx"', 'placeholder="Wallet, new mint, or market"'],
+    ['placeholder="Wallet, trail, or market"', 'placeholder="Wallet, new mint, or market"'],
     ['aria-label="Search wallets, tokens, protocols and transactions"', 'aria-label="Search a wallet, trail, or market"'],
   ];
   let next = source;
@@ -199,10 +263,12 @@ function patchResearchCopy(source) {
 }
 
 export function patchHomeChunk(source) {
-  let next = source.includes('<h1 id="flow-title">Onchain research</h1>') ? source : patchResearchCopy(source);
+  let next = source.includes('a new mint open on one workspace chart') ? source : patchResearchCopy(source);
   const helpFrom = 'Multichain search \\xB7 Token history \\xB7 Ask Ticking';
-  const helpTo = 'Wallet, trail, or market \\xB7 one workspace chart';
+  const helpMid = 'Wallet, trail, or market \\xB7 one workspace chart';
+  const helpTo = 'Wallet, trail, or a new mint \\xB7 one workspace chart';
   if (next.includes(helpFrom)) next = next.replaceAll(helpFrom, helpTo);
+  else if (next.includes(helpMid)) next = next.replaceAll(helpMid, helpTo);
   else if (!next.includes(helpTo)) throw new Error('home search help missing');
   const statusFrom = 'Finding matching wallets, tokens and protocols\\u2026';
   const statusTo = 'Opening one workspace\\u2026';
@@ -216,10 +282,12 @@ export function patchHomeChunk(source) {
 }
 
 export function patchHomeHtml(source) {
-  let next = source.includes('<h1 id="flow-title">Onchain research</h1>') ? source : patchResearchCopy(source);
+  let next = source.includes('a new mint open on one workspace chart') ? source : patchResearchCopy(source);
   const helpFrom = 'Multichain search · Token history · Ask Ticking';
-  const helpTo = 'Wallet, trail, or market · one workspace chart';
+  const helpMid = 'Wallet, trail, or market · one workspace chart';
+  const helpTo = 'Wallet, trail, or a new mint · one workspace chart';
   if (next.includes(helpFrom)) next = next.replaceAll(helpFrom, helpTo);
+  else if (next.includes(helpMid)) next = next.replaceAll(helpMid, helpTo);
   else if (!next.includes(helpTo)) throw new Error('home html search help missing');
   return next;
 }
@@ -331,7 +399,7 @@ function writeEntry(dir) {
   const src = join(dir, 'terminal/src');
   const entry = `import {TickChart as LiveTickChart} from '/_app/chunks/chart-QO7JAFT4.js';
 import {TrackPaintLayer, parseTrackPaint} from '${src}/track-paint.js';
-export {mountTrackWorkspace, mountTrackerPage, parseWorkspaceHash, acceptTrackHandoff, resolveTrackQuery} from '${src}/track-workspace.js';
+export {mountTrackWorkspace, mountMintWorkspace, mountTrackerPage, parseWorkspaceHash, acceptTrackHandoff, resolveTrackQuery} from '${src}/track-workspace.js';
 export {classifyTrackIntent} from '${src}/track-intent.js';
 
 LiveTickChart.prototype.setTrackPaint=function(paint,hooks){
@@ -441,13 +509,12 @@ function patchResearchEntry() {
   for (const name of searches) {
     const path = chunk(name);
     const source = readFileSync(path, 'utf8');
-    if (!source.includes('#/investigate/') && !source.includes('Open this address on every mapped chain')) {
-      if (source.includes('Paint this wallet on the workspace chart')) searchReady += 1;
-      continue;
+    const patched = patchExplorerSearch(source);
+    if (patched !== source) {
+      writeFileSync(path, patched);
+      dirty.push(path);
     }
-    writeFileSync(path, patchExplorerSearch(source));
-    dirty.push(path);
-    searchReady += 1;
+    if (patched.includes('Paint this wallet on the workspace chart') && patched.includes('encodeURIComponent("mint:"+')) searchReady += 1;
   }
   if (!searchReady) throw new Error('no search chunk patched');
   const chunkNames = readdirSync(join(out, '_app/chunks')).filter(name => name.endsWith('.js'));
@@ -486,6 +553,9 @@ function patchResearchEntry() {
     const text = readFileSync(chunk(name), 'utf8');
     if (text.includes('location.hash="#/investigate/"+e.toLowerCase()') || text.includes('Open this address on every mapped chain')) {
       throw new Error(`search chunk ${name} still investigates`);
+    }
+    if (text.includes('Paint this wallet on the workspace chart') && !text.includes('encodeURIComponent("mint:"+')) {
+      throw new Error(`search chunk ${name} missing mint chart`);
     }
   }
   const routeHits = chunks.filter(name => readFileSync(chunk(name), 'utf8').includes('wallet:"+l.toLowerCase()'));
@@ -532,6 +602,7 @@ let workspace = readFileSync(join(out, '_app/chunks', BASE.workspace), 'utf8');
 if (!workspace.includes('mountTrackerPage') || workspace.includes('whale-tracker-3BQEZZ6J') || !workspace.includes('sample=1')) {
   throw new Error('workspace tracker gate missing');
 }
+workspace = patchMintStudio(workspace);
 workspace = replaceOnce(workspace, BASE.shell, shellName, 'workspace shell ref');
 workspace = replaceOnce(workspace, BASE.console, consoleName, 'workspace console ref');
 const workspaceName = writeHashed('_app/chunks', 'workspace', Buffer.from(workspace));
@@ -539,17 +610,17 @@ let app = readFileSync(join(out, '_app', BASE.app), 'utf8');
 app = replaceOnce(app, BASE.workspace, workspaceName, 'app workspace ref');
 const appName = writeHashed('_app', 'app', Buffer.from(app));
 const shellText = shellBytes.toString('utf8');
-for (const needle of ['setTrackPaint', 'mountTrackWorkspace', 'classifyTrackIntent', 'data-track-form', 'dumpTagsOnly', 'columnForBridge', 'Math.min(480', 'Fast Feed is latency paint only', 'data-track-focus', 'Replay trail']) {
+for (const needle of ['setTrackPaint', 'mountTrackWorkspace', 'mountMintWorkspace', 'classifyTrackIntent', 'data-track-form', 'dumpTagsOnly', 'columnForBridge', 'Math.min(480', 'Fast Feed is latency paint only', 'data-track-focus', 'Replay trail', 'Waiting for the first prints on this mint.']) {
   if (!shellText.includes(needle)) throw new Error(`shell missing ${needle}`);
 }
 if (shellText.includes('whale-tracker')) throw new Error('shell still names whale-tracker');
 const agentText = readFileSync(join(out, '_app/chunks', agentName), 'utf8');
-for (const needle of ['resolveTrackQuery', 'classifyTrackIntent', shellName, 'One workspace chart', 'Reading the trail', 'wallet:', 'intent.mode==="market"']) {
+for (const needle of ['resolveTrackQuery', 'classifyTrackIntent', shellName, 'One workspace chart', 'Reading the trail', 'wallet:', 'intent.mode==="market"', 'intent.mode==="mint"', 'Opening the mint chart', 'mountMintWorkspace']) {
   if (!agentText.includes(needle)) throw new Error(`agent missing ${needle}`);
 }
 if (agentText.includes('What would you like to track?')) throw new Error('agent kept the old prompt');
 const workspaceText = readFileSync(join(out, '_app/chunks', workspaceName), 'utf8');
-if (!workspaceText.includes(shellName) || !workspaceText.includes(consoleName) || !workspaceText.includes('mountTrackerPage') || workspaceText.includes('whale-tracker')) {
+if (!workspaceText.includes(shellName) || !workspaceText.includes(consoleName) || !workspaceText.includes('mountTrackerPage') || workspaceText.includes('whale-tracker') || !workspaceText.includes('The mint opens on the chart.') || !workspaceText.includes('encodeURIComponent("mint:"+(evm?w.toLowerCase():w))')) {
   throw new Error('workspace wiring missing');
 }
 const appText = readFileSync(join(out, '_app', appName), 'utf8');

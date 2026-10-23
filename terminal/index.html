@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ticking · Pro source preview</title><link rel="stylesheet" href="/terminal/base.css"><link rel="stylesheet" href="/terminal/terminal.css"><link rel="stylesheet" href="/terminal/chart-tools.css"><link rel="stylesheet" href="/terminal/track-workspace.css"></head><body class="pro-active"><header class="demo-nav"><strong>ticking</strong><span>Pro terminal · source preview · read only</span></header><main id="app"></main><script type="module">
 import {terminalPage,mountTerminal} from '/terminal/src/pro-terminal.js';
-import {mountTrackWorkspace,mountTrackerRetired,parseWorkspaceHash,trackerRedirect} from '/terminal/src/track-workspace.js';
+import {mountMintWorkspace,mountTrackWorkspace,mountTrackerRetired,parseWorkspaceHash,trackerRedirect} from '/terminal/src/track-workspace.js';
 let dispose;
 function render(){
  dispose?.();dispose=null;
@@ -18,6 +18,12 @@ function render(){
   document.body.classList.remove('pro-active');root.replaceChildren();
   dispose=mountTrackWorkspace(root,ws);
   document.title=(ws.wallet.slice(0,6)+'… · Workspace — ticking');
+  return;
+ }
+ if(ws?.mint||ws?.launch){
+  document.body.classList.remove('pro-active');root.replaceChildren();
+  dispose=mountMintWorkspace(root,ws);
+  document.title=((ws.symbol||ws.mint||'Mint').slice(0,12)+' · Mint chart — ticking');
   return;
  }
  document.body.classList.add('pro-active');
