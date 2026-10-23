@@ -38,11 +38,13 @@ Production aliases `ticking.dev`, `skew.deals`, and `www.skew.deals` point at th
 
 | | |
 | --- | --- |
-| Deployment | `dpl_AYi1Zr7i4JdA4veARfA1JLtMf2Ss` |
-| App entry | `/_app/app-UVYRWMGQ.js` |
-| Track shell | `/_app/chunks/track-shell-SPIWJDUZ.js` (`setTrackPaint`, `mountTrackWorkspace`, `mountTrackerPage`, `classifyTrackIntent`) |
-| Wallet mount | `/_app/chunks/console-agent-XFNF7DZA.js` |
-| Workspace router | `/_app/chunks/workspace-KPIZJF5T.js` |
+| Deployment | `dpl_2wEmx1aRwb9jyFF5Jf3HZAJAjYcQ` |
+| App entry | `/_app/app-RTEAHYSG.js` |
+| Track shell | `/_app/chunks/track-shell-LPE3ULGM.js` (`setTrackPaint`, `mountTrackWorkspace`, `mountTrackerPage`, `classifyTrackIntent`) |
+| Wallet mount | `/_app/chunks/console-agent-VYVSH3Q3.js` |
+| Workspace router | `/_app/chunks/workspace-GQIMGUXH.js` |
+| Console | `/_app/chunks/console-XGD2I6YX.js` |
+| Home | `/_app/chunks/chunk-DHNHFGB4.js` |
 | Rollback | `dpl_8kWWQ53PMJXzv6aA4m2T5UabAKaZ` (`/_app/app-L5AHZFB4.js`) |
 
-Checked on `ticking.dev` after the alias: a wallet workspace with `?sample=1` paints the sample markers; a hop chip opens a second chart in that same incident; a bridge chip labeled `Open eth chart` opens the ETH chain chart beside it; `#/tracker` is the wallet form (`data-track-form`) and does not mount Flow. A stored handoff plus `POST /api/public/intelligence/resolve` kept the handoff summary when the live body had no markers. Roll back by aliasing `dpl_8kWWQ53PMJXzv6aA4m2T5UabAKaZ`. The alias this deploy replaced was `dpl_3ReWzi9d84dBa2Hrmx4s8Be7M1X2`.
+Checked on `ticking.dev` after the alias: the homepage title is “Onchain research”; a wallet search opens `#/console/workspace/wallet:…`; `SOL` opens `#/console/workspace/SOL`; `fast feed` stays on search. A wallet workspace with `?sample=1` paints the sample markers; a hop chip opens a second chart in that same incident; a bridge chip labeled `Open eth chart` opens the ETH chain chart beside it; `#/tracker` is the wallet form (`data-track-form`) and does not mount Flow. The console nav says “Workspace chart”. The market catalog chunk starts after the first second. Roll back by aliasing `dpl_8kWWQ53PMJXzv6aA4m2T5UabAKaZ`. The alias this deploy replaced was `dpl_Bp2E9chpSq4N5U9KLqUTRiXozXvp`.
