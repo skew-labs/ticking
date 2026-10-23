@@ -276,9 +276,16 @@ export function patchHomeChunk(source) {
   if (next.includes(statusFrom)) next = next.replaceAll(statusFrom, statusTo);
   else if (!next.includes(statusTo)) throw new Error('home search status missing');
   const observerFrom = 'let i=new IntersectionObserver(d=>{d.some(h=>h.isIntersecting)&&e()},{rootMargin:"150px"});i.observe(t.querySelector(".flow-market-section"));let l=new URLSearchParams(location.hash.split("?")[1]||"");return l.get("view")==="map"&&/^0x[a-fA-F0-9]{40}$/.test(l.get("address")||"")&&(location.hash="#/investigate/"+l.get("address"))';
-  const observerTo = 'const arm=()=>{let i=new IntersectionObserver(d=>{d.some(h=>h.isIntersecting)&&e()},{rootMargin:"0px"});const section=t.querySelector(".flow-market-section");section&&i.observe(section)};window.requestIdleCallback?requestIdleCallback(arm,{timeout:1500}):setTimeout(arm,800);let l=new URLSearchParams(location.hash.split("?")[1]||"");return l.get("view")==="map"&&/^0x[a-fA-F0-9]{40}$/.test(l.get("address")||"")&&(location.hash="#/console/workspace/"+encodeURIComponent("wallet:"+String(l.get("address")).toLowerCase()))';
+  const observerTo = 'let i;const arm=()=>{i=new IntersectionObserver(d=>{d.some(h=>h.isIntersecting)&&e()},{rootMargin:"0px"});const section=t.querySelector(".flow-market-section");section&&i.observe(section)};window.requestIdleCallback?requestIdleCallback(arm,{timeout:1500}):setTimeout(arm,800);let l=new URLSearchParams(location.hash.split("?")[1]||"");return l.get("view")==="map"&&/^0x[a-fA-F0-9]{40}$/.test(l.get("address")||"")&&(location.hash="#/console/workspace/"+encodeURIComponent("wallet:"+String(l.get("address")).toLowerCase()))';
   if (next.includes(observerFrom)) next = next.replaceAll(observerFrom, observerTo);
   else if (!next.includes('requestIdleCallback') || next.includes('location.hash="#/investigate/"+l.get("address")')) throw new Error('home market observer missing');
+  if (next.includes('const arm=()=>{let i=new IntersectionObserver')) {
+    next = next.replaceAll('const arm=()=>{let i=new IntersectionObserver', 'let i;const arm=()=>{i=new IntersectionObserver');
+  }
+  if (next.includes('clearTimeout(u),i.disconnect()')) next = next.replaceAll('clearTimeout(u),i.disconnect()', 'clearTimeout(u),i?.disconnect()');
+  if (!next.includes('let i;const arm=()=>{i=new IntersectionObserver') || !next.includes('i?.disconnect()')) {
+    throw new Error('home observer cleanup lost its handle');
+  }
   return next;
 }
 
@@ -565,7 +572,7 @@ function patchResearchEntry() {
   const home = chunks.find(name => index.includes(name) && readFileSync(chunk(name), 'utf8').includes('id="flow-title">Onchain research'));
   if (!home) throw new Error('home chunk missing after seal');
   const homeText = readFileSync(chunk(home), 'utf8');
-  if (!homeText.includes('requestIdleCallback') || homeText.includes('rootMargin:"150px"') || homeText.includes('#/investigate/')) {
+  if (!homeText.includes('requestIdleCallback') || homeText.includes('rootMargin:"150px"') || homeText.includes('#/investigate/') || !homeText.includes('i?.disconnect()')) {
     throw new Error('home chunk still eager or still investigates');
   }
   const search = chunks.filter(name => name.startsWith('explorer-search-'));
