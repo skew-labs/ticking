@@ -64,7 +64,7 @@ def table_row(row):
     """Display-only envelope sampling; retain exact observed values and x positions."""
     fields=('id','symbol','name','mint','icon','category','coingecko','price','change','volume','cap','updated_at','stale','verification','ranking_eligible','network','marketType','market','source','venue','quote','rankOrder','volumeScope','volumeUpdatedAt','volumeStale','volumePoolCount','capSource','capUpdatedAt','capStale','priceBasis','sources','changeSource','changeUpdatedAt','changeStale')
     result={k:row.get(k) for k in fields}
-    for key in ('issuer','underlying','priceUnit','underlyingReferencePolicy','venueBaseVolume24h'):
+    for key in ('issuer','underlying','priceUnit','underlyingReferencePolicy','venueBaseVolume24h','kind','subtags','turnover','turnover_usd'):
         if key in row:result[key]=row[key]
     for key in ('sparklineQuoteMint','sparklineSource','sparklineSince','sparklineThrough'):
         if key in row:result[key]=row[key]

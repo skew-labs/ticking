@@ -1,4 +1,20 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ticking · Pro source preview</title><link rel="stylesheet" href="/terminal/base.css"><link rel="stylesheet" href="/terminal/terminal.css"><link rel="stylesheet" href="/terminal/chart-tools.css"></head><body class="pro-active"><header class="demo-nav"><strong>ticking</strong><span>Pro terminal · source preview · read only</span></header><main id="app"></main><script type="module">
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ticking · Pro source preview</title><link rel="stylesheet" href="/terminal/base.css"><link rel="stylesheet" href="/terminal/terminal.css"><link rel="stylesheet" href="/terminal/chart-tools.css"></head><body class="pro-active"><header class="demo-nav"><strong>ticking</strong><nav><a href="#/markets">Markets</a><a href="#/terminal/SOL">Chart</a></nav><span>Chart workspace · source preview · read only</span></header><main id="app"></main><script type="module">
 import {terminalPage,mountTerminal} from '/terminal/src/pro-terminal.js';
-let dispose;function render(){dispose?.();const root=document.querySelector('#app');root.innerHTML=terminalPage();let id='SOL';try{id=decodeURIComponent(location.hash.split('/')[2]||'SOL')}catch{}dispose=mountTerminal(root,{ident:id})}window.addEventListener('hashchange',render);window.addEventListener('pagehide',()=>dispose?.(),{once:true});render();
+import {mountMarkets,mountWorkspace} from '/terminal/src/markets-page.js';
+let dispose;
+function decodePart(value){try{return decodeURIComponent(value)}catch{return value}}
+function route(){
+ const hash=location.hash.startsWith('#')?location.hash.slice(1):'';
+ const [path,query='']=hash.split('?');
+ const parts=path.split('/').filter(Boolean);
+ return {parts,params:new URLSearchParams(query)};
+}
+function render(){
+ dispose?.();dispose=null;const root=document.querySelector('#app');const {parts,params}=route();
+ if(parts[0]==='markets'){document.title='Markets — ticking';dispose=mountMarkets(root);return;}
+ if(parts[0]==='console'&&parts[1]==='workspace'&&parts[2]){const symbol=decodePart(parts[2]);document.title=symbol+' — ticking';dispose=mountWorkspace(root,{symbol,id:params.get('id')||'',chain:params.get('chain')||''});return;}
+ const ident=parts[0]==='terminal'&&parts[1]?decodePart(parts[1]):'SOL';
+ document.title='ticking · '+ident;root.innerHTML=terminalPage();dispose=mountTerminal(root,{ident,pool:params.get('pool')});
+}
+window.addEventListener('hashchange',render);window.addEventListener('pagehide',()=>dispose?.(),{once:true});render();
 </script></body></html>
