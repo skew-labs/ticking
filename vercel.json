@@ -1,0 +1,36 @@
+{
+  "rewrites": [
+    {"source": "/api/public/engine/fast-feed", "destination": "/api/engine-fast-feed"},
+    {"source": "/api/:path*", "destination": "https://api.ticking.dev/api/:path*"}
+  ],
+  "headers": [
+    {"source": "/_app/(.*)", "headers": [
+      {"key": "Cache-Control", "value": "public, max-age=31536000, immutable"},
+      {"key": "Access-Control-Allow-Origin", "value": "*"}
+    ]},
+    {"source": "/assets/tokens/live/(.*)", "headers": [
+      {"key": "Cache-Control", "value": "public, max-age=31536000, immutable"}
+    ]},
+    {"source": "/assets/tokens/researched/(.*)", "headers": [
+      {"key": "Cache-Control", "value": "public, max-age=31536000, immutable"}
+    ]},
+    {"source": "/assets/em/marks/(.*)", "headers": [
+      {"key": "Cache-Control", "value": "public, max-age=86400, stale-while-revalidate=604800"}
+    ]},
+    {"source": "/assets/ecosystem/(.*)", "headers": [
+      {"key": "Cache-Control", "value": "public, max-age=86400, stale-while-revalidate=604800"}
+    ]},
+    {"source": "/assets/em/icon-credits.json", "headers": [
+      {"key": "Cache-Control", "value": "public, max-age=3600, stale-while-revalidate=86400"}
+    ]},
+    {"source": "/assets/em/home/coverage.json", "headers": [
+      {"key": "Cache-Control", "value": "public, max-age=120, stale-while-revalidate=60"}
+    ]},
+    {"source": "/((?!_app/|assets/).*)", "headers": [
+      {"key": "Cache-Control", "value": "public, max-age=0, must-revalidate"}
+    ]},
+    {"source": "/api/public/engine/fast-feed", "headers": [
+      {"key": "Cache-Control", "value": "no-store"}
+    ]}
+  ]
+}
