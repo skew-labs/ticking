@@ -83,6 +83,8 @@ export class TickChart {
  pan(direction){this.offset=this.clampOffset(this.offset+direction*12);this.requestDraw();}
  reset(){this.count=this.options.compact?55:88;this.offset=0;this.manualScale=null;this.autoScale=null;this.requestDraw();}
  goToLatest(){this.offset=0;this.manualScale=null;this.autoScale=null;this.pointer=null;this.requestDraw();this.container.dispatchEvent(new CustomEvent('latestrequest'));}
+ setReferenceOverlay(overlay){this.referenceOverlay=overlay||null;this._frameSig='';this.requestDraw();}
+ touchReferenceOverlay(){this._frameSig='';this.requestDraw();}
  addLevel(){this.drawingLayer?.setTool('horizontal');}
  yToPrice(y){return this.max-(y-this.priceTop)/this.priceHeight*(this.max-this.min);}
  touchGesture(e){
@@ -129,6 +131,8 @@ export class TickChart {
   const data=this.visible;let min=Infinity,max=-Infinity,maxVol=Number.MIN_VALUE;
   for(const bar of data){min=Math.min(min,bar.low);max=Math.max(max,bar.high);maxVol=Math.max(maxVol,bar.volume);}
   for(const study of this.studies){if(study.definition.pane)continue;for(const line of Object.values(study.lines))for(let i=begin;i<Math.min(end,line.length);i++){const value=line[i];if(value!==null){min=Math.min(min,value);max=Math.max(max,value);}}}
+  const refSpan=this.referenceOverlay?.range?.(data[0].time,data.at(-1).time);
+  if(refSpan&&Number.isFinite(refSpan.min)&&Number.isFinite(refSpan.max)){min=Math.min(min,refSpan.min);max=Math.max(max,refSpan.max);}
   const reference=Math.abs(data.at(-1).close),range=Math.max(max-min,reference*1e-6,Number.MIN_VALUE);
   const scaleKey=[data[0].time,data.at(-1).time,this.offset,this.count,height,key,this.options.volume].join(':');
   // An update to the open candle should not make the entire pane breathe.
@@ -185,7 +189,8 @@ export class TickChart {
     // allowing a grouped color to imply the last candle's direction.
     for(const g of glyphs){ctx.strokeStyle=g.color;ctx.fillStyle=g.color;ctx.lineWidth=wickPixels/dpr;ctx.beginPath();ctx.moveTo(g.px,g.high);ctx.lineTo(g.px,g.low);ctx.stroke();ctx.fillRect(g.px-body/2,g.top,body,g.height);}
    }
-  }
+   }
+  this.referenceOverlay?.paint?.(ctx,this);
   const last=this.series.at(-1),lastY=y(last.close),lastColor=last.synthetic?text:last.close>=last.open?up:down;ctx.setLineDash([3,3]);ctx.strokeStyle=lastColor+'90';ctx.beginPath();ctx.moveTo(0,lastY);ctx.lineTo(plotWidth,lastY);ctx.stroke();ctx.setLineDash([]);ctx.restore();
   // Today's price must not sit on an unrelated historical scale boundary.
   if(lastY>=this.priceTop&&lastY<=priceBottom){const pillY=clamp(lastY,12,priceBottom-12);ctx.fillStyle=lastColor;ctx.fillRect(plotWidth,pillY-12,right,24);ctx.fillStyle='#fff';ctx.font=`500 ${fontSize}px "DM Sans",sans-serif`;ctx.fillText(this.formatPrice(last.close),plotWidth+7,pillY);}

@@ -19,4 +19,5 @@ node terminal/qa/indicators-math.mjs
 node terminal/qa/market-intervals-check.mjs
 node terminal/qa/check-products-sdk.mjs
 node terminal/qa/quality-feed-check.mjs
+node terminal/qa/equities-ref-check.mjs
 python3 scripts/publication-check.py
