@@ -62,14 +62,14 @@ Example:
   "tx": { "to": "0x9745ff56a6fc085b3e70a7509cd49ab6b97dcbd6", "data": "0x627dd56a…", "value": "0", "program": "0x…", "executable": true, "reason": "", "minOut": "2313639430", "deadline": 1792865000 }   // null when no recipient
 }
 ```
-`venue` ∈ univ3, sushi, giga (V3 fee-keyed), ramses, up (V3 tickSpacing-keyed), v4 (zero-hook Uniswap V4). Alandale (Algebra), Pancake Infinity CL and hooked V4 pools are excluded from routes, so every returned hop is exactly simulated.
+`venue` ∈ univ3, sushi, giga (V3 fee-keyed), ramses, up (V3 tickSpacing-keyed), v4 (zero-hook Uniswap V4).
 
 ## Building the tx
 TickingRouter v1 (contracts/, UNAUDITED by the owner's choice). **Deployed on RH mainnet (chain 4663): `0x9745ff56a6fc085b3e70a7509cd49ab6b97dcbd6`**, tx `0x2440a58c7937491ab97eb9992403c5aaedc0b28a2636421d2a03f2b2324cd908`, block 96981545, Sourcify exact match (contracts/DEPLOYED.md).
 - The engine returns a ready-to-send tx: `tx.to` = ROUTER, `tx.data` = `swap(bytes)` (selector `0x627dd56a`) ABI-encoded around `tx.program`, `tx.value` = "0". Send it as-is.
 - `swap()` returns `out`. The read-only proof `harness/router_proof.py` eth_calls `tx.data` against the deployed router at the quote's block (holder funded via state override) and checks `out == grossOut` to the wei. Results: `data/live/router_proof.json`.
 - Before the swap: `IERC20(tin).approve(ROUTER, amt)`. The router pulls `transferFrom(user → pool)` just in time.
-- If `tx.executable == false`, don't send (`reason` explains, e.g. a V4 hop on a native-ETH key). Fall back to Kyber or re-quote.
+- If `tx.executable == false`, don't send (`reason` explains). Fall back to Kyber or re-quote.
 - Program layout: header `tokenIn20|tokenOut20|recipient20|minOut u128|deadline u32`, then per hop `op u8 | amount u128 (first hop of each leg only) | hopTokenOut20 | payload` (op low nibble = venue, 0x80 = CHAIN, 0x40 = TERM). See contracts/ARCHITECTURE.md.
 - Simulate with `eth_call` first. Quotes are valid for the quoted block; the price moves every ~100 ms, so `minOut` protects the user.
 
