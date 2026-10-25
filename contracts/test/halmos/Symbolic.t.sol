@@ -25,7 +25,7 @@ contract SymbolicTest is Test {
         fac = new MockV3Factory();
         address d = address(0xdead);
         kyb = new MockKyber();
-        r = new TickingRouter([d, d, d, d, address(kyb), address(fac), d, d, d, d, d, d, d]);
+        r = new TickingRouter([d, d, d, d, address(kyb), address(fac), d, d, d, d, d, d, d], d, address(0xFEE));
         A = new MockToken();
         B = new MockToken();
         pAB = new MockV3Pool(address(A), address(B));
@@ -86,6 +86,7 @@ contract SymbolicTest is Test {
         bytes memory prog =
             bytes.concat(abi.encodePacked(address(A), address(B), rcpt, minOut, uint32(type(uint32).max)), body);
         uint256 rb = B.balanceOf(rcpt);
+        uint256 fb = B.balanceOf(address(0xFEE));
         vm.prank(attacker);
         (bool ok, bytes memory ret) = address(r).call(abi.encodeCall(TickingRouter.swap, (prog)));
         assert(A.balanceOf(victim) == 1e30);
@@ -96,6 +97,10 @@ contract SymbolicTest is Test {
             uint256 out = abi.decode(ret, (uint256));
             assert(out >= minOut);
             assert(B.balanceOf(rcpt) - rb == out);
+            // P6 (I7): fee is exactly floor(gross * 5 / 10_000) <= 5 bps of gross; recipient + feeRecipient == gross.
+            uint256 fee = B.balanceOf(address(0xFEE)) - fb;
+            // floor(g * 5 / 10_000) == g / 2000 for all g (5/10_000 == 1/2000): linear-friendly form for the solver.
+            assert(fee == (out + fee) / 2000);
         }
     }
 

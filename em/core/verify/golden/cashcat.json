@@ -1,0 +1,124 @@
+{
+ "case": "CASHCAT (Robinhood) golden, frozen 2026-10-20 ~11:40 UTC by verify",
+ "market": "robinhood:0x020bfc650a365f8bb26819deaabf3e21291018b4",
+ "creator": "0xcdfc08a1c1fbafb355645e5ddc32122e5716ca90",
+ "engine_exact": {
+  "_note": "V2 must reproduce these exactly from the Robinhood map (end block 88,098,834, 2026-10-14 04:58:56 UTC). Source: frozen map sample golden/robinhood (map/robinhood, buckets 16 20 19 11).",
+  "launch": {
+   "block": 88836,
+   "time": 1781812885,
+   "timeUtc": "2026-06-18T20:01:25Z",
+   "tx": "0x0e6d23f0babd02ede4aefaa923486591d783e1180c277c71e2f2a39fc74a4661",
+   "creationFrom": "0xcdfc08a1c1fbafb355645e5ddc32122e5716ca90",
+   "creationTo": "0xd9ec2db5f3d1b236843925949fe5bd8a3836fccb"
+  },
+  "creator_first_receipt": {
+   "from": "0xa70fc67c9f69da90b63a0e4c05d229954574e313",
+   "amount": "14395207.591280462",
+   "pctSupply": 1.4395,
+   "supply": "1000000000",
+   "logIndex": 14
+  },
+  "creator_cashcat_balance_row": {
+   "kind": "erc20",
+   "n_in": 760,
+   "n_out": 5,
+   "holds": true,
+   "net_approx": 1.51102625111662e+21,
+   "first_block": 88836,
+   "last_block": 86837783
+  },
+  "cashcat_token_stats": {
+   "n_transfers": 12423267,
+   "n_holders_map_approx": 113313,
+   "first_block": 88836,
+   "last_block": 88098710
+  },
+  "creator_out_edges": {
+   "rows": 123,
+   "n_sum": 964,
+   "cashcat_rows": 3
+  },
+  "creator_node": {
+   "first_block": 70891,
+   "last_block": 87820741,
+   "tx_sent": 762,
+   "tx_received": 13,
+   "token_transfers_in": 2828,
+   "token_transfers_out": 202,
+   "out_degree": 97,
+   "in_degree": 162,
+   "is_contract": false
+  }
+ },
+ "api_reference": {
+  "_note": "Served answers today (invscreen :8906, Robinhood dataVersion 92,786,999 = map + daily delta). V2 phase 1 serves the map only, so compare with to <= map end time (1791953936) or expect recency differences; counts below are the reference for the same window.",
+  "map_end": {
+   "block": 88098834,
+   "time": 1791953936,
+   "timeUtc": "2026-10-14T04:58:56Z"
+  },
+  "token_launch": "golden/api/cashcat/token-launch.json",
+  "holders": {
+   "atLaunch": 3,
+   "plus1h": 90,
+   "blocks": {
+    "atLaunch": 88836,
+    "plus1h": 90043
+   },
+   "rule": "holders with balance > 0 (0x0 and 0x..dead left out) at the last block with timestamp <= t (core decision 2026-10-20 15:31 UTC)",
+   "check": "raw recompute from robinhood token_transfers at those blocks: 3 (one is 0xd9ec2db5.. with 12,509 wei) and 90; EMV2 serve answers the same",
+   "invscreen_previous": {
+    "atLaunch": 2,
+    "plus1h": 87,
+    "note": "earlier golden from invscreen: it maps t ~20 s early (88,829 / 90,035) and drops dust holders; today it answers 0 and 87"
+   }
+  },
+  "bundle_1h": {
+   "buysUsd": 16500.06,
+   "linkedBuysUsd": 2198.58,
+   "pct": 13.32,
+   "groups": 4,
+   "wallets": 10,
+   "buyersConsidered": 150,
+   "buyersTotal": 281,
+   "grade": "judged",
+   "source": "home snapshot cashcat-bundle.json (savedAt 1792483806)"
+  },
+  "trace_in_1hop": {
+   "nodes": 7,
+   "links": 6,
+   "stops": 5,
+   "dataVersion": 92786999,
+   "file": "golden/api/cashcat/trace-in-1.json",
+   "earlier": {
+    "nodes": 6,
+    "links": 5,
+    "stops": 4,
+    "source": "design doc 10.2 funding_back 1 hop, older data version"
+   }
+  },
+  "trace_out_1hop": {
+   "nodes": 10,
+   "links": 9,
+   "stops": 7,
+   "dataVersion": 92786999,
+   "file": "golden/api/cashcat/trace-out-1.json"
+  },
+  "wallet_links": {
+   "links": 15,
+   "group": {
+    "size": 4,
+    "strength": "strong"
+   },
+   "file": "golden/api/cashcat/wallet-links-creator.json"
+  },
+  "address_chains": {
+   "chains": 3,
+   "file": "golden/api/cashcat/address-chains-creator.json"
+  },
+  "not_captured": {
+   "holders-at, bundle-summary, wallet-trades, acquisition": "invscreen answered too_heavy (40 s budget) / needs t= at 11:3x UTC under skew load 26-31; retry scheduled at lower load"
+  }
+ }
+}

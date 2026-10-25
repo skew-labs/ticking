@@ -1,0 +1,43 @@
+{
+ "serve": "127.0.0.1:8740",
+ "default": "old",
+ "routes": {
+  "holders-at": {
+   "linea": "shadow"
+  },
+  "wallet-trades": {
+   "linea": "shadow"
+  },
+  "acquisition": {
+   "linea": "shadow"
+  },
+  "trace-graph": {
+   "linea": "shadow"
+  },
+  "trace": {
+   "linea": "shadow"
+  },
+  "path": {
+   "linea": "shadow"
+  },
+  "neighbors": {
+   "linea": "shadow"
+  },
+  "tools/wallet": {
+   "linea": "shadow"
+  },
+  "tools/holders": {
+   "linea": "shadow"
+  },
+  "tools/trace": {
+   "linea": "shadow"
+  }
+ },
+ "sample": 0.5,
+ "min_gap_ms": 200,
+ "timeout_ms": 2000,
+ "queue": 64,
+ "log_max_mb": 64,
+ "log_keep": 5,
+ "align_old": true
+}

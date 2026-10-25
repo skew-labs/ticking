@@ -1,0 +1,976 @@
+{
+  "version": "ticking-chart-tools-v3",
+  "studies": {
+    "rsi": [
+      "rsi",
+      "relative strength index",
+      "알에스아이",
+      "상대강도지수"
+    ],
+    "ema": [
+      "ema",
+      "exponential moving average",
+      "지수이동평균선",
+      "지수 이동평균선"
+    ],
+    "sma": [
+      "sma",
+      "moving average",
+      "simple moving average",
+      "이동평균선",
+      "이평선",
+      "이동 평균선"
+    ],
+    "bb": [
+      "bb",
+      "bollinger bands",
+      "볼린저 밴드",
+      "볼린저밴드",
+      "볼밴"
+    ],
+    "macd": [
+      "macd",
+      "moving average convergence divergence",
+      "맥디"
+    ],
+    "vwap": [
+      "vwap",
+      "utc session vwap",
+      "거래량 가중 평균"
+    ],
+    "atr": [
+      "atr",
+      "average true range",
+      "평균 진폭"
+    ],
+    "supertrend": [
+      "supertrend",
+      "st",
+      "슈퍼트렌드"
+    ],
+    "stochastic": [
+      "stochastic",
+      "stochastic oscillator",
+      "stoch",
+      "스토캐스틱"
+    ],
+    "adx": [
+      "adx",
+      "average directional index"
+    ],
+    "obv": [
+      "obv",
+      "on balance volume",
+      "누적 거래량"
+    ],
+    "donchian": [
+      "donchian",
+      "donchian channels",
+      "dc"
+    ],
+    "keltner": [
+      "keltner",
+      "keltner channels",
+      "kc"
+    ],
+    "tickregime": [
+      "trend regime",
+      "tickregime",
+      "ticking trend regime",
+      "treg"
+    ],
+    "tickmomentum": [
+      "momentum pressure",
+      "tickmomentum",
+      "ticking momentum pressure",
+      "tmom"
+    ],
+    "tickvolume": [
+      "relative execution volume",
+      "tickvolume",
+      "ticking relative execution volume",
+      "tvol"
+    ],
+    "tickenvelope": [
+      "volatility envelope",
+      "tickenvelope",
+      "ticking volatility envelope",
+      "tenv"
+    ],
+    "alma": [
+      "alma",
+      "arnaud legoux moving average"
+    ],
+    "vwma": [
+      "vwma",
+      "volume weighted moving average"
+    ],
+    "envelope": [
+      "envelope",
+      "moving average envelopes",
+      "env"
+    ],
+    "ichimoku": [
+      "ichimoku",
+      "ichimoku cloud",
+      "ich",
+      "일목균형표",
+      "일목"
+    ],
+    "psar": [
+      "psar",
+      "parabolic stop and reverse",
+      "sar"
+    ],
+    "pivots": [
+      "pivots",
+      "previous utc day pivot points",
+      "piv"
+    ],
+    "atrpct": [
+      "atrpct",
+      "average true range percent",
+      "atr%"
+    ],
+    "dmi": [
+      "dmi",
+      "directional movement index"
+    ],
+    "cci": [
+      "cci",
+      "commodity channel index"
+    ],
+    "stochrsi": [
+      "stochrsi",
+      "stochastic rsi",
+      "srsi"
+    ],
+    "williams": [
+      "williams",
+      "williams percent range",
+      "%r"
+    ],
+    "mfi": [
+      "mfi",
+      "money flow index"
+    ],
+    "roc": [
+      "roc",
+      "rate of change"
+    ],
+    "momentum": [
+      "momentum",
+      "mom"
+    ],
+    "adl": [
+      "adl",
+      "accumulation / distribution"
+    ],
+    "cmf": [
+      "cmf",
+      "chaikin money flow"
+    ],
+    "force": [
+      "force",
+      "force index",
+      "fi"
+    ],
+    "ao": [
+      "ao",
+      "awesome oscillator"
+    ],
+    "ac": [
+      "ac",
+      "accelerator oscillator"
+    ],
+    "trix": [
+      "trix",
+      "triple smoothed rate of change"
+    ],
+    "kst": [
+      "kst",
+      "know sure thing"
+    ],
+    "cmo": [
+      "cmo",
+      "chande momentum oscillator"
+    ],
+    "ppo": [
+      "ppo",
+      "percentage price oscillator"
+    ],
+    "dpo": [
+      "dpo",
+      "detrended price oscillator (unshifted)"
+    ],
+    "tsi": [
+      "tsi",
+      "true strength index"
+    ],
+    "ultimate": [
+      "ultimate",
+      "ultimate oscillator",
+      "uo"
+    ],
+    "stddev": [
+      "stddev",
+      "standard deviation",
+      "sd"
+    ],
+    "hv": [
+      "hv",
+      "historical volatility (365 utc days)"
+    ],
+    "aroon": [
+      "aroon"
+    ],
+    "bbpct": [
+      "bbpct",
+      "bollinger percent b",
+      "%b"
+    ],
+    "bbwidth": [
+      "bbwidth",
+      "bollinger bandwidth",
+      "bbw"
+    ],
+    "chaikin": [
+      "chaikin",
+      "chaikin oscillator",
+      "cho"
+    ],
+    "chaikinvol": [
+      "chaikinvol",
+      "chaikin volatility",
+      "chv"
+    ],
+    "volosc": [
+      "volosc",
+      "volume oscillator",
+      "vo"
+    ],
+    "bullbear": [
+      "bullbear",
+      "bull / bear power",
+      "bbp"
+    ],
+    "chop": [
+      "chop",
+      "choppiness index"
+    ],
+    "rvi": [
+      "rvi",
+      "relative vigor index"
+    ],
+    "eom": [
+      "eom",
+      "ease of movement"
+    ],
+    "mass": [
+      "mass",
+      "mass index"
+    ],
+    "fisher": [
+      "fisher",
+      "fisher transform",
+      "fish"
+    ],
+    "wma": [
+      "wma",
+      "weighted moving average"
+    ],
+    "rma": [
+      "rma",
+      "wilder moving average"
+    ],
+    "hma": [
+      "hma",
+      "hull moving average"
+    ],
+    "dema": [
+      "dema",
+      "double ema"
+    ],
+    "tema": [
+      "tema",
+      "triple ema"
+    ],
+    "zlema": [
+      "zlema",
+      "zero lag ema"
+    ],
+    "linreg": [
+      "linreg",
+      "linear regression"
+    ]
+  },
+  "drawings": {
+    "support_resistance": [
+      "support and resistance",
+      "support resistance",
+      "지지 저항",
+      "지지선 저항선",
+      "지지·저항"
+    ],
+    "trendline": [
+      "trendline",
+      "trend line",
+      "추세선"
+    ],
+    "fib": [
+      "fibonacci",
+      "fib",
+      "피보나치",
+      "피보나치 되돌림",
+      "피보나치되돌림",
+      "fibonacci retracement"
+    ],
+    "level": [
+      "horizontal line",
+      "horizontal level",
+      "수평선"
+    ],
+    "long": [
+      "long",
+      "long position",
+      "롱 포지션",
+      "롱포지션",
+      "롱"
+    ],
+    "short": [
+      "short",
+      "short position",
+      "숏 포지션",
+      "숏포지션",
+      "숏"
+    ],
+    "parallel": [
+      "parallel",
+      "parallel channel",
+      "평행 채널",
+      "평행채널",
+      "채널"
+    ],
+    "regression": [
+      "regression",
+      "regression channel",
+      "회귀 채널",
+      "회귀채널"
+    ],
+    "uptrend": [
+      "uptrend",
+      "uptrend line",
+      "ascending trendline",
+      "ascending trend line",
+      "rising trendline",
+      "상승 추세선",
+      "상승추세선"
+    ],
+    "downtrend": [
+      "downtrend",
+      "downtrend line",
+      "descending trendline",
+      "descending trend line",
+      "falling trendline",
+      "하락 추세선",
+      "하락추세선"
+    ]
+  },
+  "panels": {
+    "executions": [
+      "executions",
+      "trades",
+      "fills",
+      "tape",
+      "체결",
+      "최근 체결"
+    ],
+    "book": [
+      "order book",
+      "orderbook",
+      "오더북",
+      "호가창"
+    ],
+    "agent": [
+      "agent view",
+      "에이전트 뷰",
+      "chart data",
+      "차트 데이터"
+    ],
+    "pools": [
+      "pools",
+      "풀"
+    ],
+    "candles": [
+      "candles",
+      "캔들 데이터"
+    ],
+    "research": [
+      "research",
+      "리서치"
+    ],
+    "status": [
+      "feed status",
+      "데이터 상태"
+    ],
+    "layers": [
+      "layers",
+      "레이어"
+    ],
+    "assistant": [
+      "assistant",
+      "어시스턴트"
+    ],
+    "close": [
+      "close panel",
+      "hide panel",
+      "패널 닫기"
+    ],
+    "alerts": [
+      "alerts",
+      "alert",
+      "알림",
+      "얼러트"
+    ],
+    "indicators": [
+      "indicators",
+      "지표"
+    ],
+    "tools": [
+      "drawing tools",
+      "드로잉 도구"
+    ],
+    "layout": [
+      "layout",
+      "multi chart",
+      "멀티차트",
+      "레이아웃"
+    ]
+  },
+  "drawing_tool": {
+    "trend": [
+      "trend",
+      "trend line"
+    ],
+    "arrow": [
+      "arrow"
+    ],
+    "ray": [
+      "ray"
+    ],
+    "extended": [
+      "extended",
+      "extended line"
+    ],
+    "info": [
+      "info",
+      "info line"
+    ],
+    "angle": [
+      "angle",
+      "trend angle"
+    ],
+    "horizontal": [
+      "horizontal",
+      "horizontal line",
+      "수평선 도구"
+    ],
+    "horizontal-ray": [
+      "horizontal-ray",
+      "horizontal ray"
+    ],
+    "vertical": [
+      "vertical",
+      "vertical line"
+    ],
+    "cross": [
+      "cross",
+      "cross line"
+    ],
+    "vwap": [
+      "vwap",
+      "anchored vwap",
+      "앵커드 vwap"
+    ],
+    "parallel": [
+      "parallel",
+      "parallel channel",
+      "평행 채널",
+      "평행채널",
+      "채널"
+    ],
+    "regression": [
+      "regression",
+      "regression channel",
+      "회귀 채널",
+      "회귀채널"
+    ],
+    "flat-channel": [
+      "flat-channel",
+      "flat top / bottom"
+    ],
+    "disjoint": [
+      "disjoint",
+      "disjoint channel"
+    ],
+    "fib-channel": [
+      "fib-channel",
+      "fib channel",
+      "피보나치 채널"
+    ],
+    "fib": [
+      "fib",
+      "fib retracement"
+    ],
+    "fib-extension": [
+      "fib-extension",
+      "trend-based fib extension",
+      "피보나치 확장"
+    ],
+    "fib-time": [
+      "fib-time",
+      "fib time zone"
+    ],
+    "fib-trend-time": [
+      "fib-trend-time",
+      "trend-based fib time"
+    ],
+    "fib-fan": [
+      "fib-fan",
+      "fib resistance fan"
+    ],
+    "fib-circles": [
+      "fib-circles",
+      "fib circles"
+    ],
+    "fib-arcs": [
+      "fib-arcs",
+      "fib resistance arcs"
+    ],
+    "fib-wedge": [
+      "fib-wedge",
+      "fib wedge"
+    ],
+    "fib-spiral": [
+      "fib-spiral",
+      "fib spiral"
+    ],
+    "pitchfork": [
+      "pitchfork"
+    ],
+    "schiff": [
+      "schiff",
+      "schiff pitchfork"
+    ],
+    "modified-schiff": [
+      "modified-schiff",
+      "modified schiff pitchfork"
+    ],
+    "inside-pitchfork": [
+      "inside-pitchfork",
+      "inside pitchfork"
+    ],
+    "pitchfan": [
+      "pitchfan"
+    ],
+    "gann-box": [
+      "gann-box",
+      "gann box"
+    ],
+    "gann-square": [
+      "gann-square",
+      "gann square"
+    ],
+    "gann-fixed": [
+      "gann-fixed",
+      "gann square fixed"
+    ],
+    "gann-fan": [
+      "gann-fan",
+      "gann fan"
+    ],
+    "brush": [
+      "brush"
+    ],
+    "highlighter": [
+      "highlighter"
+    ],
+    "rectangle": [
+      "rectangle",
+      "직사각형",
+      "박스",
+      "영역"
+    ],
+    "circle": [
+      "circle"
+    ],
+    "ellipse": [
+      "ellipse"
+    ],
+    "path": [
+      "path"
+    ],
+    "polyline": [
+      "polyline"
+    ],
+    "triangle": [
+      "triangle"
+    ],
+    "rotated-rectangle": [
+      "rotated-rectangle",
+      "rotated rectangle"
+    ],
+    "curve": [
+      "curve"
+    ],
+    "double-curve": [
+      "double-curve",
+      "double curve"
+    ],
+    "arc": [
+      "arc"
+    ],
+    "text": [
+      "text",
+      "텍스트",
+      "글씨"
+    ],
+    "note": [
+      "note"
+    ],
+    "anchored-note": [
+      "anchored-note",
+      "anchored note"
+    ],
+    "signpost": [
+      "signpost"
+    ],
+    "callout": [
+      "callout"
+    ],
+    "comment": [
+      "comment"
+    ],
+    "price-label": [
+      "price-label",
+      "price label"
+    ],
+    "price-note": [
+      "price-note",
+      "price note"
+    ],
+    "arrow-marker": [
+      "arrow-marker",
+      "arrow marker"
+    ],
+    "arrow-left": [
+      "arrow-left",
+      "arrow left"
+    ],
+    "arrow-right": [
+      "arrow-right",
+      "arrow right"
+    ],
+    "arrow-up": [
+      "arrow-up",
+      "arrow up"
+    ],
+    "arrow-down": [
+      "arrow-down",
+      "arrow down"
+    ],
+    "flag": [
+      "flag"
+    ],
+    "icon": [
+      "icon"
+    ],
+    "emoji": [
+      "emoji"
+    ],
+    "sticker": [
+      "sticker"
+    ],
+    "pin": [
+      "pin"
+    ],
+    "table": [
+      "table"
+    ],
+    "xabcd": [
+      "xabcd",
+      "xabcd pattern"
+    ],
+    "cypher": [
+      "cypher",
+      "cypher pattern"
+    ],
+    "abcd": [
+      "abcd",
+      "abcd pattern"
+    ],
+    "triangle-pattern": [
+      "triangle-pattern",
+      "triangle pattern"
+    ],
+    "three-drives": [
+      "three-drives",
+      "three drives pattern"
+    ],
+    "head-shoulders": [
+      "head-shoulders",
+      "head and shoulders"
+    ],
+    "elliott-impulse": [
+      "elliott-impulse",
+      "elliott impulse wave",
+      "엘리엇 파동",
+      "엘리엇파동",
+      "엘리어트파동"
+    ],
+    "elliott-triangle": [
+      "elliott-triangle",
+      "elliott triangle wave"
+    ],
+    "elliott-triple": [
+      "elliott-triple",
+      "elliott triple combo"
+    ],
+    "elliott-correction": [
+      "elliott-correction",
+      "elliott correction wave"
+    ],
+    "elliott-double": [
+      "elliott-double",
+      "elliott double combo"
+    ],
+    "cyclic": [
+      "cyclic",
+      "cyclic lines"
+    ],
+    "cycles": [
+      "cycles",
+      "time cycles"
+    ],
+    "sine": [
+      "sine",
+      "sine line"
+    ],
+    "long": [
+      "long",
+      "long position",
+      "롱 포지션",
+      "롱포지션",
+      "롱"
+    ],
+    "short": [
+      "short",
+      "short position",
+      "숏 포지션",
+      "숏포지션",
+      "숏"
+    ],
+    "forecast": [
+      "forecast",
+      "position forecast"
+    ],
+    "date-range": [
+      "date-range",
+      "date range"
+    ],
+    "price-range": [
+      "price-range",
+      "price range"
+    ],
+    "range": [
+      "range",
+      "date & price range"
+    ],
+    "bars-pattern": [
+      "bars-pattern",
+      "bars pattern"
+    ],
+    "ghost": [
+      "ghost",
+      "ghost feed"
+    ],
+    "sector": [
+      "sector"
+    ],
+    "volume-profile": [
+      "volume-profile",
+      "fixed range volume profile",
+      "볼륨 프로파일",
+      "매물대"
+    ]
+  },
+  "view": {
+    "reset": [
+      "reset chart",
+      "fit chart",
+      "차트 초기화",
+      "자동 크기"
+    ],
+    "latest": [
+      "latest candle",
+      "latest",
+      "최신 봉",
+      "최신봉"
+    ],
+    "standard": [
+      "standard",
+      "스탠다드"
+    ],
+    "degen": [
+      "degen",
+      "디젠"
+    ],
+    "log": [
+      "log scale",
+      "로그 차트",
+      "로그차트"
+    ],
+    "linear": [
+      "linear scale",
+      "선형 차트"
+    ],
+    "volume": [
+      "volume",
+      "거래량"
+    ]
+  },
+  "interval": {
+    "1s": [
+      "1s"
+    ],
+    "3s": [
+      "3s"
+    ],
+    "5s": [
+      "5s"
+    ],
+    "15s": [
+      "15s"
+    ],
+    "30s": [
+      "30s"
+    ],
+    "45s": [
+      "45s"
+    ],
+    "1m": [
+      "1m"
+    ],
+    "3m": [
+      "3m"
+    ],
+    "5m": [
+      "5m"
+    ],
+    "15m": [
+      "15m"
+    ],
+    "30m": [
+      "30m"
+    ],
+    "45m": [
+      "45m"
+    ],
+    "1h": [
+      "1h"
+    ],
+    "2h": [
+      "2h"
+    ],
+    "3h": [
+      "3h"
+    ],
+    "4h": [
+      "4h"
+    ],
+    "6h": [
+      "6h"
+    ],
+    "8h": [
+      "8h"
+    ],
+    "12h": [
+      "12h"
+    ],
+    "1d": [
+      "1d"
+    ],
+    "1w": [
+      "1w"
+    ]
+  },
+  "study_style": {
+    "rsi.all": [],
+    "ema.all": [],
+    "sma.all": [],
+    "bb.all": [],
+    "bb.upper": [],
+    "bb.middle": [],
+    "bb.lower": [],
+    "macd.all": [],
+    "vwap.all": [],
+    "atr.all": [],
+    "supertrend.all": [],
+    "stochastic.all": [],
+    "adx.all": [],
+    "obv.all": [],
+    "donchian.all": [],
+    "keltner.all": [],
+    "tickregime.all": [],
+    "tickmomentum.all": [],
+    "tickvolume.all": [],
+    "tickenvelope.all": [],
+    "alma.all": [],
+    "vwma.all": [],
+    "envelope.all": [],
+    "ichimoku.all": [],
+    "psar.all": [],
+    "pivots.all": [],
+    "atrpct.all": [],
+    "dmi.all": [],
+    "cci.all": [],
+    "stochrsi.all": [],
+    "williams.all": [],
+    "mfi.all": [],
+    "roc.all": [],
+    "momentum.all": [],
+    "adl.all": [],
+    "cmf.all": [],
+    "force.all": [],
+    "ao.all": [],
+    "ac.all": [],
+    "trix.all": [],
+    "kst.all": [],
+    "cmo.all": [],
+    "ppo.all": [],
+    "dpo.all": [],
+    "tsi.all": [],
+    "ultimate.all": [],
+    "stddev.all": [],
+    "hv.all": [],
+    "aroon.all": [],
+    "bbpct.all": [],
+    "bbwidth.all": [],
+    "chaikin.all": [],
+    "chaikinvol.all": [],
+    "volosc.all": [],
+    "bullbear.all": [],
+    "chop.all": [],
+    "rvi.all": [],
+    "eom.all": [],
+    "mass.all": [],
+    "fisher.all": [],
+    "wma.all": [],
+    "rma.all": [],
+    "hma.all": [],
+    "dema.all": [],
+    "tema.all": [],
+    "zlema.all": [],
+    "linreg.all": []
+  }
+}

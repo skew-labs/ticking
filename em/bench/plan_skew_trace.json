@@ -1,0 +1,162 @@
+{
+ "_note": "EMV2 serve on skew (production host), arc 627c/8af0 + unichain if loaded; trace-graph and path after the 14:33 hub fix; one request at a time",
+ "targets": {
+  "v2": "http://127.0.0.1:8740/api/public/em"
+ },
+ "queries": [
+  {
+   "name": "arc neighbors out (5 hubs)",
+   "path": {
+    "v2": "/emv2/neighbors?chain=arc&address={addr}&dir=out&limit=64"
+   },
+   "addresses": [
+    "0x0000000000000068f116a894984e2db1123eb395",
+    "0x03a13352ef67977d1601ec1276e9bc27c0ee7b75",
+    "0x23777e9c1b5c339cd7b0a2f129c2116d9eb5adb5",
+    "0x305e0b59b623d5b87a6163abada83a8e02d7f095",
+    "0x3e62968f3f5526821f7d05ee54a4aa26a73e3835"
+   ]
+  },
+  {
+   "name": "arc trace-graph in 2 hops (20 random)",
+   "path": {
+    "v2": "/trace-graph?chain=arc&address={addr}&direction=in&hops=2"
+   },
+   "addresses": [
+    "0x0026e64772314bcfaa62d7c11e3c94ed43c22315",
+    "0x0029ce8962ebce6f68b03a144bcb89e8ecedbb75",
+    "0x011509e0ca3c098d03af641df8fda549dd2fa585",
+    "0x0165090e48f97aad08960dc148ad47a879d49305",
+    "0x0192b3084c4ac8a374a811c3b877df3919b162d5",
+    "0x019b6d68041fdbffbd779491dbeffebd3068d375",
+    "0x01eb2835800dc986507080004069d0190dd4d265",
+    "0x0220f0b422550f1c769180161f50d4012615a685",
+    "0x0273f8251e26263e7a4e3d69df0e4671c592d785",
+    "0x02fff1bb31ab7c9bff3fc6d4579b67aba71fc015",
+    "0x0304d17b97566cfe81a46e2fdda83979ea6b1c25",
+    "0x033668a668ba4493a4dc62ab6454ff1286070d85",
+    "0x0348cea396890c2e405119b1b681b395588b4725",
+    "0x03593fa743aa3db7a4d565e05067ae48c4f5f915",
+    "0x036228015972297b37acb933bb924c0384b6bed5",
+    "0x0379b81dcf84273ac60c3000cb5b9ca8e7641685",
+    "0x0380640d647620646ab57733b29d01c20eb1ff65",
+    "0x038359ae34e2b9a5e1ce642f2017a991e2026dd5",
+    "0x03d0e0025a9185cd0c76e3565745c81b208598d5",
+    "0x03d0e0452ba34dba8d77ee659c6ec30e222c6bd5"
+   ]
+  },
+  {
+   "name": "arc trace-graph out 3 hops (10 random)",
+   "path": {
+    "v2": "/trace-graph?chain=arc&address={addr}&direction=out&hops=3"
+   },
+   "addresses": [
+    "0x0026e64772314bcfaa62d7c11e3c94ed43c22315",
+    "0x0029ce8962ebce6f68b03a144bcb89e8ecedbb75",
+    "0x011509e0ca3c098d03af641df8fda549dd2fa585",
+    "0x0165090e48f97aad08960dc148ad47a879d49305",
+    "0x0192b3084c4ac8a374a811c3b877df3919b162d5",
+    "0x019b6d68041fdbffbd779491dbeffebd3068d375",
+    "0x01eb2835800dc986507080004069d0190dd4d265",
+    "0x0220f0b422550f1c769180161f50d4012615a685",
+    "0x0273f8251e26263e7a4e3d69df0e4671c592d785",
+    "0x02fff1bb31ab7c9bff3fc6d4579b67aba71fc015"
+   ]
+  },
+  {
+   "name": "arc path 6 (10 pairs)",
+   "path": {
+    "v2": "/trace?chain=arc&from={addr}&to=0x0000000000000068f116a894984e2db1123eb395&max_depth=6"
+   },
+   "addresses": [
+    "0x0026e64772314bcfaa62d7c11e3c94ed43c22315",
+    "0x0029ce8962ebce6f68b03a144bcb89e8ecedbb75",
+    "0x011509e0ca3c098d03af641df8fda549dd2fa585",
+    "0x0165090e48f97aad08960dc148ad47a879d49305",
+    "0x0192b3084c4ac8a374a811c3b877df3919b162d5",
+    "0x019b6d68041fdbffbd779491dbeffebd3068d375",
+    "0x01eb2835800dc986507080004069d0190dd4d265",
+    "0x0220f0b422550f1c769180161f50d4012615a685",
+    "0x0273f8251e26263e7a4e3d69df0e4671c592d785",
+    "0x02fff1bb31ab7c9bff3fc6d4579b67aba71fc015"
+   ]
+  },
+  {
+   "name": "unichain neighbors out (5 hubs)",
+   "path": {
+    "v2": "/emv2/neighbors?chain=unichain&address={addr}&dir=out&limit=64"
+   },
+   "addresses": [
+    "0x095081de012407be5ea3cffa02863caea2d0e4e5",
+    "0x15f25db257019b338715a4f3b1ad1ca5b0a964e5",
+    "0x35596c4b39db13bc6e0a27a5a84cdda49097ca25",
+    "0x3a23f943181408eac424116af7b7790c94cb97a5",
+    "0x457dd4d67038a4dcc2b39462f830e2c0e90b7e45"
+   ]
+  },
+  {
+   "name": "unichain trace-graph in 2 hops (20 random)",
+   "path": {
+    "v2": "/trace-graph?chain=unichain&address={addr}&direction=in&hops=2"
+   },
+   "addresses": [
+    "0x0029ac8be9230cad88dbb293a6c520ae41b69ba5",
+    "0x00a90240060aa1292b9a4ac501e5d33c9e15c265",
+    "0x00dee90a15a75636e8ff6c38dd666d17dac6a725",
+    "0x00e001226f638da3cb2bcdf84b32cd6832761de5",
+    "0x015603ed08dab20304bab05c3ca4564f99da7cc5",
+    "0x016c1bee5984cfec5439d5e98474a711967b67c5",
+    "0x01a849e7ebe77c4ca6bdb189f8f7720357276105",
+    "0x01c10b08b2ce46dd77c5ed65d50fe3e8fd3e20e5",
+    "0x01f49574c49c3cf0fcd5b2f76ab3313c3b6402a5",
+    "0x01f6d1c7d438d2b1e6f22ab15b2b87543b7f74a5",
+    "0x0224a8285ebdb5e59a86a708e7f23d4545c839c5",
+    "0x0244c797159dcfd4bbd22d97b1820165af742b45",
+    "0x0257afbae1db8fff4f8073de26f7330038cfbce5",
+    "0x025ac67a87c0aa29abcbbd77e6fc0471b6a5f965",
+    "0x02964957ae031c328a06ff6aaeee4ae3a1659465",
+    "0x02eb4f78e627d94f7cff9020ec76187ca2312705",
+    "0x031dc9d8b6ce3c1d5364646d825a415ee7c5d185",
+    "0x032b727ee9026643f96814e88a5ca137cad89b25",
+    "0x03661eb883df3d92be53bbbb8fc0d6fba6aeed05",
+    "0x03af2dad6f34e411b5239d994bf7f674e9aee565"
+   ]
+  },
+  {
+   "name": "unichain trace-graph out 3 hops (10 random)",
+   "path": {
+    "v2": "/trace-graph?chain=unichain&address={addr}&direction=out&hops=3"
+   },
+   "addresses": [
+    "0x0029ac8be9230cad88dbb293a6c520ae41b69ba5",
+    "0x00a90240060aa1292b9a4ac501e5d33c9e15c265",
+    "0x00dee90a15a75636e8ff6c38dd666d17dac6a725",
+    "0x00e001226f638da3cb2bcdf84b32cd6832761de5",
+    "0x015603ed08dab20304bab05c3ca4564f99da7cc5",
+    "0x016c1bee5984cfec5439d5e98474a711967b67c5",
+    "0x01a849e7ebe77c4ca6bdb189f8f7720357276105",
+    "0x01c10b08b2ce46dd77c5ed65d50fe3e8fd3e20e5",
+    "0x01f49574c49c3cf0fcd5b2f76ab3313c3b6402a5",
+    "0x01f6d1c7d438d2b1e6f22ab15b2b87543b7f74a5"
+   ]
+  },
+  {
+   "name": "unichain path 6 (10 pairs)",
+   "path": {
+    "v2": "/trace?chain=unichain&from={addr}&to=0x095081de012407be5ea3cffa02863caea2d0e4e5&max_depth=6"
+   },
+   "addresses": [
+    "0x0029ac8be9230cad88dbb293a6c520ae41b69ba5",
+    "0x00a90240060aa1292b9a4ac501e5d33c9e15c265",
+    "0x00dee90a15a75636e8ff6c38dd666d17dac6a725",
+    "0x00e001226f638da3cb2bcdf84b32cd6832761de5",
+    "0x015603ed08dab20304bab05c3ca4564f99da7cc5",
+    "0x016c1bee5984cfec5439d5e98474a711967b67c5",
+    "0x01a849e7ebe77c4ca6bdb189f8f7720357276105",
+    "0x01c10b08b2ce46dd77c5ed65d50fe3e8fd3e20e5",
+    "0x01f49574c49c3cf0fcd5b2f76ab3313c3b6402a5",
+    "0x01f6d1c7d438d2b1e6f22ab15b2b87543b7f74a5"
+   ]
+  }
+ ]
+}

@@ -43,3 +43,10 @@ fmt:
 
 clean:
 	rm -rf contracts/out contracts/cache aggregator/target
+
+agents-check:
+	python3 -m compileall -q \
+		agents/track agents/muse agents/bridge agents/mcp agents/context agents/realtime \
+		search/investigate search/overlay search/search-guard \
+		research/refresh-py research/labels research/investigate research/mapping research/traders \
+		research/ask_report.py

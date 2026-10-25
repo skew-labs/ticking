@@ -1,0 +1,18 @@
+{
+  "version": "market-choice-v1",
+  "networkHints": {
+    "arbitrum": "\\barbitrum(?: one)?\\b|아비트럼",
+    "solana": "\\bsolana\\b|솔라나",
+    "robinhood": "\\brobinhood(?: chain)?\\b|로빈후드",
+    "exchange": "\\bexchange(?: reference)?\\b|거래소\\s*기준",
+    "base": "\\bbase\\s+(?:chain|network|mainnet|wallet|map|chart)\\b|\\bon\\s+base\\b|베이스(?:\\s|체인|네트워크|에서|의|$)",
+    "arc": "\\barc\\s+(?:chain|network|mainnet|wallet|map)\\b|\\bon\\s+arc\\b|아크(?:\\s|체인|네트워크|에서|의|$)",
+    "ethereum": "(?:^(?=.*(?:\\b(?:wallets?|address|chain|network|mainnet|map|bridge)\\b|0x[0-9a-f]{40}|지갑|주소|체인|네트워크|온체인|맵|매핑|브리지)).*?(?:\\bethereum\\b|이더리움)|\\bon\\s+(?:the\\s+)?ethereum\\b)",
+    "optimism": "\\boptimism\\b|\\bop mainnet\\b|옵티미즘",
+    "linea": "\\blinea\\b|리니아",
+    "polygon": "\\bpolygon\\b|폴리곤",
+    "unichain": "\\bunichain\\b|유니체인",
+    "hyperevm": "\\bhyper\\s?evm\\b|하이퍼\\s?evm",
+    "xlayer": "\\bx[ -]?layer\\b|엑스\\s?레이어|x\\s?레이어"
+  }
+}

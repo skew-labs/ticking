@@ -1,0 +1,32 @@
+--- base/src/conversation-state.js	2026-10-22 15:50:51.987597110 +0100
++++ src/conversation-state.js	2026-10-22 15:50:59.591654155 +0100
+@@ -1,3 +1,4 @@
++import {loadThread,resetThread} from './assistant-thread.js';
+ import {resolveBody,acceptResult,currentContext,contextFor,resultActions,routeContext} from './investigation-context.js';
+ import {accountStorageKey,cloudDocument} from './workspace-cloud.js';
+ import {clearWalletResearch} from './wallet-research.js';
+@@ -25,7 +26,7 @@
+ }
+ export function conversation(){try{const raw=sessionStorage.getItem(accountStorageKey(KEY));if(raw&&raw.length<=160000)memory=clean(JSON.parse(raw));}catch{}return clean(memory);}
+ export function rememberMessage(message){const state=conversation();state.messages.push({...message,id:'m_'+crypto.randomUUID(),at:Date.now()});memory=clean(state);try{sessionStorage.setItem(accountStorageKey(KEY),JSON.stringify(memory));}catch{}window.dispatchEvent(new Event('tickingconversation'));return memory.messages.at(-1);}
+-export function clearConversation(){clearWalletResearch();clearAgentWallet();clearWalletToolResults();memory={version:1,messages:[]};try{sessionStorage.removeItem(accountStorageKey(KEY));}catch{}window.dispatchEvent(new Event('tickingconversation'));}
++export function clearConversation(){resetThread();clearWalletResearch();clearAgentWallet();clearWalletToolResults();memory={version:1,messages:[]};try{sessionStorage.removeItem(accountStorageKey(KEY));}catch{}window.dispatchEvent(new Event('tickingconversation'));}
+ export function rememberResolution(result){
+  acceptResult(result);
+  const extra=resultActions(result).filter(a=>safeRoute(a.route));
+@@ -36,3 +37,15 @@
+ let cloudConversation=null,applyingCloud=false;
+ window.addEventListener('tickingaccountchange',event=>{cloudConversation?.destroy();if(event.detail.previous){memory={version:1,messages:[]};window.dispatchEvent(new Event('tickingconversation'));}cloudConversation=event.detail.id?cloudDocument('conversation','main',{read:conversation,apply:value=>{applyingCloud=true;memory=clean(value);try{sessionStorage.setItem(accountStorageKey(KEY),JSON.stringify(memory));}catch{}window.dispatchEvent(new Event('tickingconversation'));applyingCloud=false;}}):null;});
+ window.addEventListener('tickingconversation',()=>{if(!applyingCloud)cloudConversation?.save();});
++
++// Restore this user's server thread when the tab has no local conversation yet.
++let restored=false;
++export async function restoreConversation(){
++ if(restored)return conversation();restored=true;
++ if(conversation().messages.length)return conversation();
++ const t=await loadThread();if(!t||!Array.isArray(t.recent)||!t.recent.length)return conversation();
++ const messages=[];for(const r of t.recent){const at=Date.now();if(r.query)messages.push({id:'t_'+r.seq+'_u',role:'user',text:String(r.query).slice(0,5000),at,source:'thread'});if(r.summary)messages.push({id:'t_'+r.seq+'_a',role:'assistant',text:String(r.summary).slice(0,5000),at,source:'thread:'+String(r.capability||'').slice(0,60)});}
++ memory=clean({version:1,messages});try{sessionStorage.setItem(accountStorageKey(KEY),JSON.stringify(memory));}catch{}
++ window.dispatchEvent(new Event('tickingconversation'));return conversation();
++}
++if(typeof window!=='undefined')queueMicrotask(()=>restoreConversation());

@@ -1,0 +1,22 @@
+{
+ "serve": "127.0.0.1:8740",
+ "default": "old",
+ "routes": {
+  "holders-at": {"arc": "shadow"},
+  "wallet-trades": {"arc": "shadow"},
+  "acquisition": {"arc": "shadow"},
+  "trace-graph": {"arc": "shadow"},
+  "trace": {"arc": "shadow"},
+  "path": {"arc": "shadow"},
+  "neighbors": {"arc": "shadow"},
+  "tools/wallet": {"arc": "shadow"},
+  "tools/holders": {"arc": "shadow"},
+  "tools/trace": {"arc": "shadow"}
+ },
+ "sample": 0.5,
+ "min_gap_ms": 200,
+ "timeout_ms": 1500,
+ "queue": 64,
+ "log_max_mb": 64,
+ "log_keep": 5
+}

@@ -28,3 +28,17 @@ out/
 *.key
 
 .DS_Store
+
+# Agent / EM local state
+**/.azcopy/
+**/cache/
+**/state/
+**/*.parquet
+**/*.seg
+**/*.segV20
+**/node_modules/
+**/.venv/
+**/__pycache__/
+**/.env
+**/.env.*
+!**/.env.example

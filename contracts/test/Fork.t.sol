@@ -66,6 +66,7 @@ contract ForkTest is Test {
     address constant CRCL = 0xdF0992E440dD0be65BD8439b609d6D4366bf1CB5;
     address constant SPCX = 0x4a0E65A3EcceC6dBe60AE065F2e7bb85Fae35eEa;
     address constant T117 = 0x117cc2133c37B721F49dE2A7a74833232B3B4C0C;
+    address constant FEE_TO = 0x3e13cd3704099424a6301Ea4125791a6a1433637;
     address constant PM = 0x8366a39CC670B4001A1121B8F6A443A643e40951;
     address constant BALV = 0xB055000fbE3cc9bDE7742C583a86cc6283E3fF85;
     address constant WOO = 0x5520385bFcf07Ec87C4c53A7d8d65595Dff69FA4;
@@ -100,10 +101,12 @@ contract ForkTest is Test {
         else vm.createSelectFork(rpc, blk);
         deployCodeTo(
             "TickingRouter.sol:TickingRouter",
-            abi.encode([PM, BALV, WOO, TESS, KYB, F_UNI, F_SUSHI, F_FORK, F_TS0, F_TS1, F_ALG, PCS_V, PCS_CLPM]),
+            abi.encode(
+                [PM, BALV, WOO, TESS, KYB, F_UNI, F_SUSHI, F_FORK, F_TS0, F_TS1, F_ALG, PCS_V, PCS_CLPM], WETH, FEE_TO
+            ),
             ROUTER_AT
         );
-        r = TickingRouter(ROUTER_AT);
+        r = TickingRouter(payable(ROUTER_AT));
         r0 = new TickingRouterV0(PM, BALV, TESS);
     }
 
@@ -127,11 +130,17 @@ contract ForkTest is Test {
         uint256 s = vm.snapshotState();
         _fund(tin, amt);
         uint256 b = IERC20x(tout).balanceOf(rcpt);
+        uint256 bf = IERC20x(tout).balanceOf(FEE_TO);
         vm.prank(user);
         uint256 g = gasleft();
         out = r.swap(prog);
         gas_ = g - gasleft();
         assertEq(IERC20x(tout).balanceOf(rcpt) - b, out, "I3 recipient delta");
+        // v2 I7: returns GROSS so every quoter/V0 comparison stays wei-exact; net and fee are checked here.
+        uint256 fee = IERC20x(tout).balanceOf(FEE_TO) - bf;
+        uint256 gross = out + fee;
+        assertEq(fee, gross * 5 / 10_000, "I7 fee == floor(gross*5bps)");
+        out = gross;
         assertEq(IERC20x(tin).balanceOf(address(r)), 0, "I2 tin");
         assertEq(IERC20x(tout).balanceOf(address(r)), 0, "I2 tout");
         assertEq(IERC20x(tin).balanceOf(user), 0, "exact spend");
@@ -186,6 +195,70 @@ contract ForkTest is Test {
     function _qv4(address tin, address tout, uint256 amt, uint24 fee, int24 ts) internal returns (uint256 q) {
         (address c0, address c1) = tin < tout ? (tin, tout) : (tout, tin);
         (q,) = IV4Quoter(QV4).quoteExactInputSingle(Q4(K4(c0, c1, fee, ts, address(0)), tin < tout, uint128(amt), ""));
+    }
+
+    function _qv4n(bool ethIn, address other, uint256 amt, uint24 fee, int24 ts) internal returns (uint256 q) {
+        (q,) = IV4Quoter(QV4)
+            .quoteExactInputSingle(Q4(K4(address(0), other, fee, ts, address(0)), ethIn, uint128(amt), ""));
+    }
+
+    /// @dev v2 I8: native-ETH V4 pool (currency0 = address(0)), program-level WETH. Wei-exact vs V4Quoter.
+    function test_fork_v4_native_WETH_USDG() public {
+        for (uint256 k; k < 3; ++k) {
+            uint256 amt = [uint256(1e15), 1e17, 1e18][k];
+            (uint256 o,) = _v1(
+                bytes.concat(_h(WETH, USDG), P.v4(T | 0x20, uint128(amt), USDG, 500, 10, address(0))), WETH, USDG, amt
+            );
+            assertEq(o, _qv4n(true, USDG, amt, 500, 10), "native in: gross == V4Quoter");
+            assertEq(address(r).balance, 0);
+            emit log_named_uint("native WETH->USDG gross", o);
+        }
+    }
+
+    function test_fork_v4_native_USDG_WETH() public {
+        for (uint256 k; k < 3; ++k) {
+            uint256 amt = [uint256(1e6), 100e6, 2000e6][k];
+            (uint256 o,) = _v1(
+                bytes.concat(_h(USDG, WETH), P.v4(T | 0x20, uint128(amt), WETH, 500, 10, address(0))), USDG, WETH, amt
+            );
+            assertEq(o, _qv4n(false, USDG, amt, 500, 10), "native out: gross == V4Quoter");
+            assertEq(address(r).balance, 0);
+        }
+    }
+
+    function testFuzz_fork_v4_native(uint64 seed, bool ethIn) public {
+        if (ethIn) {
+            uint256 amt = bound(seed, 1e12, 3e18);
+            (uint256 o,) = _v1(
+                bytes.concat(_h(WETH, USDG), P.v4(T | 0x20, uint128(amt), USDG, 500, 10, address(0))), WETH, USDG, amt
+            );
+            assertEq(o, _qv4n(true, USDG, amt, 500, 10));
+        } else {
+            uint256 amt = bound(seed, 1e4, 5000e6);
+            (uint256 o,) = _v1(
+                bytes.concat(_h(USDG, WETH), P.v4(T | 0x20, uint128(amt), WETH, 500, 10, address(0))), USDG, WETH, amt
+            );
+            assertEq(o, _qv4n(false, USDG, amt, 500, 10));
+        }
+    }
+
+    /// @dev native hop chained after a V3 hop: USDG -(univ3)-> WETH -(native V4)-> USDG is not allowed (tin==tout);
+    ///      use CRCL -(v4 erc20)-> USDG -(native v4)-> WETH.
+    function test_fork_v4_native_chained() public {
+        uint256 amt = 1e18;
+        uint256 q1 = _qv4(CRCL, USDG, amt, 3000, 30);
+        uint256 q2 = _qv4n(false, USDG, q1, 500, 10);
+        (uint256 o,) = _v1(
+            bytes.concat(
+                _h(CRCL, WETH),
+                P.v4(0, uint128(amt), USDG, 3000, 30, address(0)),
+                P.v4(CH | T | 0x20, 0, WETH, 500, 10, address(0))
+            ),
+            CRCL,
+            WETH,
+            amt
+        );
+        assertEq(o, q2, "chained gross == quoter composition");
     }
 
     // ───────────── per venue (differential vs V0 + quoter where one exists) ─────────────
@@ -460,9 +533,12 @@ contract ForkTest is Test {
     function _tryV1(bytes memory prog, address tin, address tout, uint256 amt) internal returns (uint256 o) {
         uint256 s = vm.snapshotState();
         _fund(tin, amt);
+        uint256 bf = IERC20x(tout).balanceOf(FEE_TO);
         vm.prank(user);
         try r.swap(prog) returns (uint256 out) {
-            o = out;
+            uint256 fee = IERC20x(tout).balanceOf(FEE_TO) - bf; // v2 I7
+            assertEq(fee, (out + fee) * 5 / 10_000, "I7 fee");
+            o = out + fee; // gross
             emit log_named_uint("out", out);
         } catch (bytes memory e) {
             emit log_named_bytes("clean revert (no liquidity)", e);

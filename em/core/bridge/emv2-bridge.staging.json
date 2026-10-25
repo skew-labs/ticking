@@ -1,0 +1,33 @@
+{
+ "serve": "127.0.0.1:8740",
+ "default": "old",
+ "routes": {
+  "holders-at": {
+   "arc": "shadow",
+   "linea": "shadow",
+   "unichain": "shadow",
+   "robinhood": "shadow",
+   "optimism": "shadow"
+  },
+  "address-chains": {
+   "*": "shadow"
+  },
+  "neighbors": {
+   "arc": "shadow",
+   "linea": "shadow",
+   "unichain": "shadow",
+   "robinhood": "shadow",
+   "optimism": "shadow"
+  },
+  "accumulators": "new",
+  "graph": "new",
+  "featured": "new"
+ },
+ "sample": 1.0,
+ "min_gap_ms": 100,
+ "timeout_ms": 2000,
+ "queue": 64,
+ "log_max_mb": 64,
+ "log_keep": 5,
+ "align_old": true
+}

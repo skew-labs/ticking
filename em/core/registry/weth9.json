@@ -1,0 +1,105 @@
+{
+ "_status": "CONFIRMED by core 2026-10-20 (arc included); ops wrote it. needs_extra chains are rebuilt with emv2-ledger-weth output via emv2-build-ledger --extra.",
+ "_evidence": "map emitter_topics (Deposit 0xe1fffcc4\u2026, Withdrawal 0x7fcf532c\u2026) per chain; WETH_* rows counted in the full staged token_transfers (optimism, unichain, robinhood, arc snapshot) or in one late sample file (ethereum, base, polygon, linea, arbitrum).",
+ "ethereum": {
+  "weth9": [
+   "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
+  ],
+  "deposit_n": 175516168,
+  "tt_has_weth_rows": true,
+  "needs_extra": false
+ },
+ "optimism": {
+  "weth9": [
+   "0x4200000000000000000000000000000000000006"
+  ],
+  "deposit_n": 4104036,
+  "tt_has_weth_rows": true,
+  "tt_weth_deposit_rows": 4104036,
+  "needs_extra": false
+ },
+ "base": {
+  "weth9": [
+   "0x4200000000000000000000000000000000000006"
+  ],
+  "deposit_n": 542732211,
+  "tt_has_weth_rows": true,
+  "needs_extra": false
+ },
+ "unichain": {
+  "weth9": [
+   "0x4200000000000000000000000000000000000006"
+  ],
+  "deposit_n": 22723889,
+  "tt_has_weth_rows": true,
+  "tt_weth_deposit_rows": 22723889,
+  "needs_extra": false
+ },
+ "polygon": {
+  "weth9": [
+   "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270"
+  ],
+  "deposit_n": 102446441,
+  "tt_has_weth_rows": false,
+  "needs_extra": true
+ },
+ "linea": {
+  "weth9": [
+   "0xe5d7c2a44ffddf6b295a15c148167daaaf5cf34f"
+  ],
+  "deposit_n": 16010649,
+  "tt_has_weth_rows": false,
+  "needs_extra": true
+ },
+ "arbitrum": {
+  "weth9": [],
+  "note": "aeWETH 0x82af\u2026bab1 emits no WETH9 Deposit/Withdrawal topics; mints and burns are Transfer from/to 0x0 (9,916 zero-address mints in the sample file, 0 WETH_ rows), so no double count and no extra",
+  "needs_extra": false
+ },
+ "robinhood": {
+  "weth9": [],
+  "note": "no WETH9-scale emitter; top Deposit+Withdrawal contract 0xc087\u20268bce has 87/215 events",
+  "needs_extra": false
+ },
+ "arc": {
+  "weth9": [
+   "0xe6b0a06c87a1422f966e8a31b5d1f3b3fa348c5a"
+  ],
+  "deposit_n": 1420660,
+  "withdrawal_n": 1417771,
+  "tt_weth_rows": 0,
+  "tt_erc20_rows": 2315,
+  "note": "WETH9-style wrapper (Deposit and Withdrawal counts nearly equal, only 2,315 ERC20 transfers, 2-topic 32-byte data events); confirmed by core",
+  "needs_extra": true
+ },
+ "contracts": {
+  "ethereum": [
+   "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
+  ],
+  "optimism": [
+   "0x4200000000000000000000000000000000000006"
+  ],
+  "base": [
+   "0x4200000000000000000000000000000000000006"
+  ],
+  "unichain": [
+   "0x4200000000000000000000000000000000000006"
+  ],
+  "polygon": [
+   "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270"
+  ],
+  "linea": [
+   "0xe5d7c2a44ffddf6b295a15c148167daaaf5cf34f"
+  ],
+  "arbitrum": [],
+  "robinhood": [],
+  "arc": [
+   "0xe6b0a06c87a1422f966e8a31b5d1f3b3fa348c5a"
+  ]
+ },
+ "needs_extra": [
+  "polygon",
+  "linea",
+  "arc"
+ ]
+}

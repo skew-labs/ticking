@@ -1,15 +1,92 @@
 {
- "total": 154,
+ "total": 189,
  "stillborn": 1,
- "valid": 153,
- "killed": 152,
- "kill_rate": 99.35,
+ "valid": 188,
+ "killed": 176,
+ "kill_rate": 93.62,
  "survivors": [
   {
-   "line": 178,
+   "line": 107,
+   "kind": "\\|\\|->&&",
+   "orig": "if (weth == address(0) || feeRecipient == address(0)) revert Malformed();",
+   "mutant": "if (weth == address(0) && feeRecipient == address(0)) revert Malformed();",
+   "result": "SURVIVED"
+  },
+  {
+   "line": 107,
+   "kind": "delete-stmt",
+   "orig": "if (weth == address(0) || feeRecipient == address(0)) revert Malformed();",
+   "mutant": "{}",
+   "result": "SURVIVED"
+  },
+  {
+   "line": 186,
+   "kind": "delete-stmt",
+   "orig": "if (_bal(tokenOut, address(this)) != selfBefore) revert BadToken(); // I2/I7: no dust, no fee-on-transfer games",
+   "mutant": "{}",
+   "result": "SURVIVED"
+  },
+  {
+   "line": 207,
    "kind": "(?<![<>=!])<(?![<=])-><=",
    "orig": "bool zfo = tin < tout;",
    "mutant": "bool zfo = tin <= tout;",
+   "result": "SURVIVED"
+  },
+  {
+   "line": 277,
+   "kind": "==->!=",
+   "orig": "address m = k == OP_KYB ? address(this) : to;",
+   "mutant": "address m = k != OP_KYB ? address(this) : to;",
+   "result": "SURVIVED"
+  },
+  {
+   "line": 338,
+   "kind": "!=->==",
+   "orig": "if (m != to) _transfer(tout, to, got);",
+   "mutant": "if (m == to) _transfer(tout, to, got);",
+   "result": "SURVIVED"
+  },
+  {
+   "line": 403,
+   "kind": "<=-><",
+   "orig": "if (din != -int128(int256(a)) || dout <= 0) revert PartialFill();",
+   "mutant": "if (din != -int128(int256(a)) || dout < 0) revert PartialFill();",
+   "result": "SURVIVED"
+  },
+  {
+   "line": 403,
+   "kind": "\\|\\|->&&",
+   "orig": "if (din != -int128(int256(a)) || dout <= 0) revert PartialFill();",
+   "mutant": "if (din != -int128(int256(a)) && dout <= 0) revert PartialFill();",
+   "result": "SURVIVED"
+  },
+  {
+   "line": 403,
+   "kind": "delete-stmt",
+   "orig": "if (din != -int128(int256(a)) || dout <= 0) revert PartialFill();",
+   "mutant": "{}",
+   "result": "SURVIVED"
+  },
+  {
+   "line": 416,
+   "kind": "delete-stmt",
+   "orig": "_pay(other, src, POOL_MANAGER, a);",
+   "mutant": "{}",
+   "result": "SURVIVED"
+  },
+  {
+   "line": 422,
+   "kind": "!=->==",
+   "orig": "if (to != address(this)) _transfer(WETH, to, o);",
+   "mutant": "if (to == address(this)) _transfer(WETH, to, o);",
+   "result": "SURVIVED"
+  },
+  {
+   "line": 424,
+   "kind": "delete-stmt",
+   "orig": "if (address(this).balance != e0) revert PartialFill(); // I8: every wei unwrapped/taken is settled/wrapped",
+   "mutant": "{}",
    "result": "SURVIVED"
   }
  ]

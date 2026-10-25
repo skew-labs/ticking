@@ -1,0 +1,282 @@
+{
+  "version": "economic-assistant-v2",
+  "aliases": {
+    "테슬라": "TSLAx",
+    "tesla": "TSLAx",
+    "tsla": "TSLAx",
+    "tesla stock": "TSLAx",
+    "엔비디아": "NVDAx",
+    "nvidia": "NVDAx",
+    "nvda": "NVDAx",
+    "애플": "AAPLx",
+    "apple": "AAPLx",
+    "aapl": "AAPLx",
+    "마이크로소프트": "MSFTx",
+    "microsoft": "MSFTx",
+    "msft": "MSFTx",
+    "아마존": "AMZNx",
+    "amazon": "AMZNx",
+    "amzn": "AMZNx",
+    "메타 주식": "METAx",
+    "meta stock": "METAx",
+    "페이스북": "METAx",
+    "비트코인": "BTC",
+    "이더리움": "ETH",
+    "솔라나": "SOL",
+    "리플": "XRP",
+    "도지": "DOGE",
+    "도지코인": "DOGE",
+    "수이": "SUI",
+    "아발란체": "AVAX",
+    "체인링크": "LINK",
+    "유니스왑": "UNI",
+    "라이트코인": "LTC",
+    "에이다": "ADA",
+    "카르다노": "ADA",
+    "폴카닷": "DOT",
+    "주피터": "JUP",
+    "레이디움": "RAY",
+    "지토": "JTO",
+    "파이스": "PYTH",
+    "봉크": "BONK",
+    "오르카": "ORCA",
+    "렌더": "RENDER",
+    "아비트럼": "ARB",
+    "옵티미즘": "OP",
+    "니어": "NEAR",
+    "펭구": "PENGU",
+    "펌프": "PUMP"
+  },
+  "conversation": [
+    {
+      "id": "greeting",
+      "terms": [
+        "hi",
+        "hello",
+        "hey",
+        "hello ticking",
+        "hi ticking",
+        "안녕",
+        "안녕하세요",
+        "하이",
+        "안뇽",
+        "반가워",
+        "你好",
+        "こんにちは",
+        "hola",
+        "bonjour"
+      ],
+      "message": "Hi! I’m ticking. Ask in plain language — who accumulated an asset, where funds went, whale Flow last week — and I’ll answer with Flow charts (in/out/holdings), not a bubble map.",
+      "choices": [
+        {
+          "title": "Whale Tracker",
+          "route": "#/tracker"
+        },
+        {
+          "title": "Tesla xStock",
+          "route": "#/token/TSLAx"
+        },
+        {
+          "title": "SOL Pro terminal",
+          "route": "#/terminal/SOL"
+        },
+        {
+          "title": "Browse markets",
+          "route": "#/markets"
+        }
+      ]
+    },
+    {
+      "id": "help",
+      "terms": [
+        "help",
+        "what can you do",
+        "what can i ask",
+        "show commands",
+        "도움말",
+        "뭐 할 수 있어",
+        "뭐할수있어",
+        "뭐해",
+        "기능 알려줘",
+        "도와줘",
+        "사용법"
+      ],
+      "message": "Ask “Who accumulated ARB?”, “Arbitrum Foundation Flow”, paste a public address, or “Whale Tracker”. Muse reads wallet-flow / asset-flow and mounts Flow charts in the answer — related wallets are series on the same axis, not a map expand.",
+      "choices": [
+        {
+          "title": "Browse markets",
+          "route": "#/markets"
+        },
+        {
+          "title": "Chart tools guide",
+          "route": "#/docs/agent-tools"
+        },
+        {
+          "title": "Open Pro",
+          "route": "#/terminal/SOL"
+        }
+      ]
+    },
+    {
+      "id": "thanks",
+      "terms": [
+        "thanks",
+        "thank you",
+        "thank you very much",
+        "고마워",
+        "고마워요",
+        "감사",
+        "감사합니다",
+        "땡큐"
+      ],
+      "message": "You’re welcome. Tell me what you’d like to explore next."
+    },
+    {
+      "id": "identity",
+      "terms": [
+        "who are you",
+        "what are you",
+        "너 누구야",
+        "너누구야",
+        "누구야",
+        "넌 누구야"
+      ],
+      "message": "I’m the ticking assistant. Economic Machine handles known navigation and chart commands, and Muse interprets requests that need more context. Your chart tools stay editable."
+    },
+    {
+      "id": "acknowledge",
+      "terms": [
+        "ok",
+        "okay",
+        "알겠어",
+        "알았어",
+        "오케이",
+        "좋아",
+        "좋네"
+      ],
+      "message": "Ready when you are. Name a market or tell me what to add to your chart."
+    },
+    {
+      "id": "farewell",
+      "terms": [
+        "bye",
+        "goodbye",
+        "잘가",
+        "나중에 보자"
+      ],
+      "message": "See you next time. Your conversation stays in this tab."
+    }
+  ],
+  "pages": [
+    {
+      "id": "tracker",
+      "terms": [
+        "whale tracker",
+        "whales",
+        "whale",
+        "웨일",
+        "고래",
+        "트래커"
+      ],
+      "title": "Whale Tracker",
+      "route": "#/tracker"
+    },
+    {
+      "id": "markets",
+      "terms": [
+        "markets",
+        "market",
+        "마켓",
+        "시장",
+        "마켓 목록"
+      ],
+      "title": "Markets",
+      "route": "#/markets"
+    },
+    {
+      "id": "analytics",
+      "terms": [
+        "analytics",
+        "애널리틱스",
+        "분석 페이지"
+      ],
+      "title": "Analytics",
+      "route": "#/analytics"
+    },
+    {
+      "id": "research",
+      "terms": [
+        "research",
+        "blog",
+        "articles",
+        "리서치",
+        "블로그"
+      ],
+      "title": "Research",
+      "route": "#/blog"
+    },
+    {
+      "id": "news",
+      "terms": [
+        "news",
+        "뉴스"
+      ],
+      "title": "News",
+      "route": "#/news"
+    },
+    {
+      "id": "docs",
+      "terms": [
+        "docs",
+        "documentation",
+        "문서",
+        "개발 문서"
+      ],
+      "title": "Documentation",
+      "route": "#/docs"
+    },
+    {
+      "id": "developers",
+      "terms": [
+        "developers",
+        "developer playground",
+        "sdk",
+        "개발자",
+        "개발자 페이지"
+      ],
+      "title": "Developers",
+      "route": "#/developers"
+    },
+    {
+      "id": "pricing",
+      "terms": [
+        "pricing",
+        "plans",
+        "요금제",
+        "가격표"
+      ],
+      "title": "Pricing",
+      "route": "#/pricing"
+    },
+    {
+      "id": "console",
+      "terms": [
+        "console",
+        "콘솔"
+      ],
+      "title": "Console",
+      "route": "#/console"
+    },
+    {
+      "id": "billing",
+      "terms": [
+        "billing",
+        "빌링",
+        "결제 내역"
+      ],
+      "title": "Billing",
+      "route": "#/console/billing"
+    }
+  ],
+  "productFraming": "search_to_flow_v1"
+}

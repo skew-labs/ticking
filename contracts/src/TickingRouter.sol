@@ -2,7 +2,7 @@
 // !!! UNAUDITED. DO NOT DEPLOY WITH REAL FUNDS BEFORE AN INDEPENDENT AUDIT !!!
 pragma solidity 0.8.26;
 
-/// @title TickingRouter v1
+/// @title TickingRouter v2
 /// @author Ticking
 /// @notice Ownerless, immutable, stateless executor for routes produced by the Ticking off-chain engine on
 ///         Robinhood Chain. A route is a tightly bit-packed program (see ARCHITECTURE.md §Encoding) interpreted
@@ -16,6 +16,13 @@ pragma solidity 0.8.26;
 ///         I5 Token identity: first input is tokenIn, every hop input is the previous hop output, every
 ///            terminal output is tokenOut. No hop may silently swap identity.
 ///         I6 Exact-in is exact: every hop consumes exactly its amount or the call reverts (quote == fill).
+///         I7 Fee: terminal output (gross) lands at the router; fee = floor(gross * FEE_BPS / 10_000) goes to
+///            FEE_RECIPIENT, gross - fee to recipient, in the same call. FEE_BPS is a constant (5 = 0.05%),
+///            FEE_RECIPIENT immutable. Rounding is down, i.e. in the user's favor. minOut is NET (checked on the
+///            recipient's balance delta after the fee).
+///         I8 Native ETH: V4 pools keyed on currency0 = address(0) are traded as WETH at the program level
+///            (op flag F_NATIVE). ETH is only ever held inside one hop: unwrapped right before settle, wrapped
+///            right after take. receive() accepts ETH only from WETH / PoolManager and only while locked.
 contract TickingRouter {
     // ───────────────────────────── opcodes (low nibble of op byte) ─────────────────────────────
     uint256 internal constant OP_V3 = 1; // V3 fork, factory.getPool(t0,t1,uint24 fee)
@@ -34,6 +41,11 @@ contract TickingRouter {
     uint256 internal constant PCS_DELTA_HOOKS = 0x0c00;
     uint256 internal constant F_CHAIN = 0x80; // input = previous hop output held by router
     uint256 internal constant F_TERM = 0x40; // output goes to recipient and must be tokenOut
+    uint256 internal constant F_NATIVE = 0x20; // V4 only: the pool key uses native ETH (address(0)) in place of WETH
+    uint256 internal constant F_RESERVED = 0x10; // must be zero
+
+    /// @notice Protocol fee in basis points of the route's gross output. Hard-coded, not settable.
+    uint256 public constant FEE_BPS = 5;
 
     uint160 internal constant MIN_SQRT_P1 = 4295128740;
     uint160 internal constant MAX_SQRT_M1 = 1461446703485210103287273052203988822378723970341;
@@ -60,6 +72,9 @@ contract TickingRouter {
     address public immutable F_ALG; // Algebra factory
     address public immutable PCS_VAULT;
     address public immutable PCS_CLPM;
+    address public immutable WETH;
+    /// @notice Receives the protocol fee. Fixed at deployment.
+    address public immutable FEE_RECIPIENT;
 
     // ───────────────────────────── errors / events ─────────────────────────────
     error Reentrancy();
@@ -72,21 +87,25 @@ contract TickingRouter {
     error Slippage(uint256 out, uint256 minOut);
     error TransferFailed();
 
-    /// @notice One event per executed route. `amountIn` is the exact total pulled from `payer`.
+    /// @notice One event per executed route. `amountIn` is the exact total pulled from `payer`, `amountOut` the
+    ///         net credited to `recipient`, `fee` the protocol fee sent to FEE_RECIPIENT (same token).
     event Swap(
         address indexed payer,
         address indexed recipient,
         address indexed tokenIn,
         address tokenOut,
         uint256 amountIn,
-        uint256 amountOut
+        uint256 amountOut,
+        uint256 fee
     );
 
     /// @dev All venue addresses are fixed forever. Adding a venue = deploying a new router.
-    constructor(address[13] memory a) {
+    constructor(address[13] memory a, address weth, address feeRecipient) {
         for (uint256 i; i < 13; ++i) {
             if (a[i] == address(0)) revert Malformed();
         }
+        if (weth == address(0) || feeRecipient == address(0)) revert Malformed();
+        (WETH, FEE_RECIPIENT) = (weth, feeRecipient);
         (POOL_MANAGER, BAL_VAULT, WOO, TESSERA, KYBER) = (a[0], a[1], a[2], a[3], a[4]);
         (F_UNI, F_SUSHI, F_FORK, F_TS0, F_TS1, F_ALG) = (a[5], a[6], a[7], a[8], a[9], a[10]);
         (PCS_VAULT, PCS_CLPM) = (a[11], a[12]);
@@ -96,7 +115,7 @@ contract TickingRouter {
 
     /// @notice Execute a packed route program. The only state-changing entry point for users.
     /// @param p Program: header(tokenIn 20 | tokenOut 20 | recipient 20 | minOut 16 | deadline 4) then ops.
-    /// @return out Amount of tokenOut credited to recipient (balance delta, fee-on-transfer safe).
+    /// @return out NET amount of tokenOut credited to recipient (balance delta, after the protocol fee).
     function swap(bytes calldata p) external returns (uint256 out) {
         assembly ("memory-safe") {
             // I-lock: tload(T_LOCK) != 0 means we are inside a swap; any re-entry reverts.
@@ -117,6 +136,7 @@ contract TickingRouter {
         ) revert BadToken();
 
         uint256 rcptBefore = _bal(tokenOut, recipient);
+        uint256 selfBefore = _bal(tokenOut, address(this)); // I2: pre-existing router balance is never paid out
         uint256 total;
         uint256 last; // output of previous non-terminal hop, held by router
         address prevOut; // its token
@@ -144,10 +164,11 @@ contract TickingRouter {
             i += 20;
             if (a == 0 || tout == tin || tout == address(0)) revert Malformed();
             if (term ? tout != tokenOut : tout == tokenOut) revert BadToken();
-            address to = term ? recipient : address(this);
+            if (op & F_RESERVED != 0 || (op & F_NATIVE != 0 && op & 0x0f != OP_V4)) revert Malformed();
+            address to = address(this); // I7: every output lands at the router; terminal gross is split below
             address src = chain ? address(0) : msg.sender;
             uint256 got;
-            (got, i) = _hop(p, i, op & 0x0f, tin, tout, a, src, to);
+            (got, i) = _hop(p, i, op & 0x2f, tin, tout, a, src, to);
             if (term) {
                 prevOut = address(0);
                 last = 0;
@@ -157,11 +178,17 @@ contract TickingRouter {
             }
         }
         if (prevOut != address(0) || total == 0) revert Malformed(); // program must end on a terminal hop
+        uint256 gross = _bal(tokenOut, address(this)) - selfBefore;
+        // floor: rounds in the user's favor. No overflow: gross is bounded by the token's supply.
+        uint256 fee = gross * FEE_BPS / 10_000;
+        _transfer(tokenOut, recipient, gross - fee);
+        if (fee != 0) _transfer(tokenOut, FEE_RECIPIENT, fee);
+        if (_bal(tokenOut, address(this)) != selfBefore) revert BadToken(); // I2/I7: no dust, no fee-on-transfer games
         out = _bal(tokenOut, recipient) - rcptBefore;
         if (out < minOut) revert Slippage(out, minOut);
         // Justification: whole call is under the transient lock; event order is irrelevant
         // slither-disable-next-line reentrancy-events
-        emit Swap(msg.sender, recipient, tokenIn, tokenOut, total, out);
+        emit Swap(msg.sender, recipient, tokenIn, tokenOut, total, out, fee);
         assembly ("memory-safe") {
             tstore(T_LOCK, 0)
         }
@@ -175,8 +202,16 @@ contract TickingRouter {
         internal
         returns (uint256 got, uint256 j)
     {
+        bool native = k & F_NATIVE != 0;
+        k &= 0x0f;
         bool zfo = tin < tout;
         (address t0, address t1) = zfo ? (tin, tout) : (tout, tin);
+        if (native) {
+            // I8: WETH leg is native ETH in the pool key; address(0) always sorts first.
+            if (tin == WETH) (zfo, t0, t1) = (true, address(0), tout);
+            else if (tout == WETH) (zfo, t0, t1) = (false, address(0), tin);
+            else revert BadToken();
+        }
         if (k <= OP_ALG) {
             address pool;
             if (k == OP_ALG) {
@@ -327,7 +362,8 @@ contract TickingRouter {
         (PoolKey memory key, address to) = abi.decode(raw, (PoolKey, address));
         int256 d =
             IPoolManager(POOL_MANAGER).swap(key, SwapParams(zfo, -int256(a), zfo ? MIN_SQRT_P1 : MAX_SQRT_M1), "");
-        _settleTake(POOL_MANAGER, d, tin, a, src, zfo, zfo ? key.c1 : key.c0, to);
+        if (key.c0 == address(0)) _settleTakeNative(d, a, src, zfo, key.c1, to);
+        else _settleTake(POOL_MANAGER, d, tin, a, src, zfo, zfo ? key.c1 : key.c0, to);
         return "";
     }
 
@@ -355,6 +391,46 @@ contract TickingRouter {
         // slither-disable-next-line unused-return
         IPoolManager(v).settle();
         IPoolManager(v).take(tout, to, uint256(uint128(dout)));
+    }
+
+    /// @dev I8: V4 native-ETH settlement. Program-level token is WETH; the pool side is ETH.
+    ///      zfo == true  <=> input is ETH (unwrap exactly `a` WETH, settle{value: a}).
+    ///      zfo == false <=> output is ETH (take to router, wrap exactly dout, forward WETH to `to` if needed).
+    function _settleTakeNative(int256 d, uint256 a, address src, bool zfo, address other, address to) internal {
+        int128 d0 = int128(d >> 128);
+        int128 d1 = int128(d);
+        (int128 din, int128 dout) = zfo ? (d0, d1) : (d1, d0);
+        if (din != -int128(int256(a)) || dout <= 0) revert PartialFill();
+        uint256 o = uint256(uint128(dout));
+        uint256 e0 = address(this).balance; // force-sent ETH (selfdestruct) must not brick the venue: compare, not == 0
+        if (zfo) {
+            if (src != address(0)) _transferFrom(WETH, src, address(this), a);
+            IWETH(WETH).withdraw(a);
+            IPoolManager(POOL_MANAGER).sync(address(0));
+            // Justification: settled amount == a == msg.value, enforced by the din check above
+            // slither-disable-next-line unused-return,arbitrary-send-eth
+            IPoolManager(POOL_MANAGER).settle{value: a}();
+            IPoolManager(POOL_MANAGER).take(other, to, o);
+        } else {
+            IPoolManager(POOL_MANAGER).sync(other);
+            _pay(other, src, POOL_MANAGER, a);
+            // slither-disable-next-line unused-return
+            IPoolManager(POOL_MANAGER).settle();
+            IPoolManager(POOL_MANAGER).take(address(0), address(this), o);
+            // slither-disable-next-line arbitrary-send-eth
+            IWETH(WETH).deposit{value: o}();
+            if (to != address(this)) _transfer(WETH, to, o);
+        }
+        if (address(this).balance != e0) revert PartialFill(); // I8: every wei unwrapped/taken is settled/wrapped
+    }
+
+    /// @notice ETH is accepted only mid-swap and only from WETH (unwrap) or the PoolManager (take).
+    receive() external payable {
+        uint256 locked;
+        assembly ("memory-safe") {
+            locked := tload(T_LOCK)
+        }
+        if (locked == 0 || (msg.sender != WETH && msg.sender != POOL_MANAGER)) revert BadCallback();
     }
 
     /// @notice Balancer V3 vault unlock callback (exact-in single swap). Only the vault, only while armed.
@@ -510,6 +586,11 @@ contract TickingRouter {
 // ───────────────────────────── minimal external interfaces ─────────────────────────────
 interface IERC20 {
     function allowance(address, address) external view returns (uint256);
+}
+
+interface IWETH {
+    function deposit() external payable;
+    function withdraw(uint256) external;
 }
 
 interface IV3Pool {

@@ -1,0 +1,17 @@
+title = "ticking"
+
+[extend]
+# Use default rules, then allowlist public chain addresses / fixtures.
+useDefault = true
+
+[allowlist]
+description = "Public Ethereum addresses and verified contract fixtures are not secrets"
+regexes = [
+  '''(?i)0x[a-fA-F0-9]{40}''',
+]
+paths = [
+  '''(^|/)em/.+/verify/.*''',
+  '''(^|/)contracts/''',
+  '''(^|/)docs/''',
+  '''(^|/)aggregator/ENGINE\.md$''',
+]

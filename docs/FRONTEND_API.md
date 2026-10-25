@@ -1,4 +1,4 @@
-# Ticking Router — Frontend API handoff (LIVE at https://api.ticking.dev/api/router/)
+# Ticking Router — Frontend API (LIVE at https://api.ticking.dev/api/router/)
 
 Chain: Robinhood Chain mainnet, chainId 4663 (0x1237). Read-only quote engine (no keys, no txs). The user signs and sends the tx.
 
@@ -22,14 +22,7 @@ With `recipient`, the response's `tx` = `{to: 0x9745ff56a6fc085b3e70a7509cd49ab6
 | `GET /api/router/pool_quote` | `127.0.0.1:8782/pool_quote` | single-pool exact simulation (debug) |
 `/metrics`, `/divergences` and `/freshness` stay internal (not proxied).
 
-Proposed nginx block (NOT applied; needs the owner's OK):
-```
-location /api/router/quote  { proxy_pass http://127.0.0.1:8782/quote;  limit_req zone=router burst=20 nodelay; add_header Access-Control-Allow-Origin $cors_origin always; }
-location /api/router/fast   { proxy_pass http://127.0.0.1:8783/quote;  limit_req zone=router burst=50 nodelay; add_header Access-Control-Allow-Origin $cors_origin always; }
-location /api/router/health { proxy_pass http://127.0.0.1:8782/health; }
-# limit_req_zone $binary_remote_addr zone=router:10m rate=20r/s;   CORS: allow-list the ticking.dev origins, GET only, no credentials.
-```
-Rate limits: 20 req/s per IP (burst 20 best / 50 fast). The engine itself has no auth; nginx is the only gate.
+Rate limits: 20 req/s per IP (burst 40). The engine itself has no auth; nginx is the only gate.
 
 ## Request: GET /api/router/quote
 | param | type | req | meaning |
@@ -43,7 +36,7 @@ Rate limits: 20 req/s per IP (burst 20 best / 50 fast). The engine itself has no
 | `slippageBps` | int | no | default 50, max 5000; `minOut = netOut*(1-bps/1e4)` |
 | `deadline` | unix seconds u32 | no | default now+60 |
 
-Stables: **USDG** 0x5fc5360d0400a0fd4f2af552add042d716f1d168 (6 dec, Paxos, the real liquidity). **USDC** 0x80e0e24718dbfcad49ecaa6f1e6c89a190586ca8 (6 dec; canonical-bridge USDC; total supply about $340; the only liquid pool has a 92% fee → treat as untradeable and warn in the UI). The USDG token reverts transfers ≥ 1e20 raw.
+Stables: **USDG** 0x5fc5360d0400a0fd4f2af552add042d716f1d168 (6 dec, Paxos, the real liquidity). **USDC** 0x80e0e24718dbfcad49ecaa6f1e6c89a190586ca8 (6 dec, bridged). Prefer USDG for stable routing.
 
 Example:
 `/api/router/quote?tin=0x0bd7d308f8e1639fab988df18a8011f41eacad73&tout=0x5fc5360d0400a0fd4f2af552add042d716f1d168&amt=1000000000000000000&recipient=0xYourAddr&slippageBps=30`
@@ -69,7 +62,7 @@ TickingRouter v1 (contracts/, UNAUDITED by the owner's choice). **Deployed on RH
 - The engine returns a ready-to-send tx: `tx.to` = ROUTER, `tx.data` = `swap(bytes)` (selector `0x627dd56a`) ABI-encoded around `tx.program`, `tx.value` = "0". Send it as-is.
 - `swap()` returns `out`. The read-only proof `harness/router_proof.py` eth_calls `tx.data` against the deployed router at the quote's block (holder funded via state override) and checks `out == grossOut` to the wei. Results: `data/live/router_proof.json`.
 - Before the swap: `IERC20(tin).approve(ROUTER, amt)`. The router pulls `transferFrom(user → pool)` just in time.
-- If `tx.executable == false`, don't send (`reason` explains). Fall back to Kyber or re-quote.
+- If `tx.executable == false`, don't send (`reason` explains, e.g. a V4 hop on a native-ETH key). Fall back to Kyber or re-quote.
 - Program layout: header `tokenIn20|tokenOut20|recipient20|minOut u128|deadline u32`, then per hop `op u8 | amount u128 (first hop of each leg only) | hopTokenOut20 | payload` (op low nibble = venue, 0x80 = CHAIN, 0x40 = TERM). See contracts/ARCHITECTURE.md.
 - Simulate with `eth_call` first. Quotes are valid for the quoted block; the price moves every ~100 ms, so `minOut` protects the user.
 

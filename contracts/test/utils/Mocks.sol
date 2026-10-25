@@ -10,6 +10,7 @@ contract MockToken {
     bool public returnFalse;
     bool public paused;
     address public reenterTarget;
+    address public stickyFrom; // transfers out of this account debit 1 wei less (rebasing-style balance drift)
     bytes public reenterData;
 
     function mint(address to, uint256 a) external {
@@ -22,6 +23,10 @@ contract MockToken {
 
     function setReturnFalse(bool v) external {
         returnFalse = v;
+    }
+
+    function setSticky(address a) external {
+        stickyFrom = a;
     }
 
     function setPaused(bool v) external {
@@ -58,7 +63,7 @@ contract MockToken {
         require(!blacklisted[f] && !blacklisted[to], "blacklisted");
         if (returnFalse) return false;
         require(balanceOf[f] >= a, "bal");
-        balanceOf[f] -= a;
+        balanceOf[f] -= (f == stickyFrom && a != 0) ? a - 1 : a;
         uint256 fee = a * feeBps / 10_000;
         balanceOf[to] += a - fee;
         if (reenterTarget != address(0)) {
@@ -135,7 +140,7 @@ contract MockV3Pool {
         int256 rep = mode == 5 ? -int256(out * 1000) : mode == 7 ? int256(1) : -int256(out);
         (d0, d1) = zfo ? (owed, rep) : (rep, owed);
         uint256 before = MockToken(tin).balanceOf(address(this));
-        if (mode == 8) MockSingleton(poker).poke(msg.sender);
+        if (mode == 8) MockSingleton(payable(poker)).poke(msg.sender);
         if (mode == 9) {
             EvilCaller(poker).hitUnlock(msg.sender);
         }
@@ -292,18 +297,33 @@ contract MockSingleton {
         _bubble(ok, e);
     }
 
+    uint256 public ethSettled;
+
     function sync(address t) external {
         synced = t;
-        syncedBal = MockToken(t).balanceOf(address(this));
+        syncedBal = t == address(0) ? 0 : MockToken(t).balanceOf(address(this));
     }
 
     function settle() external payable returns (uint256 paid) {
-        paid = MockToken(synced).balanceOf(address(this)) - syncedBal;
+        if (synced == address(0)) {
+            paid = msg.value; // native: v4 credits msg.value
+            ethSettled += msg.value;
+        } else {
+            require(msg.value == 0, "value on erc20 settle");
+            paid = MockToken(synced).balanceOf(address(this)) - syncedBal;
+        }
     }
 
     function take(address t, address to, uint256 a) external {
-        MockToken(t).transfer(to, a);
+        if (t == address(0)) {
+            (bool ok,) = to.call{value: a}("");
+            require(ok, "eth take");
+        } else {
+            MockToken(t).transfer(to, a);
+        }
     }
+
+    receive() external payable {}
 }
 
 /// @notice Balancer V3 vault mock (exact-in, 0.3% fee).
@@ -372,5 +392,46 @@ contract DoubleSwapper {
         require(ok, string(e));
         (ok, e) = router.call(abi.encodeWithSignature("swap(bytes)", prog));
         require(ok, "second swap failed");
+    }
+}
+
+/// @dev Minimal WETH9 for unit tests.
+contract MockWETH {
+    mapping(address => uint256) public balanceOf;
+    mapping(address => mapping(address => uint256)) public allowance;
+
+    function deposit() external payable {
+        balanceOf[msg.sender] += msg.value;
+    }
+
+    function withdraw(uint256 a) external {
+        balanceOf[msg.sender] -= a;
+        (bool ok,) = msg.sender.call{value: a}("");
+        require(ok, "eth");
+    }
+
+    function approve(address s, uint256 a) external returns (bool) {
+        allowance[msg.sender][s] = a;
+        return true;
+    }
+
+    function transfer(address to, uint256 a) external returns (bool) {
+        balanceOf[msg.sender] -= a;
+        balanceOf[to] += a;
+        return true;
+    }
+
+    function transferFrom(address f, address to, uint256 a) external returns (bool) {
+        if (msg.sender != f) allowance[f][msg.sender] -= a;
+        balanceOf[f] -= a;
+        balanceOf[to] += a;
+        return true;
+    }
+}
+
+/// @dev Rejects any ETH (fee-recipient / recipient hardening tests).
+contract NoEth {
+    receive() external payable {
+        revert("no eth");
     }
 }

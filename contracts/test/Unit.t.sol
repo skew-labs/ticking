@@ -17,6 +17,7 @@ import {
     MockTessera
 } from "./utils/Mocks.sol";
 import {MockKyber} from "./utils/MockKyber.sol";
+import {MockWETH, NoEth} from "./utils/Mocks.sol";
 
 contract Base is Test {
     TickingRouter r;
@@ -40,8 +41,11 @@ contract Base is Test {
     address user = address(0xA11CE);
     address rcpt = address(0xB0B);
     address victim = address(0x71C7);
+    address constant FEE_TO = 0x3e13cd3704099424a6301Ea4125791a6a1433637;
+    MockWETH weth;
 
     function setUp() public virtual {
+        weth = new MockWETH();
         fac = new MockV3Factory();
         kyb = new MockKyber();
         address d = address(0xdead);
@@ -66,7 +70,9 @@ contract Base is Test {
                 address(facAlg),
                 address(pm),
                 address(pm)
-            ]
+            ],
+            address(weth),
+            FEE_TO
         );
         A = new MockToken();
         B = new MockToken();
@@ -110,6 +116,11 @@ contract Base is Test {
         return P.header(address(tin), address(tout), rcpt, minOut, uint32(block.timestamp + 60));
     }
 
+    /// @dev v2 protocol fee: recipient receives gross - floor(gross * 5 / 10_000).
+    function _net(uint256 g) internal pure returns (uint256) {
+        return g - g * 5 / 10_000;
+    }
+
     function _run(bytes memory prog) internal returns (uint256) {
         vm.prank(user);
         return r.swap(prog);
@@ -142,7 +153,7 @@ contract UnitTest is Base {
             P.v3(T, 6000, address(B), 0, 100, address(pAB)),
             P.v3(T, 4000, address(B), 0, 500, address(pAB2))
         );
-        assertEq(_run(prog), 5982 + 3988);
+        assertEq(_run(prog), _net(5982 + 3988));
         assertEq(A.balanceOf(user), 1e30 - 10_000);
         _clean();
     }
@@ -153,7 +164,7 @@ contract UnitTest is Base {
             P.v3(0, 10_000, address(B), 0, 100, address(pAB)),
             P.v3(CH | T, 0, address(C), 0, 100, address(pBC))
         );
-        assertEq(_run(prog), uint256(10_000) * 997 / 1000 * 997 / 1000);
+        assertEq(_run(prog), _net(uint256(10_000) * 997 / 1000 * 997 / 1000));
         _clean();
     }
 
@@ -254,7 +265,8 @@ contract UnitTest is Base {
 
     function test_feeOnTransferOut_minOutOnDelta() public {
         B.setFee(100); // 1% fee on output leg: recipient delta is what counts
-        vm.expectRevert(abi.encodeWithSelector(TickingRouter.Slippage.selector, 988, 997));
+        // v2: output is taxed twice (pool->router, router->recipient); minOut is checked on the recipient's net delta
+        vm.expectRevert(abi.encodeWithSelector(TickingRouter.Slippage.selector, 979, 997));
         _run(bytes.concat(_h(A, B, 997), P.v3(T, 1000, address(B), 0, 100, address(pAB))));
     }
 
@@ -266,7 +278,8 @@ contract UnitTest is Base {
 
     function test_blacklistedRecipient() public {
         B.setBlacklist(rcpt, true);
-        vm.expectRevert(bytes("blacklisted"));
+        // v2: the router (not the pool) pays the recipient; token revert reasons are normalized
+        vm.expectRevert(TickingRouter.TransferFailed.selector);
         _run(bytes.concat(_h(A, B, 0), P.v3(T, 1000, address(B), 0, 100, address(pAB))));
         _clean();
         assertEq(A.balanceOf(user), 1e30);
@@ -431,7 +444,7 @@ contract UnitTest is Base {
     function test_constructorZero() public {
         address d = address(1);
         vm.expectRevert(TickingRouter.Malformed.selector);
-        new TickingRouter([d, d, d, d, d, d, d, d, d, d, d, d, address(0)]);
+        new TickingRouter([d, d, d, d, d, d, d, d, d, d, d, d, address(0)], d, d);
     }
 
     function test_nonexistentPool() public {
@@ -562,7 +575,7 @@ contract UnitTest is Base {
         C.mint(address(woo), 1e30);
         C.mint(address(tess), 1e30);
         bytes memory first = P.v3(0, 10_000, address(B), 0, 100, address(pAB));
-        uint256 o1 = uint256(9970) * 997 / 1000;
+        uint256 o1 = _net(uint256(9970) * 997 / 1000);
         assertEq(_run(bytes.concat(_h(A, C, 0), first, P.v4(CH | T, 0, address(C), 500, 10, address(0)))), o1);
         assertEq(
             _run(
@@ -688,7 +701,7 @@ contract UnitTest is Base {
         bytes memory prog;
         if (!hop) {
             prog = bytes.concat(
-                _h(A, B, uint128(exp)),
+                _h(A, B, uint128(_net(exp))),
                 P.v3(T, a1, address(B), 0, 100, address(pAB)),
                 P.v3(T, a2, address(B), 0, 500, address(pAB2))
             );
@@ -696,14 +709,14 @@ contract UnitTest is Base {
             vm.assume((uint256(a1) * 997 / 1000) * 997 / 1000 > 0 && (uint256(a2) * 997 / 1000) * 997 / 1000 > 0);
             exp = (uint256(a1) * 997 / 1000) * 997 / 1000 + (uint256(a2) * 997 / 1000) * 997 / 1000;
             prog = bytes.concat(
-                _h(A, C, uint128(exp)),
+                _h(A, C, uint128(_net(exp))),
                 P.v3(0, a1, address(B), 0, 100, address(pAB)),
                 P.v3(CH | T, 0, address(C), 0, 100, address(pBC)),
                 P.v3(0, a2, address(B), 0, 500, address(pAB2)),
                 P.v3(CH | T, 0, address(C), 0, 100, address(pBC))
             );
         }
-        assertEq(_run(prog), exp);
+        assertEq(_run(prog), _net(exp));
         assertEq(A.balanceOf(user), 1e30 - amt);
         _clean();
     }

@@ -1,0 +1,28 @@
+{
+ "_note": "design section 3 baseline queries, pinned to the map end (arbitrum 512,450,747 / 1791345433; robinhood 88,098,834 / 1791953936). Run on skew when IO full < 10%.",
+ "targets": {"old": "http://127.0.0.1:8906/api/public/em", "v2": "http://127.0.0.1:8740/api/public/em", "glserve_arb": "http://127.0.0.1:8711"},
+ "queries": [
+  {"name": "holders-at ARB (arbitrum) @map end", "path": {"old": "/holders-at?market=arbitrum:0x912ce59144191c1204e64559fe8253a0e49e6548&block=512450747&limit=30",
+                                                          "v2": "/holders-at?market=arbitrum:0x912ce59144191c1204e64559fe8253a0e49e6548&block=512450747&limit=30"}},
+  {"name": "holders-at CASHCAT (robinhood) @map end", "path": {"old": "/holders-at?market=robinhood:0x020bfc650a365f8bb26819deaabf3e21291018b4&block=88098834&limit=30",
+                                                               "v2": "/holders-at?market=robinhood:0x020bfc650a365f8bb26819deaabf3e21291018b4&block=88098834&limit=30"}},
+  {"name": "trace in 3 hops (CASHCAT creator)", "path": {"old": "/trace?chain=robinhood&address=0xcdfc08a1c1fbafb355645e5ddc32122e5716ca90&direction=in&hops=3&from=0&to=1791953936",
+                                                         "v2": "/trace?chain=robinhood&address=0xcdfc08a1c1fbafb355645e5ddc32122e5716ca90&direction=in&hops=3&from=0&to=1791953936"}},
+  {"name": "trace in 2 hops (arbitrum wallets)", "path": {"old": "/trace?chain=arbitrum&address={addr}&direction=in&hops=2&from=0&to=1791345433",
+                                                          "v2": "/trace?chain=arbitrum&address={addr}&direction=in&hops=2&from=0&to=1791345433"},
+   "addresses": ["0x011e5bae5a635f4bccedd49b181aa4e88fc8868d", "0x03ae8a0b2737dd0fcccf5b7cc05e6987c5e4300d", "0x005e55d5fb001f9d1c9f9bdf26cf9a6a489f298d"]},
+  {"name": "address-chains (20 arbitrum wallets)", "path": {"old": "/address-chains?address={addr}", "v2": "/address-chains?address={addr}"},
+   "addresses": ["0x005e55d5fb001f9d1c9f9bdf26cf9a6a489f298d", "0x008900d2c4cb14771d37e44040fc778cc9768c8d", "0x00953c571c7e3bfd3ce827ad3e9a05044da9cf0d",
+                 "0x00bef8dfa8b9d8b920ab2254388249dbdab3510d", "0x01178f252c5e1046f7f9c81353dc203b750d460d", "0x017706e7c987bf0fb4f0b7b3d020259a4cd4034d",
+                 "0x0186f36aadb0d4cdaf1e3f672b2ae77bf08dad0d", "0x019cce14a9c377763aa302858d134e33e6eb338d", "0x01a1f5b542cf9158cf1f17b97ba29233d170fdcd",
+                 "0x01ab2d08f162323697931381a52aead9e2bbff4d", "0x01d6463a6e74bb5c41697b69a908b936ba1e560d", "0x020397df44bd40a23551bb4044e86ff1125923cd",
+                 "0x022a18e90e0ffc72f52ea2c55c0f39958e738a8d", "0x027c256486baa3ee226ee84a5a42e493b6a2dc4d", "0x028c05f64dd0996945a10ea8000afed5343ba70d",
+                 "0x029b495995e632b95af2a521fab168f2dc10418d", "0x02b38fe8727c00e0b8816e4d1ddab6b378ba374d", "0x037c74d1b9f8dfcf16acaf25fbaf665981f5398d",
+                 "0x03b04a11575d64e576a978bbd7c4d87e1fb76ccd", "0x03b9402ba7dae8d671b690830c5818d926e9680d"]},
+  {"name": "neighbors (20 arbitrum wallets)", "path": {"glserve_arb": "/tools/neighbors?ref={addr}&dir=both&limit=16", "v2": "/emv2/neighbors?chain=arbitrum&address={addr}&dir=both&limit=16"},
+   "addresses": ["0x005e55d5fb001f9d1c9f9bdf26cf9a6a489f298d", "0x008900d2c4cb14771d37e44040fc778cc9768c8d", "0x00953c571c7e3bfd3ce827ad3e9a05044da9cf0d",
+                 "0x00bef8dfa8b9d8b920ab2254388249dbdab3510d", "0x01178f252c5e1046f7f9c81353dc203b750d460d", "0x017706e7c987bf0fb4f0b7b3d020259a4cd4034d",
+                 "0x0186f36aadb0d4cdaf1e3f672b2ae77bf08dad0d", "0x019cce14a9c377763aa302858d134e33e6eb338d", "0x01a1f5b542cf9158cf1f17b97ba29233d170fdcd",
+                 "0x01ab2d08f162323697931381a52aead9e2bbff4d"]}
+ ]
+}

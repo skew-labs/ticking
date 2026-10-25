@@ -1,0 +1,36 @@
+name: agents
+on:
+  push:
+    branches: [main]
+    paths:
+      - "agents/**"
+      - "search/**"
+      - "research/**"
+      - "em/**"
+      - "graph/**"
+      - ".github/workflows/agents.yml"
+  pull_request:
+    paths:
+      - "agents/**"
+      - "search/**"
+      - "research/**"
+      - "em/**"
+      - "graph/**"
+      - ".github/workflows/agents.yml"
+permissions:
+  contents: read
+jobs:
+  py-compile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: byte-compile agent Python
+        run: |
+          python3 -m compileall -q \
+            agents/track agents/muse agents/bridge agents/mcp agents/context agents/realtime \
+            search/investigate search/overlay search/search-guard \
+            research/refresh-py research/labels research/investigate research/mapping research/traders \
+            research/ask_report.py

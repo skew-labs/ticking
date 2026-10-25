@@ -1,0 +1,8 @@
+{
+  "published": true,
+  "at": 1792684356,
+  "release": ".releases/ticking-unified-tracker-20261022-32",
+  "deployment": "dpl_5VcM2zC8Nxor7wGkTxWdUmHHK32k",
+  "note": "Integrated with unified engine, thread scope/race fixes, nine-chain Tracker and chain overview. Original proposal is retained unchanged; final source hashes are in the release overlay.",
+  "evidence": "/srv/skew/tick-market-ui-20261007/evidence/unified-tracker-20261022/production-rollout.json"
+}

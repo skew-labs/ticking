@@ -6,8 +6,8 @@
  *
  * Env:
  *   FEED_URL (default wss://arb1-txfeed.arbitrum.io/)
- *   API_KEY_FILE (default /srv/skew/private/arb-fastfeed/api.key)
- *   OUT_JSONL (default /srv/skew/em-realtime/arb-fastfeed/out/quotes.jsonl)
+ *   API_KEY_FILE (required)
+ *   OUT_DIR / OUT_JSONL (optional)
  */
 import fs from 'fs';
 import path from 'path';
@@ -15,8 +15,9 @@ import WebSocket from 'ws';
 import { createHash } from 'crypto';
 
 const FEED_URL = process.env.FEED_URL || 'wss://arb1-txfeed.arbitrum.io/';
-const API_KEY_FILE = process.env.API_KEY_FILE || '/srv/skew/private/arb-fastfeed/api.key';
-const OUT_DIR = process.env.OUT_DIR || '/srv/skew/em-realtime/arb-fastfeed/out';
+const API_KEY_FILE = process.env.API_KEY_FILE;
+if (!API_KEY_FILE) throw new Error('set API_KEY_FILE');
+const OUT_DIR = process.env.OUT_DIR || './out';
 const OUT_JSONL = process.env.OUT_JSONL || path.join(OUT_DIR, 'quotes.jsonl');
 const STATUS = path.join(OUT_DIR, 'status.json');
 

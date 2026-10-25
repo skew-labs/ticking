@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "fields": {
+    "capital": "(?:account|capital|budget|계좌|자본|예산)\\s*[:=]?\\s*\\$?(\\d+(?:,\\d{3})*(?:\\.\\d+)?)",
+    "margin": "(?:margin|증거금)\\s*[:=]?\\s*\\$?(\\d+(?:,\\d{3})*(?:\\.\\d+)?)",
+    "notional": "(?:notional|명목(?:금액)?)\\s*[:=]?\\s*\\$?(\\d+(?:,\\d{3})*(?:\\.\\d+)?)",
+    "quantity": "(?:quantity|qty|수량)\\s*[:=]?\\s*(\\d+(?:,\\d{3})*(?:\\.\\d+)?)",
+    "leverage": "(?:leverage|레버리지)\\s*[:=]?\\s*(\\d+(?:,\\d{3})*(?:\\.\\d+)?)\\s*(?:x|배)?",
+    "entry": "(?:\\bentry(?: price)?|진입가?|진입\\s*가격)\\s*[:=@]?\\s*\\$?(\\d+(?:,\\d{3})*(?:\\.\\d+)?)",
+    "stop": "(?:\\bstop(?: loss)?(?: price)?|\\bsl|손절가?|손절\\s*가격)\\s*[:=@]?\\s*\\$?(\\d+(?:,\\d{3})*(?:\\.\\d+)?)(?![\\d.])",
+    "profitAmount": "(?:target\\s*(?:pnl|profit)|profit\\s*(?:amount|goal)|목표\\s*수익(?:금)?|수익금|익절\\s*금액)\\s*[:=]?\\s*\\$?(\\d+(?:,\\d{3})*(?:\\.\\d+)?)(?![\\d.])",
+    "riskAmount": "(?:max(?:imum)?\\s*loss|loss\\s*(?:limit|budget)|risk(?: budget)?|손절\\s*금액|최대\\s*손실|손실\\s*한도|위험\\s*예산|리스크)\\s*[:=]?\\s*\\$?(\\d+(?:,\\d{3})*(?:\\.\\d+)?)(?![\\d.])",
+    "target": "(?:\\btarget(?: price)?|\\btp|익절가|익절\\s*가격)\\s*[:=@]?\\s*\\$?(\\d+(?:,\\d{3})*(?:\\.\\d+)?)(?![\\d.])"
+  },
+  "numeric": "(\\d+(?:,\\d{3})*(?:\\.\\d+)?)",
+  "intent": "(?:(?:\\$|달러|usd[ct]?|증거금|레버리지|leverage|margin|notional|quantity|\\bqty\\b|\\bentry\\b|\\bstop\\b|\\btarget\\b|\\btp\\b|\\bsl\\b|capital|account|budget|예산|자본|진입가?|손절가?|익절가?|target\\s*(?:profit|pnl)|최대\\s*손실|손실\\s*한도|risk\\s*budget).*[0-9]|[0-9].*(?:달러|usd[ct]?|배|x\\b))|(?:return|roi|roe|profit|gain|earn|make|risk|price\\s*movement|수익|먹|벌|목표|리스크|위험).*\\d+\\s*(?:%|퍼센트|프로)|\\d+\\s*(?:%|퍼센트|프로).*(?:return|profit|gain|earn|make|수익|먹|벌|목표)",
+  "high": "high[ -]?leverage|고\\s*레버리지",
+  "education": "what (?:is|does)|how does|무슨\\s*뜻|뭐야|설명해|의미|차이",
+  "return": "(?:return|roi|roe|profit|gain|earn|make|수익|먹|벌|목표)",
+  "risk": "risk|loss|리스크|위험|손실",
+  "percent": "(\\d+(?:,\\d{3})*(?:\\.\\d+)?)\\s*(?:%|퍼센트|프로)(?!필)",
+  "multiplier": "(\\d+(?:,\\d{3})*(?:\\.\\d+)?)\\s*(?:x\\b|배)(?!\\s*(?:수익|목표))",
+  "explicitQuoteMarket": "(?:analy[sz]e|trade|plan|show|open|draw|token|asset|market)\\s+(?:the\\s+)?(?:USDC|USDT|USD)\\b|\\b(?:USDC|USDT|USD)\\s*(?:chart|token|market|차트|분석|종목|토큰)"
+}

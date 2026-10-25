@@ -1,0 +1,19 @@
+# chain	token	symbol	note  (canonical stablecoin contracts: USD 1:1 only for these on a listed chain; the same symbol on another contract = impersonator spam. Chosen 2026-10-20: top holders ≥10× the next and ≥1,000, or the issuer address)
+arbitrum	0xaf88d065e77c8cc2239327c5edb3a432268e5831	USDC	Circle native
+arbitrum	0xff970a61a04b1ca14834a43f5de4533ebddb5cc8	USDC	bridged USDC.e (symbol USDC)
+arbitrum	0xff970a61a04b1ca14834a43f5de4533ebddb5cc8	USDC.E	bridged
+arbitrum	0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9	USDT	Tether (symbol now USD₮0)
+arbitrum	0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9	USD₮0	Tether
+arbitrum	0xda10009cbd5d07dd0cecc66161fc93d7c9000da1	DAI	MakerDAO bridged
+arbitrum	0x17fc002b466eec40dae837fc4be5c67993ddbd6f	FRAX	Frax
+arbitrum	0x498bf2b1e120fed3ad3d42ea2165e9b73f99c1e5	CRVUSD	Curve
+arc	0x3600000000000000000000000000000000000000	USDC	native gas token (balances held: native reconciliation)
+arc	0xf5b08979251f398180385b54381ee3d6fa1bbe09	AUSD	Agora
+unichain	0x078d782b760474a361dda0af3839290b0ef57ad6	USDC	Circle native
+unichain	0x588ce4f028d8e7b53b687865d6a67b3a54c75518	USDT	bridged (14,380 holders; next 3)
+unichain	0x9151434b16b9763660705744891fa906f660ecc5	USD₮0	Tether
+unichain	0x20cab320a855b39f724131c69424240519573f81	DAI	bridged
+linea	0x176211869ca2b568f2a7d4ee941e073a821ee1ff	USDC	bridged (441,963 holders)
+linea	0xa219439258ca9da29e9cc4ce5596924745e12b93	USDT	bridged (200,943 holders)
+linea	0x4af15ec2a0bd43db75dd04e62faa3b8ef36b00d5	DAI	bridged
+linea	0x5d3a1ff2b6bab83b63cd9ad0787074081a52ef34	USDE	Ethena

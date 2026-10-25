@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Sync `contracts/` to TickingRouter v2 source (0.05% fee, native ETH V4 flag); live deployment remains v1 in `DEPLOYED.md`.
+- Sync `aggregator/` engine sources with the running t1 engine tree.
+- Add `search/`, `research/`, `em/`, `graph/`, `agents/` (Muse, track, bridge, MCP, context, realtime) with `docs/ARCHITECTURE-AGENTS.md`.
+- Frontend router API doc marked LIVE at `https://api.ticking.dev/api/router/`.
+
 All notable changes are listed here. The format follows [Keep a Changelog](https://keepachangelog.com).
 
 ## [Unreleased]

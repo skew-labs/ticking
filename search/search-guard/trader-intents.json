@@ -1,0 +1,30 @@
+{
+  "version": "trader-dialogue-v1",
+  "decision": "\\b(?:should|can|could|would)\\s+(?:i|we|you)\\s+(?:buy|sell|enter|trade|long|short)\\b|\\b(?:buy|sell|enter|long|short)\\s+(?:it\\s+)?(?:now|here)\\b|\\b(?:is\\s+(?:it|this)\\s+(?:a\\s+)?(?:good|safe)\\s+(?:time|entry)|what\\s+should\\s+i\\s+do|worth\\s+buying)\\b|(?:지금|여기|이거|솔라나|비트코인|이더리움).*(?:사도|사야|살까|팔아|팔까|팔아도|팔아야|들어가도|들어갈까|들어가야|진입해도|롱.*돼|숏.*돼)|(?:매수|매도|진입).*(?:해도|할까|해야|괜찮)|(?:사도|사야|살까|팔까|들어가도|들어갈까|진입해도)\\s*(?:될까|돼|되나|하나|좋|괜찮)|지금.*(?:뭐|어떻게).*(?:해야|하면|할까)|너라면.*(?:살|팔|롱|숏|진입|어떻게)|\\bhow\\s+(?:would|should|could|do)\\s+(?:you|i|we)\\s+trade\\b|\\b(?:should|can|could)\\s+i\\s+(?:take|open)\\s+(?:a\\s+)?(?:long|short|position)\\b|진입해?\\s*볼\\s*만|들어가\\s*볼\\s*만",
+  "onboarding": "\\b(?:i(?: am|.m) (?:a )?(?:new|beginner)|new to (?:this|trading)|help me (?:get started|understand what to do)|how (?:do|can) i (?:get started|use this))\\b|(?:처음|초보).*(?:뭐|어떻게|도와|시작|알려)|사용법.*알려",
+  "mutation": "\\b(?:add|draw|plot|remove|delete|hide|color|colour|set|change|switch|alert)\\b|그려|그리|추가|지워|삭제|색상|색깔|바꿔|알림|얼러트",
+  "conceptQuestion": "\\b(?:what|why|how|mean|means|explain|understand|difference|does|should|can)\\b|뭐|무슨|뜻|설명|어떻게|차이|왜|이면|되면|인가|하나|돼|인가요|얼마|몇|없어도|안\\s*넣어도|할\\s*수|필요|퍼센트|몇",
+  "concepts": {
+    "rsi": "\\brsi(?:14)?\\b|상대\\s*강도",
+    "macd": "\\bmacd\\b|맥디",
+    "bollinger": "\\b(?:bollinger|bb)\\b|볼린저",
+    "atr": "\\batr(?:14)?\\b",
+    "ema": "\\b(?:ema|sma|moving average)s?\\b|이동평균|이평선",
+    "divergence": "\\bdivergence\\b|다이버전스|다이버젼스",
+    "fibonacci": "\\bfib(?:onacci)?\\b|피보나치",
+    "channel": "\\b(?:channel|trendline|trend line)\\b|채널|추세선",
+    "retest": "\\b(?:retest|breakout|whipsaw)\\b|리테스트|휩쏘|돌파",
+    "volume": "\\bvolume\\b|거래량|볼륨",
+    "leverage": "\\bleverage\\b|레버리지|증거금",
+    "rewardRisk": "\\b(?:reward.?risk|risk.?reward|r.?multiple)\\b|손익비|리워드",
+    "stops": "\\b(?:stop loss|take profit|stop risk|target pnl)\\b|손절|익절|스탑",
+    "costs": "\\b(?:fees?|slippage)\\b|수수료|슬리피지",
+    "sizing": "\\b(?:quantity|position siz(?:e|ing)|risk budget)\\b|수량|위험 예산|리스크 예산|얼마.*(?:잃|손실)",
+    "probability": "\\b(?:probability|win rate|chance of winning)\\b|승률|확률"
+  },
+  "timeframeReplacement": "([1-9]\\d*\\s*(?:minutes?|mins?|hours?|hrs?|seconds?|secs?|분|시간|초|일|주|[smhdw])(?:봉)?)\\s*(?:말고|대신|아니라)\\s*([1-9]\\d*\\s*(?:minutes?|mins?|hours?|hrs?|seconds?|secs?|분|시간|초|일|주|[smhdw])(?:봉)?)",
+  "timeframeInstead": "([1-9]\\d*\\s*(?:minutes?|mins?|hours?|hrs?|seconds?|secs?|분|시간|초|일|주|[smhdw])(?:봉)?)\\s+instead\\s+of\\s+([1-9]\\d*\\s*(?:minutes?|mins?|hours?|hrs?|seconds?|secs?|분|시간|초|일|주|[smhdw])(?:봉)?)",
+  "sideReplacement": "(long|short|롱|숏)\\s*(?:말고|대신|아니라)\\s*(long|short|롱|숏)",
+  "sideInstead": "\\b(long|short)\\s+instead\\s+of\\s+(long|short)\\b",
+  "editMutation": "\\b(?:draw|add|plot|remove|delete)\\b|그려|그리|추가|지워|삭제"
+}

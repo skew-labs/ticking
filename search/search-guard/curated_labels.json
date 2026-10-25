@@ -1,0 +1,3148 @@
+{
+  "0x28c6c06298d514db089934071355e5743bf21d60": {
+    "name": "Binance 14 (hot wallet)",
+    "type": "exchange",
+    "source": "curated_labels / public CEX hot-wallet label (owner to confirm PoR)",
+    "entity_id": "binance_14"
+  },
+  "0x15533b77981cda0f85c4f9a485237df4285d6844": {
+    "name": "Arbitrum Foundation Vesting Budget Wallet",
+    "type": "foundation",
+    "source": "https://docs.arbitrum.foundation/deployment-addresses",
+    "entity_id": "arbitrum_foundation"
+  },
+  "0xf3fc178157fb3c87548baa86f9d24ba38e649b58": {
+    "name": "Arbitrum DAO Treasury",
+    "type": "foundation",
+    "source": "https://docs.arbitrum.foundation/deployment-addresses",
+    "entity_id": "arbitrum_foundation"
+  },
+  "0xbfc1feca8b09a5c5d3effe7429ebe24b9c09ef58": {
+    "name": "Arbitrum DAO L2 Treasury Timelock (ETH treasury)",
+    "type": "foundation",
+    "source": "https://docs.arbitrum.foundation/deployment-addresses",
+    "entity_id": "arbitrum_foundation"
+  },
+  "0xd8da6bf26964af9d7eed9e03e53415d37aa96045": {
+    "name": "vitalik.eth",
+    "type": "ens",
+    "source": "ENS reverse record (forward-verified)",
+    "entity_id": "vitalik_buterin"
+  },
+  "0x03426aacbcf9030a380b3ba4a1f16b968649ef3d": {
+    "name": "OKX PoR wallet (arbitrum)",
+    "type": "exchange",
+    "source": "okx_por",
+    "entity_id": "okx"
+  },
+  "0x04e9d79a17f4894c76c65c52516f790531ef6bee": {
+    "name": "OKX PoR wallet (arbitrum)",
+    "type": "exchange",
+    "source": "okx_por",
+    "entity_id": "okx"
+  },
+  "0x085673a0fe2d1440112225d2ce433434216b80c3": {
+    "name": "OKX PoR wallet",
+    "type": "exchange",
+    "source": "okx_por",
+    "entity_id": "okx"
+  },
+  "0x67a24ce4321ab3af51c2d0a4801c3e111d88c9d9": {
+    "name": "Arbitrum ARB Token Distributor",
+    "type": "foundation",
+    "source": "https://docs.arbitrum.foundation/deployment-addresses",
+    "entity_id": "arbitrum_foundation"
+  },
+  "0x34d45e99f7d8c45ed05b5ca72d54bbd1fb3f98f0": {
+    "name": "Arbitrum DAO L2 Core Timelock",
+    "type": "foundation",
+    "source": "https://docs.arbitrum.foundation/deployment-addresses",
+    "entity_id": "arbitrum_foundation"
+  },
+  "0xe6841d92b0c345144506576ec13ecf5103ac7f49": {
+    "name": "Arbitrum DAO L1 Timelock",
+    "type": "foundation",
+    "source": "https://docs.arbitrum.foundation/deployment-addresses",
+    "entity_id": "arbitrum_foundation"
+  },
+  "0xc06145782f31030db1c40b203be6b0fd53410b6d": {
+    "name": "Ethereum Foundation Treasury (Safe)",
+    "type": "foundation",
+    "source": "EF co-ED Hsiao-Wei Wang public post 2025-10-21 naming treasury Safe",
+    "entity_id": "ethereum_foundation"
+  },
+  "0x9fc3dc011b461664c835f2527fffb1169b3c213e": {
+    "name": "Ethereum Foundation DeFi multisig (Safe 3-of-5)",
+    "type": "foundation",
+    "source": "EF co-ED Hsiao-Wei Wang public post 2025-01-20",
+    "entity_id": "ethereum_foundation"
+  },
+  "0x2a82ae142b2e62cb7d10b55e323acb1cab663a26": {
+    "name": "OP Treasury Foundation Allocated Budget",
+    "type": "foundation",
+    "source": "https://docs.optimism.io/governance/resources",
+    "entity_id": "optimism_foundation"
+  },
+  "0x2501c477d0a35545a387aa4a3eee4292a9a8b3f0": {
+    "name": "OP Treasury Foundation Approved Budget",
+    "type": "foundation",
+    "source": "https://docs.optimism.io/governance/resources",
+    "entity_id": "optimism_foundation"
+  },
+  "0x19793c7824be70ec58bb673ca42d2779d12581be": {
+    "name": "OP Foundation Grants Wallet",
+    "type": "foundation",
+    "source": "https://docs.optimism.io/governance/resources",
+    "entity_id": "optimism_foundation"
+  },
+  "0xe4553b743e74da3424ac51f8c1e586fd43ae226f": {
+    "name": "OP Foundation Locked Grants Wallet",
+    "type": "foundation",
+    "source": "https://docs.optimism.io/governance/resources",
+    "entity_id": "optimism_foundation"
+  },
+  "0x1a9c8182c09f50c8318d769245bea52c32be35bc": {
+    "name": "Uniswap Governance Timelock / Treasury",
+    "type": "treasury",
+    "source": "https://github.com/uniswapfoundation/governance-processes/blob/main/TREASURY_ADDRESSES.md",
+    "entity_id": "uniswap_treasury"
+  },
+  "0x2bad8182c09f50c8318d769245bea52c32be46cd": {
+    "name": "Uniswap Governance Treasury (Arbitrum)",
+    "type": "treasury",
+    "source": "https://github.com/uniswapfoundation/governance-processes/blob/main/TREASURY_ADDRESSES.md",
+    "entity_id": "uniswap_treasury"
+  },
+  "0x31fafd4889fa1269f7a13a66ee0fb458f27d72a9": {
+    "name": "Uniswap Governance Treasury (Base)",
+    "type": "treasury",
+    "source": "https://github.com/uniswapfoundation/governance-processes/blob/main/TREASURY_ADDRESSES.md",
+    "entity_id": "uniswap_treasury"
+  },
+  "0xa1dd330d602c32622aa270ea73d078b803cb3518": {
+    "name": "Uniswap Governance Treasury (Optimism)",
+    "type": "treasury",
+    "source": "https://github.com/uniswapfoundation/governance-processes/blob/main/TREASURY_ADDRESSES.md",
+    "entity_id": "uniswap_treasury"
+  },
+  "0x8a1b966ac46f42275860f905dbc75efbfdc12374": {
+    "name": "Uniswap Governance Treasury (Polygon)",
+    "type": "treasury",
+    "source": "https://github.com/uniswapfoundation/governance-processes/blob/main/TREASURY_ADDRESSES.md",
+    "entity_id": "uniswap_treasury"
+  },
+  "0x3e40d73eb977dc6a537af587d48316fee66e9c8c": {
+    "name": "Lido DAO Aragon Agent (treasury)",
+    "type": "dao",
+    "source": "https://docs.lido.fi/deployed-contracts/",
+    "entity_id": "lido_dao"
+  },
+  "0xb8ffc3cd6e7cf5a098a1c92f48009765b24088dc": {
+    "name": "Lido DAO Kernel",
+    "type": "dao",
+    "source": "https://docs.lido.fi/deployed-contracts/",
+    "entity_id": "lido_dao"
+  },
+  "0xbe8e3e3618f7474f8cb1d074a26affef007e98fb": {
+    "name": "Maker/Sky Pause Proxy",
+    "type": "dao",
+    "source": "Sky/Maker protocol docs (Pause Proxy)",
+    "entity_id": "maker_dao"
+  },
+  "0x6d903f6003cca6255d85cca4d3b5e5146dc33925": {
+    "name": "Compound Governor Timelock",
+    "type": "dao",
+    "source": "https://docs.compound.finance/",
+    "entity_id": "compound_dao"
+  },
+  "0xefed08b791423c7d7937507cf840e86a7ddc11c1": {
+    "name": "Compound Treasury Timelock",
+    "type": "dao",
+    "source": "comp.xyz TMC transparency",
+    "entity_id": "compound_dao"
+  },
+  "0xfe89cc7abb2c4183683ab71653c4cdc9b02d44b7": {
+    "name": "ENS DAO Wallet (wallet.ensdao.eth)",
+    "type": "dao",
+    "source": "https://docs.ens.domains/dao/",
+    "entity_id": "ens_dao"
+  },
+  "0x0003b5aa5e30e97fcc596bb5d0f3a75255e08d4e": {
+    "name": "OKX PoR wallet (ethereum)",
+    "type": "exchange",
+    "source": "okx_por",
+    "entity_id": "okx"
+  },
+  "0x000b011a46c25f4ad21520f5070b0eb652fdad57": {
+    "name": "OKX PoR wallet (ethereum)",
+    "type": "exchange",
+    "source": "okx_por",
+    "entity_id": "okx"
+  },
+  "0x0db6ffb36e26958cfa53cbe6d767f3cc7ba595d7": {
+    "name": "OKX PoR wallet (base)",
+    "type": "exchange",
+    "source": "okx_por",
+    "entity_id": "okx"
+  },
+  "0x1c226944c7bb338bb8c491fdb583b5e53431b4b3": {
+    "name": "OKX PoR wallet (base)",
+    "type": "exchange",
+    "source": "okx_por",
+    "entity_id": "okx"
+  },
+  "0x04ffa7d9869141376f52c84b075376e3b3b178fd": {
+    "name": "OKX PoR wallet (optimism)",
+    "type": "exchange",
+    "source": "okx_por",
+    "entity_id": "okx"
+  },
+  "0x1db3439a222c519ab44bb1144fc28167b4fa6ee6": {
+    "name": "Vitalik Buterin (self-listed DAO edge-cases signer 2016)",
+    "type": "ens",
+    "source": "https://medium.com/curator-multisig-phf-official-channel/the-daos-edge-cases-multisig-post-hard-fork-2f107380bd61",
+    "entity_id": "vitalik_buterin"
+  },
+  "0x002cf36badd53a680feebefd17fbeb7fa72105d4": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x01f66697aec1e7de7773115243247952245fd3a4": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x02c20fb5b2e24139e73bb9a56d32830c0dbfd54d": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x037df4a476c1578175a38caca11a5585d233af9c": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x03d0aad7c6a0b36f47d852a28ff0fb7bc9ae46b6": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x03ffb8cc16499d20cf79261ebc7064f72984330e": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x0475dd0e4194422a8cac486dc69173f535d0baf4": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x04866bb0724ec4ce076cd9f9848d917e4b40dd31": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x05be3079508e1baab0583938b9f0aae342fe6116": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x05d9617595e69ff577076355abc5e7c51ed0bdf3": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x05e851e9196fa1fc55f92ddd07ee83a978db35d0": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x0607c628054a7db3d36eed7c4a408eda8260de09": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x062e571b18b066eb99f81855796588fe26aba0cc": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x06324bad3913cb69cb5e748a3ed72f9d692324bb": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x0651bc2559600f054f1a9a7bed3bfe6fc9ebfaf1": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x069feaed2171aab9bcdc51b7aeff13863698f40c": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x06d3a30cbb00660b85a30988d197b1c282c6dcb6": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x073f564419b625a45d8aea3bb0de4d5647113ad7": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x082cf98e8410e165105170f62e2e7ed0cf8f96b8": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x0897b12ef41f8bf8d6c8def73bcb743fcbf16aa2": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x08af9c4767236221c55069dd523e2f7a0013e898": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x0a9100ff165d3dab0c6172a7a2ad06b2e7ca09a0": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x0aada49de7f40ae13b43f882fc1f276e24f5a922": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x0ad255ac941ac84ce626c0cf0afc8283a6896a33": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x0af6b0b2f1e8b1a259fffc70f2c19e177e4638c4": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x0bfe0573f1702d9f125b0155a3020590c5288bf0": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x0c48511102453352fe570370672cd556bf0e63f9": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x0cd6db9cc8fd024bea83711f2dd1c1987dc566fc": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x0d96b0525186c56aab001ff856313c85ced6bbe3": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x0e90f23b7af169b7b0a9f3de14fcc9392f398322": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x0fef96bf251fb5a8f22cf7a0c9c6aa539dfb67bc": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x0ff9491b236a36cc183823e39d7532194143fdb1": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x10dce18d6b5c779bc8de620f8d0a561dfc3a51f0": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x11b113383ce08e84001dc614f141ae4c27221e31": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x11f5fd80454785077a3b7e68b9adb212bad3f5c0": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x12a8bdc0470ab29a229d828526641b7d1f170fcf": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x14681e4e26f1b5b5774ae3b7f694ff08bbbeb65c": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x148cfef68ff06b8e7f31bfdbdca4f4f61f4d8102": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x1673b9951a8f7c379926723f5e79e9f3ee7165c7": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x173810f8ca9c4c631aeb1d6c36d007f054fee980": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x1811068091a2459ee38a8dde52cce5b2acfc1b61": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x186637e312b92137b4d5a10b7b6b01932e55181e": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x18d516d87f12895ffb25aeda13ecc6bdc3a1fbbb": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x1a557020c52f9d2495b2c12eb137ee7b5d467a4f": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x1c7f04fd42db4358fb6dd3602cebbd02e93401ad": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x1ca140408144c3992ffada9a182f314f3e0e5df3": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x1caac54c35a967495b988838dd65a49a4b8e65de": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x1e3796bfd98bb9131bd20caa6d52524d4ccd86e2": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x1e43e7a911b1b0229ea7d64e11ae260c482a0870": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x1fe0ace5c6b8889336431267deb501f86d3d83fc": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x20909ca8b92707086d965a820b2b523426375dda": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x20a3a4ae2aacb8bbcfd89dc71280dd18cd9a0cb4": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x20e061a60bf70127ece373cc5ddf2c415eae8a32": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x21606180cdf5239777d8ae6a961b31fc885189e9": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x21feca4bbfc884a2af8b7e936f974bcf6845b129": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x22f08491184f37ade8e71006eaa07906ea3e8b08": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x2345804130f13a04c95b3838f31564992aa1885d": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x25faf24d943df3a4d191740c22d8b3baefd96dae": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x276cdba3a39abf9cedba0f1948312c0681e6d5fd": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x29a3c3f9ee412f45ee0721bda51f9b8ea39072c1": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x2a3fb1a511a6e0f2be0ed5f8c5e5c904df82d84c": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x2f4eef9866652e52d8338e779ad6cd393a3e0aad": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x313eb1c5e1970eb5ceef6aebad66b07c7338d369": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x31e65b94ba5bd57196afe367ebcf4fe8b24f635d": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x320f90a985e453a2b1bafd5e85a971f5d03122aa": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x32703badef3204c15cb96a66391d0497449b85a2": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x328a61fe54865c3019c25d092892c9b40250923d": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x32dc16f4631a27b042a974d05c1ccf8a303e8199": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x330b531bd9d81ee7b608f17763c8331e2efbfe61": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x3333faa2d028d64cad5f196c4668e09042ab8b12": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x33c8b333e9b12dfc618f4cda2e655ed6f99fc981": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x3447f37f33a983c94b2f24bd3ac20facacf7eb4c": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x35179e4e31fb510d46ec8fa9a03fe4f9ce5977cf": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x358fc6e70cd949d483943d027a8a751bac78654c": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x35cba33a679983debc9f0989af85467cf9d79bd5": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x366a88f8de3b8036aeb24e4f6512aeff2c5cc76a": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x377bb41c86d3945c0acc24f472b80865328aa792": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x3b9694465483cbb677b700a91c26f487193a6e03": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x3b98b9e9cb75c1cb1729aab8f09ced2936505e4f": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x3bb00393bfa5e76b7f31e93948f7d3cef12942ad": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x3bf5d6216439e286b36e11b86f639d0adc81af94": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x3c0c9b53c75645cc5e465a5f30b30ba5f14738a3": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x3c9df24f248ff949161a5a43bbf6dd69378d7799": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x3d2335cac7b31411467ef03168c5869452fb7e86": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x3d55ccb2a943d88d39dd2e62daf767c69fd0179f": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x3e7d48c8ae2e50c2b9adedc8e276d3cc92b39458": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x3ed0b01c262a3938c25d16c8902e1e8ca2cfd8fb": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x3f482c72a2b3e777746f5755cc0ff1323ea2ad16": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x400d8280acf364f683e989462879fd8dd358067d": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x4194ee9f6a154ea5789c14bb85b527aed06f4c42": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x423871dc2c4f74e696c52b8ed4a5acec8abc5c90": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x42e8d8b0a5744d245fce9c566408656984236bb3": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x44ac1a08c1adebbf65234f077bde55bcffe71bef": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x44f4b585b71d10b6c055887a7cfaeb5e9532f487": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x45f329ff834a84fccea2319f91e1993540b22a2a": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x469df5114ec0a558a0e4d2929ec7e419d9e33f4b": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x46c503f0a14975d2e1d84135bba2b20270da2851": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x47adffbed67e9bde8c2a4c28ce3533ead981ed48": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x47d7352782c9e34508a1f23b78ed7ec83ce422b1": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x48120be2162bf6d7b1c8ea04a150a530d294dcd0": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x49deed891d8c73462bce6171d3b00361dfd4f0fe": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x4a4aaa0155237881fbd5c34bfae16e985a7b068d": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x4a8f1f5b2a3652131eac54a6f183a4a2cf44a9a6": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x4c6defe1149bf3e3467c79cc8c4e38fc2580c1de": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x4ccda666c69cd35be70aabd8931d824b2cfa3d2d": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x4e2757e46103556f98d4d036d8efe18389b89f51": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x4f74ca0cdac31e9710f6e401d2a95a40c60f49b4": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x50137e4f43c97b9638f5d7ba69f7dfcc3910ee89": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x5041ed759dd4afc3a72b8192c143f72f4724081a": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x512a749c20dce00d6b451f206e6cc607370b4ef8": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x529546a859bc8150807f1a27373bfe67146ce7cb": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x536c4921d1aafde6a5cda882fb5ca046f3601c65": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x53f07e235034a869eec8265e0cb120c55cc558d4": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x54edc2d90bbfe50526e333c7ffead3b0f22d39f0": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x55823001c8cd87a6e86716ca768bce51f2d89c9c": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x559432e18b281731c054cd703d4b49872be4ed53": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x55d6758d12eb8e40b869bed2b3b12f31033d69a2": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x560cfcb78aecac04104dc5097f7530832cc3e7e2": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x566ca397c22dac32e4f8219d9de24d5cb88d78ed": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x56df0bba3d324de9892f20f97e82f08fcd914f0e": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x56fd42ecd77c88bdd959be54af10d1759b473dff": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x58ae1f76ad787ca70aa469f15c61e5cb4c80a509": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x59c25e3e6787a0d6aca1c3e9044c7d5450119053": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x59f156f9b6c1f688f427165c28a9d4ace3ad7d8a": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x5a0036bcab4501e70f086c634e2958a8beae3a11": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x5b51635d93ba9adf2caf7239200bb8872cbc1a18": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x5b873ffcad5dccdc61c1a53c391fb76cb316a841": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x5c0c26822b36c91bcadb83d885f7f9ad25541890": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x5ca38fb7cf2b587026a1650f0d2b0a13c41f5d0f": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x5cd7d0dcff3dc59c37ce9554df367ba5d0ec5ae6": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x5cf0f45c59d616ad71415ff0844c3eec17b66768": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x5dfd97e75f564c9b0825743d2ad400fd05b6ad89": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x5e5ebe20f1457c7dbb67cf79caf8db2e1fca217a": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x5ed5ed7a4b4422d4523d299da1b50c7a4ffaaa5b": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x608c27519c5e65a61cfc1d2c9e658e5c57a2e3d7": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x611f7bf868a6212f871e89f7e44684045ddfb09d": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x61ae60a04b5f040e44f6daf20f3f3bab1f5a4323": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x652a2ade712e21b9f83672bde4462c6f8723a30b": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x65e392dda704bb2ccfee7fa62d0945094dd2037a": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x65e891ec42fcaa19459fe6221163e1a3f8cf7ea6": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x663326cf3f361b97344af35f837b1e5504a90b7e": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x6667a4b7eff4a0b86781fb3b187622cd3c257f09": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x68369ad7b0738b1b656f5de1dbce020323a0fe3e": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x68841a1806ff291314946eebd0cda8b348e73d6d": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x6908a0b31947ecdd070d4ac8ee0eabafe0901f37": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x6969d381bb7c775f6393bde4b69ed1afbbf7780a": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x6a4561ef7874a76b4bf0d3edca31dfcd51603414": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x6a7801854f38616341b983092eb707600fdb5fbf": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x6a9338ef5b8f45e0ffd1874431b82eb93fb87113": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x6ac38d1b2f0c0c3b9e816342b1ca14d91d5ff60b": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x6b90f1d1c578e5bdf0bf4514b170e337f3b95d45": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x6b9377d422194e17d6c3a8649db3ff217d53f09d": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x6c89fb575215cc4b23c83e8a11458cd20b467c5b": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x6cbb2add2a126e65cef029afca45576910a26b5f": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x6cc5f688a315f3dc28a7781717a9a798a59fda7b": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x6d29fc1267b1691c0cd43a8d35b27135957ffea9": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x6dad7caa0bc98fe23b5cef9c107fb19484466041": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x6de33354f806a2790f6d4fefe300e8acf17b422e": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x6e910b81bfa97f36ea2826ac4d99bd2dbb921192": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x6ededbad1e864105fa2538ddfbf4e7214b9e6529": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x6ee7b43565cb8e573df97cb0d41519b4df3722c2": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x6f9b8f480a1666a5c442416c3d7078b03996b22b": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x7144ce4c2b47577ae4c74b01db337df75a55e17c": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x728d92a8023bfbe0d4f3fdd549ed3b4996a0eba9": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x72ec2e073324960a4ec15758bab80f9ffd53f903": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x735f51f086d5efcc6a11d1e853b272a5e5817237": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x739768219c831ec1f747bf904f0e25c2d99c7dc1": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x748d97a351511f901964a71fa6077267af2d35c8": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x74eb01a457f3bd87ebd712bdeaa8cd3e30fcecee": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x75550352dde4f8254a8f1c4400bcd391c1357e43": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x767a905b77b0a40801488c6af8b8b5992b43511c": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x76a267c4373b7b1fabcb595c7f50c47a2a5878ea": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x78a012199b2f955fb0d864549347bd337eb4f399": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x793aa889e19a130ee4cb8b63c79aa3bdccc663cb": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x7a79e75453543287ac000a162252e5a55eab8d56": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x7a91e803db0e58b6fecc4e42c86b366778475e3c": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x7a93539c1bf9a96f87044925deb7a0849266213e": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x7c7061221666e41b87ca5817cfa2fcac09b3d943": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x7cfa2f97f575c9c4cab3be8f032e24770a2be5a1": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x7cfe28094f4531809992ed89060a61413116365d": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x7d328f5d5f4640f81b2f93d2903ec0a6c030eed6": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x7d3f1333c27f09c6058688cc4d6e4af9a9e87351": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x7d4736709bd37e5b0c31210335376a935a18c725": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x7e1471786abdc701c29c5e68d881cf1f0bae9246": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x7eb6c83ab7d8d9b8618c0ed973cbef71d1921ef2": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x7f61dc44c15ca818f96c6fc40739e5aa732e240c": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x7fd71b2b0b226e79cd83e2ddb48b969da7000d8a": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x7fe830ec109e112f549d6ee9d3e9540e7785997b": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x8073672715603301ac84928b80c6218605370458": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x8098667269d4c8ed0408005c023203875a71b491": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x8167a1ebf00ff5886d1b5908419bb1159d8cf6a4": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x83bdf89ce9b2b587785a89603d2d451f05cf719b": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x85dcd76d4fbd3aa0c85c27b9441222c19a14134b": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x863413fe65a20f8c91eafbcc091c04c1ca4a43b8": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x86aee064cc073d0dc95ba86633067b2c615040bb": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x8749596ce1288d518589bf1aef43150386a6769c": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x89b59726f9c42c350641182536bb045b9c6a36ca": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x89ff6ab26516d7eff47f958ef8ba0ade38351867": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x8a7242e8b4458190d34c3131fa947d7a85b72ddd": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x8b091e8002854de0729470dd46196d6e37ca13e7": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x8b935cc06f7b06ac5111b2a7495b8746b8dcee62": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x8e47e83ee263f1d5f92a9765fa49f7effd618d38": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x8e54cfa8e361446e697b0eea8918ef5b56873fef": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x8f1aae22d0b4335945950d0bbd0f3743d3fc6f22": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x8f2b0a11ea2f039d9cca0aa8b36a95ed42f58e34": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x906b999178fbbd4132b30c8df3c41fed28651004": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x91a9c9e30ab9229f6b16579fea23f8724eceff1e": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x91d40e4818f4d4c57b4578d9eca6afc92ac8debe": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x921dffda53c53eafb1063435051ad900c1ca0b4e": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x924ecf96cb225284bf97fc35c3c8997c252a7c41": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x92a4b302edc42de653ff94dad331d5f70bab78aa": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x92ea7496eba5f001d620005f88f3e8e686e3d4ea": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x92f3a62710490e2597a72ab10733d88751f11a4d": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x9391466ad56f2705ce5fd12e763a65509aee4862": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x96ce4e3d23bf25a1c5e8dae3eb884899eba82c25": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x96fdc631f02207b72e5804428dee274cf2ac0bcd": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x970d82aef119b99bc94213e592fe43812ec59a59": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x9723b6d608d4841eb4ab131687a5d4764eb30138": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x97e32062bdf7eea3fd3b62391a619b28623a50d0": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x9938ee74ba7a5c1abcd157272a18fcfc9ec9e8d5": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x993fade64545c0d82d121fab5232b2072da98daf": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x99a02fd769e802d5d943bd402646120d8d1f585c": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x99e9e89986625cd6b4603b48a669ffad6ab12f8c": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x9a68bdb67dbb167e7c33a7614f8e1e7fcae05283": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x9a7e076b20697d4c9764689e80ddcf6e91dcc5e2": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x9abecc9a0c75ae0485ec358dca239063da978a8f": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x9b4495fcc3c99b3cb73a3722320ff1858c81c2f0": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x9c01aea63a9588f39333dd2f7a528a3fd74b41d4": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x9c189d979b997818357afc9ded180532e007594d": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x9c22a4039f269e72de6b029b273be059cdbb831c": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x9c308b1665097af7ab2e38a41577bfecdc2d1c5c": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x9d56da517f3636746e43187b7de1264d235a7ca7": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x9d590273f48e3d2583dca257157f6d330d7664e3": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x9d622a07c3fd494dd6e7975728746482a6f7e283": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x9d6641cdd4ff339ae44eb89d06f00f9390e604da": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x9db8b860692c41e709d48d089de64cf01e6e317e": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x9e3bb2cd5a89fcc4b826230b144c4917881bea85": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x9e4e147d103def9e98462884e7ce06385f8ac540": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x9f3e65b8e8d9f948cb0b136b3ac77ca3d39c40eb": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xa16f524a804beaed0d791de0aa0b5836295a2a84": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xa1741cff7a058692371f466bf83159d760a330fd": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xa2308ff09a5c17fbb157d6fa5c03f387309a8efd": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xa27cef8af2b6575903b676e5644657fae96f491f": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xa3261fcd86619b2c48029553a50ad7e2d8eea2aa": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xa4af69adbe83a44c318acc4337bfd8ce37210733": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xa570e7f97edcbf7cc728eaeb0c71305602b2b5ba": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xa6b4912836bcf5cf842646913994ffb8f5817346": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xa798900a6b525ac66a0d5688fc1e9f59852de197": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xa7efae728d2936e78bda97dc267687568dd593f3": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xa84f4c8ba92171a9362641e21dde558eb79676b8": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xa9ac43f5b5e38155a288d1a01d2cbc4478e14573": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xaa0cbae2dd290f8aed1b672ebe2e197fd969628b": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xaa55908a2d3b8dd588c420c8da8adc5e5215a781": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xabca56f063002709dae1110bf04d44b8617b43fb": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xae57735ab5d7e33757464b1a00ab89860e5dac50": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xae5dde433888a7456c3e0aecbb2e0a5748cbc1eb": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xae8a4786a8bc7abb97dc8fc9689d88b3a07dae05": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xae9e13e4350954feaa52d4b7e711cce9ad52f185": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xaf40b4e2c6c740077e7c1c84f405b46f745cb0a6": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xaf6e08926da465fb3c59c2ad5dad47f6dca252ab": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xafcac8ea1a02cee3632f685b4ad8f1ce58c7bbba": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xb0a27099582833c0cb8c7a0565759ff145113d64": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xb1b3d97ac15f647ab1d66f72cfcfc9bdb5f6ea93": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xb22275b43638ab1542aef3874db53fdf78233b6b": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xb3760f19df5d7c9230ab668a586120232227e543": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xb460e34aad832a7acf436fc2887a4f16570eafa2": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xb4625df7d1bbce0547fe37a4c4e5bab22df529f4": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xb5c070658120162af61caa09233b9a2799d0baed": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xb5e6460f9c740c9eea3d71763f8016031e7c0627": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xb5feb7074bfdf7b130e070801cc52b8a1d8e3e42": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xb613789e8fdf00489052afe679ecd7e4ea668a78": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xb86c50c72a4cd16078cbcd06340ff6f272eef44a": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xb9b6d305e54b4fcf6b2af87bca62ff5cb17e309b": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xbb3c6d28def21b6297016622a57a0b05015e3ad2": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xbb96e1253431f8d0523cd8337ca85ce47f01e5e2": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xbba1cc89729e8371b43d7ce461d1d1709c3f564a": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xbc14008d66ea84d1f8a4ee869d582c838780019d": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xbc2605302caef6cd4e7a982d73ba033e73eb8c9e": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xbc8a0f5e41857292d12ef620e2a5895ce65a5ce0": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xbd89043e8a74345c54b8593ace5786fdd6878496": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xbda23b750dd04f792ad365b5f2a6f1d8593796f2": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xbe051734afed281e9b0e1ed9f8ca0ddd777dcfcc": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xbe2e5a5c685bed2223fd8a446adf08a21f2997dd": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xbe2ec156292587338d4e9f80f5439e6152d56fc5": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xbebb95c44deec2322ed17221aab94e799f1d4208": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xbec9ffc3cf1c6f8de4aadf183cf09e4170252bb8": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xbf90664017218ac7d9db5ae0c84873628e9ae1ae": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xbf94f0ac752c739f623c463b5210a7fb2cbb420b": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xc088a55610efe73f932debd7622413df961b6ed0": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xc129150d1253f01001432864070a4e539aefa58b": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xc13b7230f851b7f205bb260cc8851098fbd6e23f": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xc18475f347cc757b3cc49025820248a5f27d97ce": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xc24b7c8df5d953a719fbd587939822496b30e5eb": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xc2974d54480e3817899c7561c048749403324771": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xc458114f4000bf3c19fe1c69c82a881a29251650": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xc4f4f3be73ed207e661b4593a67d911014775890": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xc50d09c1a9b1412dfad9a951f2a7aa258c8e9b3d": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xc5267f13b9b4ba7bb73bdd53a2a3c944733a2961": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xc5a93444cc4da6efb9e6fc6e5d3cb55a53b52396": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xc5b562c67f9417c337c93f2d80fa6b53a56a5e34": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x0100538e3edae5e6e0621ca87083596183a0e7e6": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x012bcc0b88e1ebe69ec29713f0a8f94d012a9de7": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x0198d3d2a185e1885728a40ba72db92e4efb80d8": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x084f4873918c7562788f19b6161a5b88db82a32a": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x0cd15f7ea0afe612f05dc742e36fc9d5baaa7e5e": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x0de9e2f92261cde608f8c77cead7bf4e8cd52b22": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x0f51a310a4dd79d373eb8be1c0ddd54570235443": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x0fd14417b0ff903f06dde436c42b2af42e36cfa0": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x10e7d149e73dae219bb517de0fcb6a9601ba0f02": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x11ad89ba6a30ddd809b3e9d40e9a12eea94f1be2": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x12065f1998a4e6b6fe4059048ef9503c13e278e8": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x14a00f896f1b007666ec1b0e26e9f97cecfa8b68": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x14e4cf5ea420e192073385909d25a3514768dfe8": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x154230da0cd7bcd25632f0e927ff11de2c485fca": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x17483cf5ac4cc0962bd6b7a18503419d0ca3cdd7": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x185ffcbcada4768bb690dd1301c96758ca8966b3": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x19373386ef068c9b40d6773a8bc34b493b4a920d": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x1f4fb2e048b77ef0bf311dc53b208dbaf9b12518": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x1f7bce228f3fcb41580646ca2eea82876768a788": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x22d805e4c63d1c2fbffdfa2bfe88e23bffa1c4ec": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x23d90deb6252846090f83e4e39555199bcc3b729": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x266fd34300830e607627c64a90fa37e6511d8302": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x286f7b9ceb6a173516eed4735a88482b5385dde4": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x29f5cbf6aa4385169a3566f2e43bd1f13419d2d9": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x2a04a18b65f99790f8aff2ca04fd41fdb7807e27": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x2ff499fdcc8c252c4cec2512be6561e6dced278d": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x30af6c5f1163f522b8e10f16e54011b1492a9808": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x343d752bb710c5575e417edb3f9fa06241a4749a": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x3b50287cf8f073ff443b84de57e2375d446b962b": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x3b89edaba6f9061ec4c9d7831dfaa98b2c4f4ecb": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x3be5df1ffba3dca8caf582b06d3dad20071f5127": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x4060a467cc7bd596e00d86f3446893762c915587": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x41ddf01de355547d821873ebd4fb2ffa2dc63d4c": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x4315c16e217bb49a40faad63edc0c2b9a889ea20": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x439488b3a2f50387a6d59152f0af4c9e1dd16c0a": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x443d442212601d8d4315b7eb9afb8a901fc20fbc": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x47865a80c20470e94155eb59ada59d064a726ae7": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x499ce2c8026794bdb77523e3f866fdfa08728c26": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x4a152242605ab21df5ac6e819fdb128a4efc33fc": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x4eb7f22f5a21d13c8a8a01390806366cc1428346": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x11efcc0b689d6cbd217899479305c0d7f8a3655c": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x126d0c3f792b99ec831990c5ef23badda9c95f5e": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x13be4b56a8f3d5f000eb2be700de7e385cf52587": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x172883abff9ba6a49d7355b0984a0e7bf82cd147": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x17de8c47489a8cf34a0cc6676565fa5f443528c5": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x1b151dd63b464add0fba6e1df1d9a057d7032149": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x1cb2fbeb90da13f19df98cd197e8d5f7018a04e0": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x1cdf5ba7297f276bf0320c88ca948d4311c913ce": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x1d397b0afa588d1b5adcdca54ebeb28b82f00a31": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x1d6ca1b7825c2895990fee5bf7a43a9173b10b2e": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x27b6ebda5e3158ff89ab0e55463c7b43cca3b039": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x299ab41d456e587fae98d4dbdd3b47c26ce890ab": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x2dc529b1111bdef630a188afd43139f41c25fac0": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x35a0083ae4e52f1d2509f1898cb2fbc3a4fd052d": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x3e8c0d3cf96b69c245b14923758dc8a2db8621ec": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x3ee8863d3345f96ddda022eda4fdb58c32d519e8": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x4c51b920f03b8692520d9c0bb1645fb8f0ccf12d": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x5530942407be0c15ac3dad71b5326984c4631144": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x582988097ef9f2cf50cfac3f5f3b1ed54bc52a88": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x595a657c7a8b6ad1ada09b0095e71307a3e6e26c": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x5ca1063894e5bbd688830d83fefa5ce3d339744d": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x62f062a9cc39f23d91177334ec6ec0a2721ea7fb": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x70b6443b25127af586e7757fa95a5fe65a235ca8": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x7232ce85622b290bd0a0f09218b61c220b4a92e4": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x7265748a7eae8763dcf3411a0b629ce291348a8e": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x77a9b3fa8387652128ca5a9e4756e9e88dac3634": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x7cfc90f86e6695c191a0edc3505f59c20fe1f3c1": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x7fa19087a1290a1e36c1f8a4a80778ea25dee63d": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x80e99e5b3e5438ce36217f0cdba1546f5b1a2ef3": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x84714ac1a08d11fc9383ef8d4d406d43ffe80363": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x88288100c2005c5ce9b06956bed357f3ccc95b9e": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x8c1cf2d3480c5cbde6194413e8bdb411ca0d7407": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x908ea000c00425aae42ffa6cf08dbab80f0ee0fe": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x946c1043f86ebc7eee771fbe9600e31ffd2632e0": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x94a8a0fc880caa891e4c635b2a8fda0a78e97f7a": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x9a62bbcef8d7435d1ef28c2ba8a31a4c9b351b00": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x9b65692dc3fde3bf331156afda771f147ff0d460": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xab56ce2fd4939339fe0d2c3e46ad2f8712cc496a": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xafee421482faea92292ed3ffe29371742542ad72": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xb0f3b242b5273b4705a31576e2ffcd7bdec8aaff": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xb24472398170408edcb3b5cd30dc0b17c7eb4816": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xb37172818580416a8d4db0ae793a144cfe43b9c0": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xb4086efea4058a144a4231af112a6311f4f6d25b": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xc496e5e40f18035d6f8e805f1e5595657d7dca9f": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xca4815761f16f826211213c429c393e179354e3b": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xcd276ebdf62d8867b7c9a31e81af11a159bb4a3d": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xd9eb8ddaed166d9ec9c8e46bbd4bff2d39ff1eb2": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xddbe5633c49ebb4efa44d0a7009d0e98c11f5215": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xdddce28b1f7b0544eee9f8dd167ce6f72bc60403": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xe22ad79ac9eac9b8258f02188a9d444e47377292": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x078aee23756a23512a0989f16cfc0531bc9ef5f3": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x0ca0e2aa6f2203ef8fa6e1f7f1903fb3a8ec1d35": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x0fd070ad29cbae04bbc22e5ec720c9f0235a2737": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x109d8bc9e99d81b9a4a0d0de45d118972e1a005e": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x114624b274cbf1910c439921ca5d62c7d19dff12": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x159456ddebdca9ea884a3df972e1280c9ef639b3": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x15a83f4727b9fbb584b82968b59cd52c9d72cb00": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x194c63b5c66d436adcb30b472b3a3408f05ac8e8": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x1c008d70b0bafe50c49684128b8b8061f8c67220": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x1e6f148916affd027d7759de62896e49e9fae76b": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x1ee1b179a2e73689e7a041451021c4ab69ea914e": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x2300d1a8e991abc1cfa915f870fd6edd824b7de4": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x26738cb185d888bb8c77ef0821dae410d0a748de": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x2857734ec152ac01e565e9c169edf51298d5cd18": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x28734d8ccfa30a3270513b40fd147071b79d7638": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x28979107282844fece77b1fafb9a1343602ffee7": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x2a87680534caca4106ff68920702daaaab965e80": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x2b9b18b521a4548e6663f0bef03a7d08cc559495": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x2c4aa899a83573c7c5bbb500d52858dad9f7939b": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x2d2cc0eb095e43204e0c087e07dbf95909650939": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x3288aacaafaccfd0ac0de73df621736a06b86de8": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x43647152fc29a32caf53abbef2b2b220fae87b51": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x453fa2151650076c7a7f49b545389a52bb147f4f": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x46de13278cffcc9793e90533d776e913eae8c669": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x485f9cc7a41d17b1fddaba8406e1914e1a337d9e": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x4a8c00e80e3cfae4c903f9462b4ee2826404fe05": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x4b2aa7187e8bd9c97a9daaac9e1fcd4fc9ef4270": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x5a741eab50d90a955392fcb06d77e81fccefdb3d": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x5cf8898ad99f138ea62070938c3f00474916798a": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x5d002b87b6e1bdf390027c1210fdc1f6dd2ed85c": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x5ebfc3de7cef8a26775b15913130831ee9159109": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x63a34366eff680c1a01a0146feccbcedf72d95ff": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x6e828c91c60958a62c8e2d8d82178ee5dd4c7b99": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x7035fc8e3fbec8d6bdcc7a28f21eb820b84e6e64": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x7332cd352a84673f1413416ef2e321e17df59844": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x73ac240593f87307096bbab059d8d063120d7c65": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x79ff5625c3a682adad4bdaccce6d2ab6effde07c": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x7a4612430b1b023ea6d0e1076c29b03e5ecebef7": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x82eb69d80d67cf4d37eda3ad72294e4c8d96cd27": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x8517cb8660b187918da4fbf434d394061de67e49": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x27371412121d0ce78d922528cf1f2ae3185f55be": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x335bc68d20f45d306c581eb702717f40097a6d68": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x39591e7c099a379fd7b349ebfecaeef439c40454": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x65fbae954d0e54cb008dc89e91e64afe8ec81e00": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x71d9f70284c687335bcb2b9eba9453a28742d7bb": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x728be0d7c9f72d4841b6b4b825f7d4d2c790b528": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x77c6981ca84a19f10950369bd262ed55c223734d": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x8a65e2d6f1906f256ceb05669533088fee7ea473": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xa6a3989b76be622a0db058020fdfae95ea388e0d": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xa8d29a977fc4c9d7801192caf2600aebc7748ec0": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xcf748f1bd1e2a1e2a1cef35a480acfd5220c9e7d": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x0ba37936c50bbcdc7130c67d931e5fe14285b8eb": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x0fd7b7cdb116e641a85d03f71826f5da7244a0df": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x1458bf4d7d29fa2b92b7090fcafcb24703317e96": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x300d21e40a9c0812d0222fd9dab73eb9852eddb9": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x741c5a38f58151d3498a2b847e079de1b17d43ee": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xc844e4707d449f5d816578e5ec219d4fcb660dc2": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0xf51dbb62cea8493cd6e99548f1de94fec4f229c9": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x0073c587f1bad63fe1316c25d9fc35a591495cce": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x018993fa45a01bc0a0e859401f0d4d5b99f55251": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x01d08ab321b67f0af0a3688738cf2b218fe78f83": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x01d6c597628164901f45d87da57f21721a150086": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x02bf74705756577c71019c90401bbdd8e5718f90": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x02d86b6b2645a243e2944df2e591862b816232f6": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x04be3f08472a53527a4c6375673374658185980e": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x0510dfdd31314850c736aa18c15a0585b9354962": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x069211fe1d19a0e10d7c2cd61059a2571980360b": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x074f93557bfbb2f67f869304b88e42a75ed6db1e": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x07b8d997b4c3bc87eb5e50a00da20b556d335a45": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x07c24dd8caf491f098ca8a9bcb1e158f4aad31b8": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x082bd68f41acd500d53007c46b96620ddfc9048f": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x0863b60b607c94d2de2796ae103e4139afdf6b74": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x0899abc0a1bd917cdecfb90516ed9447300ab20d": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x091b4d4987fbdfd6c854976d9c064cfbd9ddbf87": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x0943646586b93138cd09e4fb18bc73b90e47be5b": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x0956d24536638d6ff0000aee06f431a66708943c": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x0aa689b9cf2db424e57e63c157fd06fcab04e733": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x0aef8cf30ac4a6e495206adf98bffdbdbf614a38": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x0babde7930dc302d13181c64b5a951f6dd9c1054": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x0da248a5a6d218bb653cdb723745207b63d3a0cd": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x0dd75e22100d5767365b6727c79d6a4e8f424f42": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x0e5cb74818167570f92682d41b5eb601134a622a": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x0edcdc29f3414349af7846b6be173962f062250b": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x0f8f62a261b9bd7d8ad5b3ce7eb0b616a2bc65e0": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x0fda5b907ef753a7d8b9f6276f690df3014cb371": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x105a9d57348079523fcc945d88c8e95be6fb45ce": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x10b40f36a4c442e92441ba66a0d8286217033010": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x10f13260fac5004349aa47f62a3a843c4b3620fd": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x118043f53cea4d09472a92e253558ccda249ce90": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x127b547b5c144b6076b29afe2c15c58c401b8ce9": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x12850fabc6a6aaae03bc7bc99ab2f0a0e002d025": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x130651a57e9006c256e5fefc4d354f53afc5e03f": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x1374b5e9d50b904c23bd48bf48578953839dda79": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x139eb84948632e1c34ca1008d49671305cadac30": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x1415a4fa8472a94c3aa43db1d8be18a736553bea": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x14bce67eb8725ba658119a0de3492d3ec685bf43": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x14e764089d568c2415387cd35ba19f965785ae70": {
+    "name": "OKX (PoR)",
+    "type": "exchange",
+    "source": "okx_por 2026-10-03",
+    "entity_id": "okx"
+  },
+  "0x47ac0fb4f2d84898e4d9e7b4dab3c24507a6d503": {
+    "name": "Binance (cold / known hot cluster)",
+    "type": "exchange",
+    "source": "public CEX wallet label set / search mapped"
+  },
+  "0xbe0eb53f46cd790cd13851d5eff43d12404d33e8": {
+    "name": "Binance (known hot wallet)",
+    "type": "exchange",
+    "source": "public CEX wallet label set / search mapped"
+  },
+  "0x3f5ce5fbfe3e9af3971dd833d26ba9b5c936f0be": {
+    "name": "Binance (known hot wallet)",
+    "type": "exchange",
+    "source": "public CEX wallet label set / search mapped"
+  },
+  "0x71660c4005ba85c37ccec55d0c4493e66fe775d3": {
+    "name": "Coinbase (known hot wallet)",
+    "type": "exchange",
+    "source": "public CEX wallet label set / search mapped"
+  }
+}

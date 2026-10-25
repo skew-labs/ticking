@@ -67,11 +67,15 @@ contract Deploy is Script {
         verifyArgs(a);
         uint256 pk = vm.envUint("DEPLOYER_PK"); // never logged
         vm.startBroadcast(pk);
-        router = new TickingRouter(a);
+        address weth = 0x0Bd7D308f8E1639FAb988df18A8011f41EAcAD73; // canonical RH WETH
+        address feeTo = vm.envAddress("FEE_RECIPIENT"); // 0x3e13cd3704099424a6301Ea4125791a6a1433637 (user-confirmed EOA)
+        require(feeTo.code.length == 0 && feeTo != address(0), "fee recipient must be an EOA");
+        router = new TickingRouter(a, weth, feeTo);
         vm.stopBroadcast();
         // post-deploy immutables check
         require(router.POOL_MANAGER() == a[0] && router.KYBER() == a[4] && router.F_ALG() == a[10], "immutables");
         require(router.PCS_VAULT() == a[11] && router.PCS_CLPM() == a[12], "immutables pcs");
+        require(router.WETH() == weth && router.FEE_RECIPIENT() == feeTo && router.FEE_BPS() == 5, "fee immutables");
         console.log("TickingRouter deployed at", address(router));
         console.log("constructor args (abi):");
         console.logBytes(abi.encode(a));

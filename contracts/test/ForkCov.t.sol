@@ -65,6 +65,7 @@ contract ForkCovTest is Test {
     address constant CRCL = 0xdF0992E440dD0be65BD8439b609d6D4366bf1CB5;
     address constant SPCX = 0x4a0E65A3EcceC6dBe60AE065F2e7bb85Fae35eEa;
     address constant T117 = 0x117cc2133c37B721F49dE2A7a74833232B3B4C0C;
+    address constant FEE_TO = 0x3e13cd3704099424a6301Ea4125791a6a1433637;
     address constant PM = 0x8366a39CC670B4001A1121B8F6A443A643e40951;
     address constant BALV = 0xB055000fbE3cc9bDE7742C583a86cc6283E3fF85;
     address constant WOO = 0x5520385bFcf07Ec87C4c53A7d8d65595Dff69FA4;
@@ -98,14 +99,18 @@ contract ForkCovTest is Test {
         else vm.createSelectFork(rpc, blk);
         address deployed = vm.envOr("ROUTER_ADDR", address(0)); // post-deploy smoke: test the live bytecode
         if (deployed != address(0)) {
-            r = TickingRouter(deployed);
+            r = TickingRouter(payable(deployed));
         } else {
             deployCodeTo(
                 "TickingRouter.sol:TickingRouter",
-                abi.encode([PM, BALV, WOO, TESS, KYB, F_UNI, F_SUSHI, F_FORK, F_TS0, F_TS1, F_ALG, PCS_V, PCS_CLPM]),
+                abi.encode(
+                    [PM, BALV, WOO, TESS, KYB, F_UNI, F_SUSHI, F_FORK, F_TS0, F_TS1, F_ALG, PCS_V, PCS_CLPM],
+                    WETH,
+                    FEE_TO
+                ),
                 ROUTER_AT
             );
-            r = TickingRouter(ROUTER_AT);
+            r = TickingRouter(payable(ROUTER_AT));
         }
     }
 
@@ -128,11 +133,15 @@ contract ForkCovTest is Test {
         uint256 s = vm.snapshotState();
         _fund(tin, amt);
         uint256 b = IERC20x(tout).balanceOf(rcpt);
+        uint256 bf = IERC20x(tout).balanceOf(FEE_TO);
         vm.prank(user);
         uint256 g = gasleft();
         out = r.swap(prog);
         gas_ = g - gasleft();
         assertEq(IERC20x(tout).balanceOf(rcpt) - b, out, "I3 recipient delta");
+        uint256 fee = IERC20x(tout).balanceOf(FEE_TO) - bf; // v2 I7
+        assertEq(fee, (out + fee) * 5 / 10_000, "I7 fee == floor(gross*5bps)");
+        out += fee; // gross: keeps quoter comparisons wei-exact
         assertEq(IERC20x(tin).balanceOf(address(r)), 0, "I2 tin");
         assertEq(IERC20x(tout).balanceOf(address(r)), 0, "I2 tout");
         assertEq(IERC20x(tin).balanceOf(user), 0, "exact spend");
@@ -316,9 +325,12 @@ contract ForkCovTest is Test {
     function _tryV1(bytes memory prog, address tin, address tout, uint256 amt) internal returns (uint256 o) {
         uint256 s = vm.snapshotState();
         _fund(tin, amt);
+        uint256 bf = IERC20x(tout).balanceOf(FEE_TO);
         vm.prank(user);
         try r.swap(prog) returns (uint256 out) {
-            o = out;
+            uint256 fee = IERC20x(tout).balanceOf(FEE_TO) - bf; // v2 I7
+            assertEq(fee, (out + fee) * 5 / 10_000, "I7 fee");
+            o = out + fee; // gross
             emit log_named_uint("out", out);
         } catch (bytes memory e) {
             emit log_named_bytes("clean revert (no liquidity)", e);

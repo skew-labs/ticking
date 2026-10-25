@@ -1,0 +1,19 @@
+[
+  {
+    "entity_id": "okx",
+    "name": "OKX",
+    "type": "exchange",
+    "aliases": ["okx", "okex", "okx exchange", "okb", "x layer"],
+    "website": "https://www.okx.com",
+    "sources": [
+      {
+        "id": "okx_por",
+        "url": "https://www.okx.com/proof-of-reserves",
+        "file": "https://static.okx.com/cdn/okx/por/chain/por_csv_2026100300_V4.zip",
+        "as_of": "2026-10-03",
+        "license": "Published by OKX for public verification of its reserves. Each EVM address is signed ('I am an OKX address'); signatures re-verified with the scheme in okx/proof-of-reserves (MIT).",
+        "blob_copy": "em-mapping/research/sources/okx/por_csv_2026100300_V4.zip"
+      }
+    ]
+  }
+]

@@ -1,0 +1,16 @@
+{
+  "version": "analysis-dialogue-v5",
+  "rules": {
+    "whatif": "\\bwhat\\s+if\\b|\\b(?:entry|trade)\\s+checklist\\b|\\bconditions?\\s+to\\s+(?:reconsider|watch|enter)\\b|(?:어떤|무슨)\\s*(?:변화|조건).*(?:진입|들어|검토)|(?:진입|들어갈).*(?:조건|경우)|(?:만약|이러면|그렇게\\s*되면).*(?:롱|숏|진입|매수|매도)|왓이프|(?:어느|어떤|무슨)\\s*(?:가격|레벨|선).*(?:넘|깨|뚫|돌파|다시|봐)|\\b(?:what|which)\\s+(?:price|level).*(?:break|watch|reconsider)|(?:뭘|무엇을)\\s*(?:기다|봐야)|what (?:am i|should i be) waiting for|\\bwhat (?:needs to|must|has to) happen\\b|뭐가.*(?:바뀌|달라|변해)|어떻게.*되면.*(?:들어|진입)|\\bwhat (?:would|could|will) make you change your mind\\b|판단.*(?:바꿀|바뀔|바꾸|변하)|생각.*바꿀",
+    "rank": "\\b(?:which|what).*(?:best|strongest|likely|favor|prefer|choose|recommend)|\\b(?:which one|best.supported|most likely|strongest setup|best option|rank (?:these|the))\\b|유력|가장.*(?:좋|나|괜찮|가능|확률)|(?:추천|시나리오|전략).*(?:중|중에).*(?:뭐|어느|어떤)|뭘.*(?:고르|선택)|(?:그중|그\\s*중|둘\\s*중|두\\s*개\\s*중).*(?:제일|가장|뭐|어느)|제일.*(?:좋|나|괜찮|가능|유력)",
+    "entry": "\\b(?:when|how).*(?:enter|entry)|\\bentry (?:condition|trigger)|언제.*(?:들어|진입)|진입.*(?:조건|언제)|\\b(?:where.*entry|my entry|entry price)\\b|진입가.*(?:어디|얼마)|어디.*진입",
+    "invalidation": "\\b(?:what|when|why).*(?:invalid|cancel|stop)|\\binvalidation\\b|(?:무효|취소|손절).*(?:기준|언제|왜|조건)|언제.*(?:손절|취소|무효)|\\bwhere.*(?:stop|invalid)|\\bwhen.*cancel|\\b(?:my stop|stop price)\\b|손절가.*(?:얼마|어디)|어디.*손절|(?:손절|스탑|SL)(?:가|은|는|을|를)?\\s*(?:어디|얼마|어느|어떻게|몇)",
+    "opposite": "\\bopposite\\b|반대(?:로|쪽|편|는|도|의|\\s*(?:시나리오|포지션|전략))|^(?:반대)[?!.\\s]*$",
+    "conservative": "\\bconservative\\b|보수적|위험.*(?:줄|낮)|(?:더\\s*)?안전(?:하게|한\\s*쪽|한\\s*방향)|\\b(?:safer|less aggressive|reduce (?:the )?risk)\\b",
+    "refresh": "\\brefresh\\b|새로\\s*(?:분석|계산)|(?:분석|전략).*갱신|최신.*(?:분석|전략)",
+    "continue": "\\b(?:same|again|previous analysis|continue)\\b|똑같|같은\\s*(?:전략|방식|조건)|이어서|이어서|그대로|다시.*(?:분석|전략|봉)",
+    "timeframe": "(?:[1-9][0-9]*\\s*(?:s|m|h|d|w|분|시간|일|주)(?:봉)?).*(?:으로|에서|다시|바꿔|분석|전략)|\\b(?:switch|change|use|same on)\\b.*[1-9][0-9]*\\s*(?:minutes?|hours?|mins?|m|h|d)\\b",
+    "explain": "\\b(?:why (?:that|this)|explain (?:this|that|the|reasoning)|compare (?:these|the scenarios|this))|(?:그거|그게|그걸|그중|그것|추천|이거|이게|전략|시나리오).*(?:왜|이유|설명|비교)|왜.*(?:그게|그거|이게|그쪽|그것|분석|판단|추세|추천)|(?:이|이번|현재|저장된)\\s*(?:분석|판단).*(?:설명|이유|왜)|^(?:왜|이유는|더 자세히)[?.!\\s]*$|(?:쉽게|간단히|짧게).*(?:설명|말해|알려)|(?:그게|이게|그건).*무슨\\s*뜻|\\b(?:in plain english|simplify|make it simple|explain simply)\\b|그럼.*지금.*(?:뭐|어떻게).*(?:하면|해야|할까)",
+    "target": "\\b(?:my target|target price|take.profit price|where.*(?:target|take profit))\\b|익절가.*(?:얼마|어디)|어디.*익절|목표가.*(?:얼마|어디)|(?:익절|목표|TP)(?:가|은|는|을|를)?\\s*(?:어디|얼마|어느|어떻게|몇)"
+  }
+}
