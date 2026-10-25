@@ -1,0 +1,19 @@
+name: contracts
+on:
+  push:
+    branches: [main]
+    paths: ["contracts/**", ".github/workflows/contracts.yml", "Makefile"]
+  pull_request:
+    paths: ["contracts/**", ".github/workflows/contracts.yml", "Makefile"]
+permissions:
+  contents: read
+jobs:
+  forge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: foundry-rs/foundry-toolchain@v1
+      - run: make contracts-lint
+      - run: make contracts-build
+      - name: unit + invariant tests (fork tests excluded)
+        run: make contracts-test

@@ -1,0 +1,25 @@
+name: aggregator
+on:
+  push:
+    branches: [main]
+    paths: ["aggregator/**", ".github/workflows/aggregator.yml", "Makefile"]
+  pull_request:
+    paths: ["aggregator/**", ".github/workflows/aggregator.yml", "Makefile"]
+permissions:
+  contents: read
+jobs:
+  cargo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: aggregator
+      - run: make aggregator-lint
+      - run: make aggregator-build
+      - run: make aggregator-test
+      - name: clippy (advisory)
+        run: cd aggregator && cargo clippy --release --locked
