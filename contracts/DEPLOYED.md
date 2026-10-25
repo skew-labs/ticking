@@ -1,4 +1,32 @@
-# TickingRouter: Robinhood Chain mainnet (chain 4663)
+# TickingRouter v2: Robinhood Chain mainnet (chain 4663) — LIVE
+
+| field | value |
+|---|---|
+| Address | `0x05d35a3b72458cD1C20832Ec4F2Cd16962d1567F` |
+| Deploy tx | `0xb9ce514af3476542990455b276366882a83e64e24c1bc3893b75fdcd1801b143` |
+| Block | 97273019 (2026-10-25 11:14:49 SGT) |
+| Deployer | `0x3e13cd3704099424a6301Ea4125791a6a1433637` |
+| Gas used | 2,610,266 |
+| Deployer balance after | 0.008906033910403144 ETH |
+| Fee | `FEE_BPS() == 5` (0.05%); `FEE_RECIPIENT() == 0x3e13cd3704099424a6301Ea4125791a6a1433637` (verified on-chain) |
+| Compiler | solc 0.8.26, via-IR, optimizer 200 runs, EVM version cancun |
+| Explorer | https://robinhoodchain.blockscout.com/address/0x05d35a3b72458cD1C20832Ec4F2Cd16962d1567F |
+| Source verification | Sourcify **exact_match**, creation + runtime (match id 56911058): https://sourcify.dev/server/v2/contract/4663/0x05d35a3b72458cD1C20832Ec4F2Cd16962d1567F |
+| What's new vs v1 | 5 bps protocol fee on gross out (floor); native-ETH Uniswap V4 hops |
+
+## Post-deploy checks (2026-10-25 ~11:15 SGT)
+- [x] Broadcast SUCCESS (forge script Deploy.s.sol --broadcast --slow)
+- [x] codesize 11753; FEE_BPS=5; FEE_RECIPIENT=0x3e13…3637; WETH/POOL_MANAGER/KYBER getters match constructor
+- [x] Sourcify **exact_match** creation+runtime (match id 56911058, 2026-10-25 11:18:27 SGT): https://sourcify.dev/server/v2/contract/4663/0x05d35a3b72458cD1C20832Ec4F2Cd16962d1567F — 
+- [x] ForkCov smoke vs deployed bytecode: kyber fixture refreshed for ROUTER_ADDR; `FOUNDRY_PROFILE=fork forge test --match-path test/ForkCov.t.sol` → **27/27 pass** (2026-10-25 ~11:18 SGT)
+
+Engine: `engine2.rs` defaults `ROUTER_V2` to this address (overridable via env `ROUTER_V2`). The public API (`api.ticking.dev/api/router/quote`) returns this router as `tx.to`; `?router=v1` targets the superseded v1 address.
+
+---
+
+# Superseded — TickingRouter v1 (no fee)
+
+# TickingRouter v1 (superseded)
 
 | field | value |
 |---|---|

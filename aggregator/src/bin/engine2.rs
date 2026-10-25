@@ -186,8 +186,8 @@ fn apply_fees(e: &mut Eng, m: &str) { let ids = e.dyn_fee_ids(); let d = mc_deco
 type Fix = (usize, U256, i32, u128);
 /// TickingRouter v1, deployed on RH mainnet (contracts/DEPLOYED.md); Sourcify exact match
 const ROUTER: &str = "0x9745ff56a6fc085b3e70a7509cd49ab6b97dcbd6"; // v1 (no fee, no native V4) - still accepted via ?router=v1
-/// TickingRouter v2: 5 bps protocol fee on gross output (floor), native-ETH V4 hops (op flag 0x20). Set via ROUTER_V2 env until hard-coded.
-fn router_v2() -> Option<String> { std::env::var("ROUTER_V2").ok().filter(|a| a.len() == 42).map(|a| a.to_lowercase()) }
+/// TickingRouter v2 LIVE: 5 bps protocol fee on gross output (floor), native-ETH V4 hops (op flag 0x20). Override with ROUTER_V2 env.
+fn router_v2() -> Option<String> { Some(std::env::var("ROUTER_V2").ok().filter(|a| a.len() == 42).unwrap_or_else(|| "0x05d35a3b72458cd1c20832ec4f2cd16962d1567f".into()).to_lowercase()) }
 const FEE_BPS: u64 = 5;
 /// V4 pool ids keyed on native ETH (currency0 = address(0)); the engine trades them as WETH.
 static NATIVE_V4: std::sync::LazyLock<std::sync::RwLock<HashSet<String>>> = std::sync::LazyLock::new(|| {

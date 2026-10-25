@@ -1,8 +1,8 @@
-# Ticking Router — Frontend API (LIVE at https://api.ticking.dev/api/router/)
+# Ticking Router — Frontend API handoff (PROPOSAL, not applied to nginx)
 
 Chain: Robinhood Chain mainnet, chainId 4663 (0x1237). Read-only quote engine (no keys, no txs). The user signs and sends the tx.
 
-**Router: TickingRouter v1 `0x9745fF56A6FC085B3e70A7509cd49Ab6b97dCBD6` (RH mainnet, chain 4663).** Every quote with `recipient=` returns `tx.{to,data,value}` targeting it. Deployed-router eth_call proof: 63/63 exact (`data/live/router_proof.json`). Gate numbers: ENGINE.md "FINAL gate run".
+**Router: TickingRouter v2 `0x05d35a3b72458cD1C20832Ec4F2Cd16962d1567F` (RH mainnet, chain 4663; 0.05% fee → `0x3e13…3637`).** v1 `0x9745fF56A6FC085B3e70A7509cd49Ab6b97dCBD6` superseded (`?router=v1` still works). Quotes with `recipient=` return `tx.{to,data,value}` targeting v2 by default.
 
 ## LIVE public endpoints (since 2026-10-25 08:16 SGT): https://api.ticking.dev/api/router/…
 - `https://api.ticking.dev/api/router/health`
@@ -11,7 +11,7 @@ Chain: Robinhood Chain mainnet, chainId 4663 (0x1237). Read-only quote engine (n
 - `https://api.ticking.dev/api/router/pool_quote?…` (debug)
 nginx: exact-match locations in /etc/nginx/snippets/ticking-router.conf (included in the api.ticking.dev :443 server). Rate limit: 20 r/s per IP, burst 40 → 429. CORS: `Access-Control-Allow-Origin: *`, GET/OPTIONS only.
 Backend: persistent systemd `ticking-engine.service` on t1 (enabled, PRUNE_STATES=1), 127.0.0.1:8782/8783.
-With `recipient`, the response's `tx` = `{to: 0x9745ff56a6fc085b3e70a7509cd49ab6b97dcbd6, data: swap(bytes) calldata, value: "0", minOut, deadline, executable}`. Send it directly after approve(tin → router).
+With `recipient`, the response's `tx` = `{to: 0x05d35a3b72458cd1c20832ec4f2cd16962d1567f, data: swap(bytes) calldata, value: "0", minOut, deadline, executable}`. Send it directly after approve(tin → router).
 
 ## Public endpoints (mapping)
 | public path | upstream | purpose |
@@ -22,7 +22,14 @@ With `recipient`, the response's `tx` = `{to: 0x9745ff56a6fc085b3e70a7509cd49ab6
 | `GET /api/router/pool_quote` | `127.0.0.1:8782/pool_quote` | single-pool exact simulation (debug) |
 `/metrics`, `/divergences` and `/freshness` stay internal (not proxied).
 
-Rate limits: 20 req/s per IP (burst 40). The engine itself has no auth; nginx is the only gate.
+Proposed nginx block (NOT applied; needs the owner's OK):
+```
+location /api/router/quote  { proxy_pass http://127.0.0.1:8782/quote;  limit_req zone=router burst=20 nodelay; add_header Access-Control-Allow-Origin $cors_origin always; }
+location /api/router/fast   { proxy_pass http://127.0.0.1:8783/quote;  limit_req zone=router burst=50 nodelay; add_header Access-Control-Allow-Origin $cors_origin always; }
+location /api/router/health { proxy_pass http://127.0.0.1:8782/health; }
+# limit_req_zone $binary_remote_addr zone=router:10m rate=20r/s;   CORS: allow-list the ticking.dev origins, GET only, no credentials.
+```
+Rate limits: 20 req/s per IP (burst 20 best / 50 fast). The engine itself has no auth; nginx is the only gate.
 
 ## Request: GET /api/router/quote
 | param | type | req | meaning |
@@ -36,7 +43,7 @@ Rate limits: 20 req/s per IP (burst 40). The engine itself has no auth; nginx is
 | `slippageBps` | int | no | default 50, max 5000; `minOut = netOut*(1-bps/1e4)` |
 | `deadline` | unix seconds u32 | no | default now+60 |
 
-Stables: **USDG** 0x5fc5360d0400a0fd4f2af552add042d716f1d168 (6 dec, Paxos, the real liquidity). **USDC** 0x80e0e24718dbfcad49ecaa6f1e6c89a190586ca8 (6 dec, bridged). Prefer USDG for stable routing.
+Stables: **USDG** 0x5fc5360d0400a0fd4f2af552add042d716f1d168 (6 dec, Paxos, the real liquidity). **USDC** 0x80e0e24718dbfcad49ecaa6f1e6c89a190586ca8 (6 dec; canonical-bridge USDC; total supply about $340; the only liquid pool has a 92% fee → treat as untradeable and warn in the UI). The USDG token reverts transfers ≥ 1e20 raw.
 
 Example:
 `/api/router/quote?tin=0x0bd7d308f8e1639fab988df18a8011f41eacad73&tout=0x5fc5360d0400a0fd4f2af552add042d716f1d168&amt=1000000000000000000&recipient=0xYourAddr&slippageBps=30`
@@ -52,13 +59,13 @@ Example:
   "gasUnits": 300000,                // estimate: 60k base + 120k per hop
   "mode": "best", "compute_us": 6595, "paths": 1155,
   "legs": [ { "amountIn": "688…", "hops": [ { "pool": "0x1667…", "venue": "univ3", "fee": 79, "zfo": true, "tokenIn": "0x0bd7…", "tokenOut": "0x5fc5…" } ] } ],
-  "tx": { "to": "0x9745ff56a6fc085b3e70a7509cd49ab6b97dcbd6", "data": "0x627dd56a…", "value": "0", "program": "0x…", "executable": true, "reason": "", "minOut": "2313639430", "deadline": 1792865000 }   // null when no recipient
+  "tx": { "to": "0x05d35a3b72458cd1c20832ec4f2cd16962d1567f", "data": "0x627dd56a…", "value": "0", "program": "0x…", "executable": true, "reason": "", "minOut": "2313639430", "deadline": 1792865000 }   // null when no recipient
 }
 ```
-`venue` ∈ univ3, sushi, giga (V3 fee-keyed), ramses, up (V3 tickSpacing-keyed), v4 (zero-hook Uniswap V4).
+`venue` ∈ univ3, sushi, giga (V3 fee-keyed), ramses, up (V3 tickSpacing-keyed), v4 (zero-hook Uniswap V4). Alandale (Algebra), Pancake Infinity CL and hooked V4 pools are excluded from routes, so every returned hop is exactly simulated.
 
 ## Building the tx
-TickingRouter v1 (contracts/, UNAUDITED by the owner's choice). **Deployed on RH mainnet (chain 4663): `0x9745ff56a6fc085b3e70a7509cd49ab6b97dcbd6`**, tx `0x2440a58c7937491ab97eb9992403c5aaedc0b28a2636421d2a03f2b2324cd908`, block 96981545, Sourcify exact match (contracts/DEPLOYED.md).
+TickingRouter v2 (contracts/, UNAUDITED by the owner's choice). **LIVE on RH mainnet (chain 4663): `0x05d35a3b72458cD1C20832Ec4F2Cd16962d1567F`**, tx `0xb9ce514af3476542990455b276366882a83e64e24c1bc3893b75fdcd1801b143`, block 97273019 (2026-10-25 11:14:49 SGT). FEE_BPS=5. v1 `0x9745fF56A6FC085B3e70A7509cd49Ab6b97dCBD6` superseded. See contracts/DEPLOYED.md.
 - The engine returns a ready-to-send tx: `tx.to` = ROUTER, `tx.data` = `swap(bytes)` (selector `0x627dd56a`) ABI-encoded around `tx.program`, `tx.value` = "0". Send it as-is.
 - `swap()` returns `out`. The read-only proof `harness/router_proof.py` eth_calls `tx.data` against the deployed router at the quote's block (holder funded via state override) and checks `out == grossOut` to the wei. Results: `data/live/router_proof.json`.
 - Before the swap: `IERC20(tin).approve(ROUTER, amt)`. The router pulls `transferFrom(user → pool)` just in time.
