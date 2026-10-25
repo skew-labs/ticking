@@ -1,0 +1,630 @@
+{
+  "symbols": {
+    "ETHUSDT": {
+      "binance": "ETHUSDT",
+      "markets": [
+        {
+          "id": "arbitrum:0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+          "symbol": "WETH"
+        },
+        {
+          "id": "robinhood:0x0bd7d308f8e1639fab988df18a8011f41eacad73",
+          "symbol": "WETH"
+        }
+      ]
+    },
+    "BTCUSDT": {
+      "binance": "BTCUSDT",
+      "markets": [
+        {
+          "id": "arbitrum:0x2f2a2543b76a4166549f7aab2e75bef0aefc5b0f",
+          "symbol": "WBTC"
+        },
+        {
+          "id": "robinhood:0xcec185eb182c47d1ba1efc84e6959e18cd620be4",
+          "symbol": "CBBTC"
+        }
+      ]
+    },
+    "ARBUSDT": {
+      "binance": "ARBUSDT",
+      "markets": [
+        {
+          "id": "arbitrum:0x912ce59144191c1204e64559fe8253a0e49e6548",
+          "symbol": "ARB"
+        }
+      ]
+    },
+    "PENDLEUSDT": {
+      "binance": "PENDLEUSDT",
+      "markets": [
+        {
+          "id": "arbitrum:0x0c880f6761f1af8d9aa9c466984b80dab9a8c9e8",
+          "symbol": "PENDLE"
+        }
+      ]
+    },
+    "GMXUSDT": {
+      "binance": "GMXUSDT",
+      "markets": [
+        {
+          "id": "arbitrum:0xfc5a1a6eb076a2c7ad06ed22c90d7e710e35ad0a",
+          "symbol": "GMX"
+        }
+      ]
+    },
+    "MAGICUSDT": {
+      "binance": "MAGICUSDT",
+      "markets": [
+        {
+          "id": "arbitrum:0x539bde0d7dbd336b79148aa742883198bbf60342",
+          "symbol": "MAGIC"
+        }
+      ]
+    },
+    "LINKUSDT": {
+      "binance": "LINKUSDT",
+      "markets": [
+        {
+          "id": "arbitrum:0xf97f4df75117a78c1a5a0dbb814af92458539fb4",
+          "symbol": "LINK"
+        },
+        {
+          "id": "robinhood:0xe6864e4630d4d7a0cad2e61f6bc2c0dcad777712",
+          "symbol": "LINK"
+        }
+      ]
+    },
+    "ZROUSDT": {
+      "binance": "ZROUSDT",
+      "markets": [
+        {
+          "id": "arbitrum:0x6985884c4392d348587b19cb9eaaf157f13271cd",
+          "symbol": "ZRO"
+        }
+      ]
+    },
+    "AAVEUSDT": {
+      "binance": "AAVEUSDT",
+      "markets": [
+        {
+          "id": "arbitrum:0xba5ddd1f9d7f570dc94a51479a000e3bce967196",
+          "symbol": "AAVE"
+        }
+      ]
+    },
+    "CRVUSDT": {
+      "binance": "CRVUSDT",
+      "markets": [
+        {
+          "id": "arbitrum:0x11cdb42b0eb46d95f990bedd4695a6e3fa034978",
+          "symbol": "CRV"
+        }
+      ]
+    },
+    "GNSUSDT": {
+      "binance": "GNSUSDT",
+      "markets": [
+        {
+          "id": "arbitrum:0x18c11fd286c5ec11c3b683caa813b77f5163a122",
+          "symbol": "GNS"
+        }
+      ]
+    },
+    "MEMEUSDT": {
+      "binance": "MEMEUSDT",
+      "markets": [
+        {
+          "id": "robinhood:0x385f4f8ae47651ce5f58f5265395a669f8281e18",
+          "symbol": "MEME"
+        }
+      ]
+    },
+    "VIRTUALUSDT": {
+      "binance": "VIRTUALUSDT",
+      "markets": [
+        {
+          "id": "robinhood:0xc6911796042b15d7fa4f6cde69e245ddcd3d9c31",
+          "symbol": "VIRTUAL"
+        }
+      ]
+    },
+    "SPELLUSDT": {
+      "binance": "SPELLUSDT",
+      "markets": [
+        {
+          "id": "arbitrum:0x3e6648c5a70a150a88bce65f4ad4d506fe15d2af",
+          "symbol": "SPELL"
+        }
+      ]
+    },
+    "PEPEUSDT": {
+      "binance": "PEPEUSDT",
+      "markets": [
+        {
+          "id": "arbitrum:0xfc44abe4f62122d31e3ff317d60f7bbce7e7b7db",
+          "symbol": "PEPE"
+        },
+        {
+          "id": "robinhood:0x9b09c435bc5da088722be47e97989fb1e3ed4eb9",
+          "symbol": "PEPE"
+        }
+      ]
+    },
+    "UNIUSDT": {
+      "binance": "UNIUSDT",
+      "markets": [
+        {
+          "id": "arbitrum:0xfa7f8980b0f1e64a2062791cc3b0871572f1f7f0",
+          "symbol": "UNI"
+        },
+        {
+          "id": "robinhood:0xf177d86a28b520e3e396e4f3b96cd8e72d7dabd8",
+          "symbol": "UNI"
+        }
+      ]
+    },
+    "ANIMEUSDT": {
+      "binance": "ANIMEUSDT",
+      "markets": [
+        {
+          "id": "arbitrum:0x37a645648df29205c6261289983fb04ecd70b4b3",
+          "symbol": "ANIME"
+        }
+      ]
+    },
+    "XAIUSDT": {
+      "binance": "XAIUSDT",
+      "markets": [
+        {
+          "id": "arbitrum:0x4cb9a7ae498cedcbb5eae9f25736ae7d428c9d66",
+          "symbol": "XAI"
+        }
+      ]
+    },
+    "GRTUSDT": {
+      "binance": "GRTUSDT",
+      "markets": [
+        {
+          "id": "arbitrum:0x9623063377ad1b27544c965ccd7342f7ea7e88c7",
+          "symbol": "GRT"
+        }
+      ]
+    },
+    "TURBOUSDT": {
+      "binance": "TURBOUSDT",
+      "markets": [
+        {
+          "id": "arbitrum:0x8700fcef7558572a5a036fa5798cbb27b2b1348b",
+          "symbol": "TURBO"
+        },
+        {
+          "id": "robinhood:0x808a9d5071e7d5f58490cb7385027536bbe43ef0",
+          "symbol": "TURBO"
+        }
+      ]
+    },
+    "SOLUSDT": {
+      "binance": "SOLUSDT",
+      "markets": [
+        {
+          "id": "arbitrum:0x2bcc6d6cdbbdc0a4071e48bb3b969b06b3330c07",
+          "symbol": "SOL"
+        }
+      ]
+    },
+    "ESPUSDT": {
+      "binance": "ESPUSDT",
+      "markets": [
+        {
+          "id": "arbitrum:0x3b8db18e69d6686ad9371a423afe3dd1065c94f1",
+          "symbol": "ESP"
+        }
+      ]
+    },
+    "LDOUSDT": {
+      "binance": "LDOUSDT",
+      "markets": [
+        {
+          "id": "arbitrum:0x13ad51ed4f1b7e9dc168d8a00cb3f4ddd85efa60",
+          "symbol": "LDO"
+        }
+      ]
+    },
+    "CHIPUSDT": {
+      "binance": "CHIPUSDT",
+      "markets": [
+        {
+          "id": "arbitrum:0x0c1c1c109fe34733fca54b82d7b46b75cfb71f6e",
+          "symbol": "CHIP"
+        },
+        {
+          "id": "robinhood:0x1e4d3243a287edb687a4cbf2a1223da54e8c835f",
+          "symbol": "CHIP"
+        }
+      ]
+    },
+    "LPTUSDT": {
+      "binance": "LPTUSDT",
+      "markets": [
+        {
+          "id": "arbitrum:0x289ba1701c2f088cf0faf8b3705246331cb8a839",
+          "symbol": "LPT"
+        }
+      ]
+    },
+    "DIAUSDT": {
+      "binance": "DIAUSDT",
+      "markets": [
+        {
+          "id": "arbitrum:0x6efa9b8883dfb78fd75cd89d8474c44c3cbda469",
+          "symbol": "DIA"
+        }
+      ]
+    },
+    "ETHFIUSDT": {
+      "binance": "ETHFIUSDT",
+      "markets": [
+        {
+          "id": "arbitrum:0x7189fb5b6504bbff6a852b13b7b82a3c118fdc27",
+          "symbol": "ETHFI"
+        }
+      ]
+    },
+    "APEUSDT": {
+      "binance": "APEUSDT",
+      "markets": [
+        {
+          "id": "arbitrum:0x7f9fbf9bdd3f4105c478b996b648fe6e828a1e98",
+          "symbol": "APE"
+        }
+      ]
+    },
+    "SUSHIUSDT": {
+      "binance": "SUSHIUSDT",
+      "markets": [
+        {
+          "id": "arbitrum:0xd4d42f0b6def4ce0383636770ef773390d85c61a",
+          "symbol": "SUSHI"
+        },
+        {
+          "id": "robinhood:0x0bb40d7fbae7f0c69bc5910c601987dce697d85f",
+          "symbol": "SUSHI"
+        }
+      ]
+    },
+    "CHRUSDT": {
+      "binance": "CHRUSDT",
+      "markets": [
+        {
+          "id": "arbitrum:0x15b2fb8f08e4ac1ce019eadae02ee92aedf06851",
+          "symbol": "CHR"
+        }
+      ]
+    },
+    "CYBERUSDT": {
+      "binance": "CYBERUSDT",
+      "markets": [
+        {
+          "id": "arbitrum:0x10a625d21bbb6ae379b2b402d9907dcb9fe1700d",
+          "symbol": "CYBER"
+        }
+      ]
+    },
+    "CAKEUSDT": {
+      "binance": "CAKEUSDT",
+      "markets": [
+        {
+          "id": "arbitrum:0x1b896893dfc86bb67cf57767298b9073d2c1ba2c",
+          "symbol": "CAKE"
+        }
+      ]
+    },
+    "KNCUSDT": {
+      "binance": "KNCUSDT",
+      "markets": [
+        {
+          "id": "arbitrum:0xe4dddfe67e7164b0fe14e218d80dc4c08edc01cb",
+          "symbol": "KNC"
+        }
+      ]
+    },
+    "TAOUSDT": {
+      "binance": "TAOUSDT",
+      "markets": [
+        {
+          "id": "robinhood:0xf3081494b87e8d5fb7960f066e931d1d0e6e3d67",
+          "symbol": "TAO"
+        }
+      ]
+    },
+    "MMTUSDT": {
+      "binance": "MMTUSDT",
+      "markets": [
+        {
+          "id": "arbitrum:0x27d8de4c30ffde34e982482ae504fc7f23061f61",
+          "symbol": "MMT"
+        }
+      ]
+    },
+    "SUIUSDT": {
+      "binance": "SUIUSDT",
+      "markets": [
+        {
+          "id": "arbitrum:0xffdb5e6f2e77440fcf8f2b88951c143f17e4b088",
+          "symbol": "SUI"
+        }
+      ]
+    },
+    "JOEUSDT": {
+      "binance": "JOEUSDT",
+      "markets": [
+        {
+          "id": "arbitrum:0x371c7ec6d8039ff7933a2aa28eb827ffe1f52f07",
+          "symbol": "JOE"
+        }
+      ]
+    },
+    "COMPUSDT": {
+      "binance": "COMPUSDT",
+      "markets": [
+        {
+          "id": "arbitrum:0x354a6da3fcde098f8389cad84b0182725c6c91de",
+          "symbol": "COMP"
+        }
+      ]
+    },
+    "SUNUSDT": {
+      "binance": "SUNUSDT",
+      "markets": [
+        {
+          "id": "arbitrum:0x378585830d92ba7197e2f5c8b780c1e8a547ab44",
+          "symbol": "SUN"
+        }
+      ]
+    },
+    "DOTUSDT": {
+      "binance": "DOTUSDT",
+      "markets": [
+        {
+          "id": "arbitrum:0x8d010bf9c26881788b4e6bf5fd1bdc358c8f90b8",
+          "symbol": "DOT"
+        }
+      ]
+    },
+    "WOOUSDT": {
+      "binance": "WOOUSDT",
+      "markets": [
+        {
+          "id": "arbitrum:0xcafcd85d8ca7ad1e1c6f82f651fa15e33aefd07b",
+          "symbol": "WOO"
+        }
+      ]
+    },
+    "LQTYUSDT": {
+      "binance": "LQTYUSDT",
+      "markets": [
+        {
+          "id": "arbitrum:0xfb9e5d956d889d91a82737b9bfcdac1dce3e1449",
+          "symbol": "LQTY"
+        }
+      ]
+    },
+    "HOMEUSDT": {
+      "binance": "HOMEUSDT",
+      "markets": [
+        {
+          "id": "robinhood:0xe9ab3214a9b77baebfde2b6d17dec4823599ff6f",
+          "symbol": "HOME"
+        }
+      ]
+    },
+    "RPLUSDT": {
+      "binance": "RPLUSDT",
+      "markets": [
+        {
+          "id": "arbitrum:0xb766039cc6db368759c1e56b79affe831d0cc507",
+          "symbol": "RPL"
+        }
+      ]
+    },
+    "IMXUSDT": {
+      "binance": "IMXUSDT",
+      "markets": [
+        {
+          "id": "arbitrum:0x9c67ee39e3c4954396b9142010653f17257dd39c",
+          "symbol": "IMX"
+        }
+      ]
+    },
+    "RSRUSDT": {
+      "binance": "RSRUSDT",
+      "markets": [
+        {
+          "id": "arbitrum:0xca5ca9083702c56b481d1eec86f1776fdbd2e594",
+          "symbol": "RSR"
+        }
+      ]
+    },
+    "WIFUSDT": {
+      "binance": "WIFUSDT",
+      "markets": [
+        {
+          "id": "robinhood:0x5173b8ea6923c2d40267890d45c46a3480954773",
+          "symbol": "WIF"
+        }
+      ]
+    },
+    "HOTUSDT": {
+      "binance": "HOTUSDT",
+      "markets": [
+        {
+          "id": "robinhood:0x4597319a6c157140548f427bebaae29ff71d16ff",
+          "symbol": "HOT"
+        }
+      ]
+    },
+    "PENGUUSDT": {
+      "binance": "PENGUUSDT",
+      "markets": [
+        {
+          "id": "robinhood:0x74be72affafbc8de30f0c11247814036314d625f",
+          "symbol": "PENGU"
+        }
+      ]
+    },
+    "SYNUSDT": {
+      "binance": "SYNUSDT",
+      "markets": [
+        {
+          "id": "arbitrum:0x080f6aed32fc474dd5717105dba5ea57268f46eb",
+          "symbol": "SYN"
+        }
+      ]
+    },
+    "REZUSDT": {
+      "binance": "REZUSDT",
+      "markets": [
+        {
+          "id": "arbitrum:0x682629d1219b574e31885b85153136fd763a5507",
+          "symbol": "REZ"
+        }
+      ]
+    },
+    "BONKUSDT": {
+      "binance": "BONKUSDT",
+      "markets": [
+        {
+          "id": "arbitrum:0x09199d9a5f4448d0848e4395d065e1ad9c4a1f74",
+          "symbol": "BONK"
+        }
+      ]
+    },
+    "WINUSDT": {
+      "binance": "WINUSDT",
+      "markets": [
+        {
+          "id": "robinhood:0x23acfab04106a21af0ae1643b74cfec3c9aac181",
+          "symbol": "WIN"
+        }
+      ]
+    },
+    "COWUSDT": {
+      "binance": "COWUSDT",
+      "markets": [
+        {
+          "id": "arbitrum:0xcb8b5cd20bdcaea9a010ac1f8d835824f5c87a04",
+          "symbol": "COW"
+        }
+      ]
+    },
+    "PEOPLEUSDT": {
+      "binance": "PEOPLEUSDT",
+      "markets": [
+        {
+          "id": "robinhood:0xd1efce38684400cfe7343ab52de8d1fbe4c54f18",
+          "symbol": "PEOPLE"
+        }
+      ]
+    },
+    "FLOWUSDT": {
+      "binance": "FLOWUSDT",
+      "markets": [
+        {
+          "id": "robinhood:0xe59eccb15ea07a755eb9587eefda7929559e1fa6",
+          "symbol": "FLOW"
+        }
+      ]
+    },
+    "ROBOUSDT": {
+      "binance": "ROBOUSDT",
+      "markets": [
+        {
+          "id": "robinhood:0x8b48e9da0501a3556a961463fcf39bb426501d0d",
+          "symbol": "ROBO"
+        }
+      ]
+    },
+    "ZECUSDT": {
+      "binance": "ZECUSDT",
+      "markets": [
+        {
+          "id": "robinhood:0xec127e99da1a2ed3d6c0433227154a99b7b29221",
+          "symbol": "ZEC"
+        }
+      ]
+    },
+    "DCRUSDT": {
+      "binance": "DCRUSDT",
+      "markets": [
+        {
+          "id": "robinhood:0x29b9e5306cbc8e0e8e4c1d63fc85a843303e0c7a",
+          "symbol": "DCR"
+        }
+      ]
+    },
+    "TRUMPUSDT": {
+      "binance": "TRUMPUSDT",
+      "markets": [
+        {
+          "id": "robinhood:0xb6f15563a0df68ca81abdcfbb177fb7240a3cccc",
+          "symbol": "TRUMP"
+        }
+      ]
+    },
+    "RVNUSDT": {
+      "binance": "RVNUSDT",
+      "markets": [
+        {
+          "id": "robinhood:0x060a0600abe74166e629f6749de284910ff8d8a3",
+          "symbol": "RVN"
+        }
+      ]
+    },
+    "DOGEUSDT": {
+      "binance": "DOGEUSDT",
+      "markets": [
+        {
+          "id": "robinhood:0xb66d83f0a7eae1bed80df1e049a5d6aefa90eb66",
+          "symbol": "DOGE"
+        }
+      ]
+    },
+    "HIVEUSDT": {
+      "binance": "HIVEUSDT",
+      "markets": [
+        {
+          "id": "robinhood:0xcdae63d95d6dd4f89f6e508c77bd4388b4e5c8ab",
+          "symbol": "HIVE"
+        }
+      ]
+    },
+    "MARSCOINUSDT": {
+      "binance": "MARSCOINUSDT",
+      "markets": [
+        {
+          "id": "robinhood:0xd8ec6474c02e5f913a8fd566648a2df4b18dbba3",
+          "symbol": "MARSCOIN"
+        }
+      ]
+    },
+    "ATMUSDT": {
+      "binance": "ATMUSDT",
+      "markets": [
+        {
+          "id": "robinhood:0x0a4fc372afdc6d283bcfd644273e66125491fe06",
+          "symbol": "ATM"
+        }
+      ]
+    },
+    "RIFUSDT": {
+      "binance": "RIFUSDT",
+      "markets": [
+        {
+          "id": "robinhood:0xd931c47f4edf0f4428b0a2c084e29d0a6bdb4185",
+          "symbol": "RIF"
+        }
+      ]
+    }
+  }
+}

@@ -33,3 +33,4 @@ aggregator/target/
 *.duckdb
 *.parquet
 .env*
+!/data/
