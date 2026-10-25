@@ -22,3 +22,14 @@ node_modules/
 evidence/private/
 
 /engine/engine/slotline-observer
+# router / engine / data
+contracts/out/
+contracts/cache/
+contracts/lib/
+contracts/broadcast/
+aggregator/target/
+**/__pycache__/
+*.sqlite3*
+*.duckdb
+*.parquet
+.env*

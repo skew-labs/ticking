@@ -1,0 +1,16 @@
+{
+ "total": 154,
+ "stillborn": 1,
+ "valid": 153,
+ "killed": 152,
+ "kill_rate": 99.35,
+ "survivors": [
+  {
+   "line": 178,
+   "kind": "(?<![<>=!])<(?![<=])-><=",
+   "orig": "bool zfo = tin < tout;",
+   "mutant": "bool zfo = tin <= tout;",
+   "result": "SURVIVED"
+  }
+ ]
+}

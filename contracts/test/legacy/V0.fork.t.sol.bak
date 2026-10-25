@@ -1,0 +1,45 @@
+// SPDX-License-Identifier: MIT
+pragma solidity 0.8.26;
+import "forge-std/Test.sol";
+import "../src/TickingRouter.sol";
+contract Reenter { fallback() external { TickingRouter(payable(msg.sender)).swap(new TickingRouter.Op[](0), address(0), 0, address(1), 0, address(2), type(uint256).max); } }
+contract TickingRouterForkTest is Test {
+  address constant WETH=0x0Bd7D308f8E1639FAb988df18A8011f41EAcAD73; address constant USDG=0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168;
+  address constant CRCL=0xdF0992E440dD0be65BD8439b609d6D4366bf1CB5; address constant SPCX=0x4a0E65A3EcceC6dBe60AE065F2e7bb85Fae35eEa;
+  address constant PM=0x8366a39CC670B4001A1121B8F6A443A643e40951;
+  address constant TESS=0x55555522005BcAE1c2424D474BfD5ed477749E3e; address constant V3_WU_100=0x52e65B17fB6E5BA00Ed806f37Afcd2DaA50271Ca;
+  address constant FERMI_WU=0x0217Ee258081bb431f9fA25e0943628cE9d0595a; address constant WOO=0x5520385bFcf07Ec87C4c53A7d8d65595Dff69FA4;
+  address constant BUSH=0xc2fEf42121FaDA751ba9f2107C4c8d4C593af435;
+  TickingRouter r; address user=address(0xA11CE); address rcpt=address(0xB0B);
+  function setUp() public {
+    vm.createSelectFork(vm.envOr("RH_RPC", string("https://rpc.mainnet.chain.robinhood.com")));
+    r = new TickingRouter(PM, vm.envOr("BAL_VAULT", address(0xB055000fbE3cc9bDE7742C583a86cc6283E3fF85)), TESS);
+  }
+  function _go(TickingRouter.Op[] memory ops, address tin, uint256 amt, address tout, uint256 minOut) internal returns (uint256 out) {
+    deal(tin, user, amt); vm.startPrank(user); IERC20(tin).approve(address(r), amt);
+    out = r.swap(ops, tin, amt, tout, minOut, rcpt, block.timestamp + 60); vm.stopPrank();
+    assertEq(IERC20(tout).balanceOf(rcpt), out, "recipient got out");
+    assertEq(IERC20(tin).balanceOf(address(r)), 0, "no stuck tokenIn"); assertEq(IERC20(tout).balanceOf(address(r)), 0, "no stuck tokenOut");
+  }
+  function _one(TickingRouter.K k, address t, bool z, uint256 a, bytes memory d) internal pure returns (TickingRouter.Op[] memory o) { o = new TickingRouter.Op[](1); o[0] = TickingRouter.Op(k, t, z, a, d); }
+  function test_v3() public { uint256 o = _go(_one(TickingRouter.K.V3, V3_WU_100, true, 1e18, ""), WETH, 1e18, USDG, 1); emit log_named_uint("v3 out", o); assertGt(o, 1000e6); }
+  function test_v4() public { bytes memory kd = abi.encode(PoolKey(USDG, CRCL, 3000, 30, address(0)));
+    uint256 o = _go(_one(TickingRouter.K.V4, PM, true, 1000e6, kd), USDG, 1000e6, CRCL, 1); emit log_named_uint("v4 out", o); assertGt(o, 0); }
+  function test_fermi() public { uint256 o = _go(_one(TickingRouter.K.FERMI, FERMI_WU, true, 1e18, abi.encode(WETH)), WETH, 1e18, USDG, 1); emit log_named_uint("fermi out", o); assertGt(o, 1000e6); }
+  function test_tessera() public { uint256 o = _go(_one(TickingRouter.K.TESS, TESS, false, 1000e6, abi.encode(USDG, SPCX)), USDG, 1000e6, SPCX, 1); emit log_named_uint("tess out", o); assertGt(o, 0); }
+  function test_woofi() public { uint256 o = _go(_one(TickingRouter.K.WOO, WOO, false, 1e18, abi.encode(WETH, USDG)), WETH, 1e18, USDG, 1); emit log_named_uint("woo out", o); assertGt(o, 1000e6); }
+  function test_bush() public { uint256 o = _go(_one(TickingRouter.K.BAL, BUSH, false, 1e16, abi.encode(BUSH, WETH, USDG)), WETH, 1e16, USDG, 1); emit log_named_uint("bush out", o); assertGt(o, 10e6); }
+  function test_multihop_split() public { TickingRouter.Op[] memory o = new TickingRouter.Op[](2);
+    o[0] = TickingRouter.Op(TickingRouter.K.V3, V3_WU_100, true, 5e17, ""); o[1] = TickingRouter.Op(TickingRouter.K.FERMI, FERMI_WU, true, 5e17, abi.encode(WETH));
+    _go(o, WETH, 1e18, USDG, 1); }
+  function test_revert_minOut() public { deal(WETH, user, 1e18); vm.startPrank(user); IERC20(WETH).approve(address(r), 1e18);
+    vm.expectRevert(); r.swap(_one(TickingRouter.K.V3, V3_WU_100, true, 1e18, ""), WETH, 1e18, USDG, type(uint256).max, rcpt, block.timestamp + 60); }
+  function test_revert_deadline() public { deal(WETH, user, 1e18); vm.startPrank(user); IERC20(WETH).approve(address(r), 1e18);
+    vm.expectRevert(TickingRouter.Expired.selector); r.swap(_one(TickingRouter.K.V3, V3_WU_100, true, 1e18, ""), WETH, 1e18, USDG, 1, rcpt, block.timestamp - 1); }
+  function test_revert_unauth_callback() public { vm.expectRevert(TickingRouter.BadCallback.selector);
+    (bool ok,) = address(r).call(abi.encodeWithSignature("uniswapV3SwapCallback(int256,int256,bytes)", int256(1e18), int256(0), "")); ok; }
+  function test_revert_unauth_unlock() public { vm.expectRevert(TickingRouter.BadCallback.selector); r.unlockCallback(""); }
+  function test_revert_overspend() public { deal(WETH, user, 1e18); vm.startPrank(user); IERC20(WETH).approve(address(r), 1e18);
+    vm.expectRevert(); r.swap(_one(TickingRouter.K.V3, V3_WU_100, true, 2e18, ""), WETH, 1e18, USDG, 1, rcpt, block.timestamp + 60); }
+  function test_revert_recipient_self() public { vm.expectRevert(TickingRouter.BadOp.selector); r.swap(new TickingRouter.Op[](0), WETH, 0, USDG, 0, address(r), block.timestamp+1); }
+}
