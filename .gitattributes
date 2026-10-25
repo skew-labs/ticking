@@ -1,0 +1,4 @@
+* text=auto eol=lf
+*.sol linguist-language=Solidity
+Cargo.lock linguist-generated=true
+contracts/verify/*.json linguist-generated=true
