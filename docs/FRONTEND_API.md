@@ -1,4 +1,4 @@
-# Ticking Router — Frontend API handoff (PROPOSAL, not applied to nginx)
+# Ticking Router — Frontend API handoff (LIVE at https://api.ticking.dev/api/router/)
 
 Chain: Robinhood Chain mainnet, chainId 4663 (0x1237). Read-only quote engine (no keys, no txs). The user signs and sends the tx.
 
