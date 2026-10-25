@@ -1,3 +1,0 @@
-#include "native_archive.hpp"
-#include <iostream>
-int main(int argc,char**argv){using namespace tick::archive;try{require(argc==3,"usage: archive-compactor --pack|--verify|--refresh-checkpoint SEGMENT");fs::path folder=argv[2];std::string mode=argv[1];if(mode=="--pack")std::cout<<pack_capsule(folder).dump()<<'\n';else if(mode=="--refresh-checkpoint")std::cout<<refresh_raw_checkpoint(folder).dump()<<'\n';else if(mode=="--verify"){auto s=scan_capsule(folder);std::cout<<Json{{"sourceSHA256",s.digest},{"frames",s.frames},{"sourceBytes",s.bytes},{"state",s.counts.json()}}.dump()<<'\n';}else throw std::runtime_error("invalid compaction mode");return 0;}catch(const std::exception&e){std::cerr<<e.what()<<'\n';return 78;}}
